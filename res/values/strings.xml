@@ -1,0 +1,55 @@
+<resources>
+	<string name="app_name">BeautyRanking</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+	<string name="user_id">手机</string>
+	<string name="user_id_hint">手机号码</string>
+	<string name="pwd">密码</string>
+	<string name="login">登录</string>
+	<string name="login_register_link">没有账号？<a href="#" mece_href="#">注册</a></string>
+	<string name="register_new_user">注册新用户</string>
+	
+	
+	
+	<string name="pull_to_refresh">下拉可以刷新</string>
+	<string name="release_to_refresh">释放立即刷新</string>
+	<string name="refreshing">正在刷新…</string>
+	<string name="updated_just_now">刚刚更新</string>
+	<string name="list_header_refresh_last_update">上次更新于:%s</string>
+	<string name="down_arrow">指示下拉可以刷新列表内容的箭头</string>
+	<string name="up_arrow">指示释放开始更新的箭头</string>
+	
+    <string name="list_footer_more">更多</string>
+    <string name="list_footer_loading">正在加载</string>
+    
+    
+    <string name="name_label">姓名：</string>
+    <string name="school_lable">学校：</string>
+    
+    <string name="sumList">总排行榜</string>
+    <string name="newList">新人榜</string>
+    <string name="riseList">飙升榜</string>
+    <string name="ranking_list_cursor_description">标示了选择哪个图片的下划图标</string>
+    
+    <string name="avatar_description">详细信息中的头像</string>
+    <string name="beauty_info_school">学校</string>
+    <string name="beauty_info_admission_year">入学年份</string>
+    <string name="beauty_info_birthday">生日</string>
+    <string name="beauty_info_constellation">星座</string>
+    <string name="beauty_info_description">印象</string>
+    <string name="beauty_info_album">个人相册</string>
+    <string name="beauty_info_photo">相片</string>
+    
+    <string name="register_user_phone_number">用户手机</string>
+    <string name="register_password">密码</string>
+    <string name="register_password_confirm">确认密码</string>
+    <string name="register_nike_name">昵称</string>
+    <string name="register_sex">性别</string>
+    <string name="register_hint_sex">男/女</string>
+    <string name="register_school">所在学校</string>
+    <string name="register_hint_school">广东外语外贸大学</string>
+    <string name="register_admission_year">入学年份</string>
+    <string name="register_hint_admission_year">2011</string>
+    <string name="register_button">注册</string>
+    
+</resources>

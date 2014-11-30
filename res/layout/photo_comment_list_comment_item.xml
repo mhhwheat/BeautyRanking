@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	<TextView 
+	    android:id="@+id/tvPhotoComment_comment"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:singleLine="false"
+	    android:layout_marginLeft="5dp"
+	    android:layout_marginTop="5dp"
+	    android:layout_marginRight="5dp"
+	    android:text="好漂亮的mm"/>
+	<TextView
+	    android:id="@+id/tvCommenter"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/tvPhotoComment_comment"
+	    android:textColor="#FF0000FF"
+	    android:textSize="12sp"
+        android:text="疯狂豆芽"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"/>
+	<TextView
+	    android:id="@+id/tvCommentTime"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/tvPhotoComment_comment"
+	    android:layout_alignParentRight="true"
+	    android:layout_marginRight="5dp"
+	    android:textSize="12sp"
+	    android:textColor="#FF696969"
+	    android:text="23小时前"/>"
+</RelativeLayout>
