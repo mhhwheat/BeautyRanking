@@ -11,7 +11,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-
+//test
 public class ImageActivityTest extends Activity
 {
 	private ImageView image;
