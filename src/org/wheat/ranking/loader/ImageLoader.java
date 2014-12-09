@@ -199,6 +199,10 @@ public class ImageLoader
 					
 					
 				}
+				else
+				{
+					Log.w("ImageLoader", "resultΪnull!!!!!!");
+				}
 			}
 			else
 			{

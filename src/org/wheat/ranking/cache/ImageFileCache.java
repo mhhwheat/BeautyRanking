@@ -51,7 +51,7 @@ public class ImageFileCache
 	/** 将图片存入文件缓存 **/
 	public void saveBitmap(Bitmap bm,String url)
 	{
-		System.out.println("save bitmap in sdcard-------->");
+		System.out.println("save bitmap in sdcard--------->");
 		if(bm==null)
 		{
 			return;
