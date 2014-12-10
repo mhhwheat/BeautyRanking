@@ -29,6 +29,7 @@
 	        android:layout_toRightOf="@id/beauty_avatar"
 	        android:text="疯狂豆芽"
 	        android:paddingLeft="10dp"
+	        android:paddingRight="10dp"
 	        android:textColor="#FF000000"
 	        android:textSize="17sp"/>
 	    <ImageButton 
