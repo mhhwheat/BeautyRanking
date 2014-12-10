@@ -4,10 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
@@ -16,14 +19,17 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
@@ -34,6 +40,107 @@ import android.graphics.BitmapFactory;
 
 public class HttpLoader 
 {
+	/**
+	 * @deprecated using the get method to post data and recive the json data
+	 * @param url   the address
+	 * @param data  data to post in the url ,using the map
+	 * @param headers   set the request parameters ,default null
+	 * @return
+	 * @throws IOException
+	 */
+	public static String getData(String url,HashMap<String,String> data,HashMap<String,String>headers) throws IOException
+	{
+		if (url == null) {
+            return null;
+        }
+		String newUrl=url;
+		if(data!=null){
+			try {
+				newUrl=addDatatoUrl(url,data,"utf-8");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		
+		HttpGet httpGet=new HttpGet(newUrl);
+		
+		//http报头
+		if(headers==null)
+		{
+			headers=new HashMap<String, String>();
+		}
+		addHeaders(httpGet, headers);//加入http报头
+		
+		//开始请求
+		HttpResponse rsp=httpClient.execute(httpGet);
+		System.out.println("hoga"+" "+rsp.getStatusLine().getStatusCode());
+		String result=getStringContentFromHttpResponse(rsp);
+		
+		return result;
+		
+	}
+	/**
+	 * @deprecated using the get method 
+	 * @param url
+	 * @param data
+	 * @param headers
+	 * @return the response code (without the data)
+	 * @throws IOException
+	 */
+	public static int  getCode(String url,HashMap<String,String> data,HashMap<String,String>headers) throws IOException
+	{
+		if (url == null) {
+            return -1;
+        }
+		String newUrl=url;
+		if(data!=null){
+			try {
+				newUrl=addDatatoUrl(url,data,"utf-8");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		
+		HttpGet httpGet=new HttpGet(newUrl);
+		
+		//http报头
+		if(headers==null)
+		{
+			headers=new HashMap<String, String>();
+		}
+		addHeaders(httpGet, headers);//加入http报头
+		
+		//开始请求
+		HttpResponse rsp=httpClient.execute(httpGet);
+		
+		
+		return rsp.getStatusLine().getStatusCode();
+		
+	}
+	/**
+	 * @deprecated add the data which going to post  to the url paramters
+	 * @param path
+	 * @param params
+	 * @param enc
+	 * @return
+	 * @throws Exception
+	 */
+	public static String addDatatoUrl(String path, Map<String, String> params, String enc)throws Exception{
+		StringBuilder sb = new StringBuilder(path);  
+        sb.append('?');  
+        for(Map.Entry<String, String> entry : params.entrySet()){  
+            sb.append(entry.getKey()).append('=')  
+                .append(URLEncoder.encode(entry.getValue(), enc)).append('&');  
+        }  
+        sb.deleteCharAt(sb.length()-1);  
+         System.out.println("hoga"+sb.toString()); 
+         return sb.toString();
+	}
+	
 	public static String get(String url,HashMap<String,String> headers) throws IOException
 	{
 		if (url == null) {
@@ -83,6 +190,38 @@ public class HttpLoader
         HttpResponse rsp=httpClient.execute(httpPost);
         
         String result=getStringContentFromHttpResponse(rsp);
+        
+        return result;
+	}
+	/**
+	 * 
+	 * @param url  要请求的url
+	 * @param headers  请求的头部信息
+	 * @param object  要传送的对象
+	 * @return	返回的对象，这里只是处理StringEntity
+	 * @throws IOException
+	 */
+	public static String postDataUsingJson(String url,HashMap<String,String> headers,Object object) throws IOException
+	{
+		
+		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		
+		HttpPost httpPost=new HttpPost(url);
+		
+		//http报头
+        if (headers == null) {
+            headers = new HashMap<String, String>();
+        }
+        addHeaders(httpPost, headers);//加入http报头
+        
+        String objectJson=HttpDataLoader.toJson(object);
+        httpPost.setEntity(new StringEntity(objectJson));
+        //开始请求
+        System.out.println("in post withoutdata1");
+        HttpResponse rsp=httpClient.execute(httpPost);
+        System.out.println("in post withoutdata2");
+        String result=getStringContentFromHttpResponse(rsp);
+//        System.out.println(result);
         
         return result;
 	}
@@ -227,7 +366,7 @@ public class HttpLoader
             }
 
         } catch (Throwable e) {
-
+        	e.printStackTrace();
         }
     }
 	
@@ -271,7 +410,7 @@ public class HttpLoader
     public static String getStringContentFromHttpResponse(HttpResponse rsp) throws IOException
     {
     	if(rsp==null)
-    	{
+    	{System.out.println("response is null");
     		return null;
     	}
     	if(rsp.getStatusLine().getStatusCode()==HttpStatus.SC_OK)
