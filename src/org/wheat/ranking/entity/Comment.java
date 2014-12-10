@@ -3,22 +3,30 @@ package org.wheat.ranking.entity;
 import org.wheat.ranking.data.DataType;
 import org.wheat.ranking.data.IData;
 
+import com.google.gson.annotations.SerializedName;
+
 
 public class Comment implements IData
 {
 	private static final long serialVersionUID = 1L;
 	private int dataType=DataType.ENTITY_COMMENT;
 	//照片ID
-	private int photoID;
+	@SerializedName("photoId")
+	private String  photoID;
 	//mmid
+	@SerializedName("beautyId")
 	private int beautyID;
 	//用户手机号
+	@SerializedName("userPhoneNumber")
 	private String userPhoneNumber;
 	//评论时间
+	@SerializedName("commentTime")
 	private String commentTime;
 	//评论的内容
+	@SerializedName("commentContent")
 	private String commentContent;
-	public Comment(int photoID,int beautyID,String userPhoneNumber,String commentTime,String commentContent)
+	public Comment(){}
+	public Comment(String photoID,int beautyID,String userPhoneNumber,String commentTime,String commentContent)
 	{
 		this.photoID=photoID;
 		this.beautyID=beautyID;
@@ -26,11 +34,11 @@ public class Comment implements IData
 		this.commentTime=commentTime;
 		this.commentContent=commentContent;
 	}
-	public void setPhotoID(int photoID)
+	public void setPhotoID(String photoID)
 	{
 		this.photoID=photoID;
 	}
-	public int getPhotoID()
+	public String getPhotoID()
 	{
 		return photoID;
 	}

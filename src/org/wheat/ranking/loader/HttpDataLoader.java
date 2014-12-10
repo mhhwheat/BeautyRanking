@@ -26,7 +26,7 @@ public class HttpDataLoader
 	 */
 	private static final byte[] PSW = "AjGfpbbQmU7EAnkJ".getBytes();
 	
-	private static final String HttpRoot="http://192.168.202.197:8080/BeautyRankingServer";
+	private static final String HttpRoot="http://192.168.202.236:8080/BeautyRankingServer";
 	
 	/*
 	 * 把json格式的字符串转为实体对象

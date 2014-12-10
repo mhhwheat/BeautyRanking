@@ -28,6 +28,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_toRightOf="@id/beauty_avatar"
 	        android:text="疯狂豆芽"
+	        android:paddingStart="10dp"
 	        android:paddingLeft="10dp"
 	        android:paddingRight="10dp"
 	        android:textColor="#FF000000"

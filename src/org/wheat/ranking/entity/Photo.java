@@ -1,45 +1,49 @@
 package org.wheat.ranking.entity;
 
-import org.wheat.ranking.data.DataType;
-import org.wheat.ranking.data.IData;
 
-public class Photo implements IData
+import com.google.gson.annotations.SerializedName;
+public class Photo  
 {
-	private static final long serialVersionUID = 1L;
-	private int dataType=DataType.ENTITY_PHOTO;
+
 	//照片id
-	private int photoID;
+	@SerializedName("commentCount")
+	private int commentCount;
 	//mm的id
-	private int beautyID;
+	@SerializedName("praiseCount")
+	private int praiseCount;
 	//照片在本地的路径
+	@SerializedName("photoPath")
 	private String photoPath;
 	//用户手机号码(上传该照片的用户)
+	@SerializedName("userPhoneNumber")
 	private String userPhoneNumber;
 	//上传时间
+	@SerializedName("uploadTime")
 	private String uploadTime;
-	public Photo(int photoID,int beautyID,String photoPath,String userPhoneNumber,String uploadTime)
+	public Photo(){}
+	public Photo(int commentCount,int praiseCount,String photoPath,String userPhoneNumber,String uploadTime)
 	{
-		this.photoID=photoID;
-		this.beautyID=beautyID;
+		this.commentCount=commentCount;
+		this.praiseCount=praiseCount;
 		this.photoPath=photoPath;
 		this.userPhoneNumber=userPhoneNumber;
 		this.uploadTime=uploadTime;
 	}
-	public void setPhotoID(int photoID)
+	public void setPraiseCount(int praiseCount)
 	{
-		this.photoID=photoID;
+		this.praiseCount=praiseCount;
 	}
-	public int getPhotoID()
+	public int getPraiseCount()
 	{
-		return this.photoID;
+		return this.praiseCount;
 	}
-	public void setBeautyID(int beautyID)
+	public void setCommentCount(int commentCount)
 	{
-		this.beautyID=beautyID;
+		this.commentCount=commentCount;
 	}
-	public int getBeautyID()
+	public int getCommentCount()
 	{
-		return this.beautyID;
+		return this.commentCount;
 	}
 	public void setPhotoPath(String photoPath)
 	{
@@ -64,11 +68,6 @@ public class Photo implements IData
 	public String getUploadTime()
 	{
 		return this.uploadTime;
-	}
-	@Override
-	public int getDataType() 
-	{
-		return dataType;
 	}
 	
 }
