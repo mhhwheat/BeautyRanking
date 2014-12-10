@@ -199,7 +199,7 @@ public class TabSumFragment extends Fragment implements RefreshListener
 			holder.school.setText(listItem.getSchool());
 			holder.description.setText(listItem.getDescription());
 			//new AddTaskThread(listItem.getAvatarPath(), holder.photo).start();
-			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), -1, -1), holder.photo);
+			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 100, 10000), holder.photo);
 			
 			
 			return convertView;

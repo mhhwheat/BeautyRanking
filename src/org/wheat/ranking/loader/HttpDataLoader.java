@@ -11,7 +11,6 @@ import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.entity.json.UserLoginJson;
 import org.wheat.ranking.entity.json.UserRegisterJson;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Base64;
