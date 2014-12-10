@@ -26,8 +26,19 @@
 	</LinearLayout>
 	<RadioGroup 
 	    android:layout_width="fill_parent"
-	    android:layout_weight="1">
+	    android:layout_weight="1"
+	    android:orientation="horizontal">
 	    <RadioButton 
-	        />
+	        android:id="@+id/rb_first_page"
+	        style="@style/main_page_tab"
+	        android:text="@string/main_rb_first_page"/>
+	    <RadioButton 
+	        android:id="@+id/rb_find_page"
+	        style="@style/main_page_tab"
+	        android:text="@string/main_rb_find_page"/>
+	    <RadioButton 
+	        android:id="@+id/rb_mine_page"
+	        style="@style/main_page_tab"
+	        android:text="@string/main_rb_mine_page"/>
 	</RadioGroup>
 </LinearLayout>
