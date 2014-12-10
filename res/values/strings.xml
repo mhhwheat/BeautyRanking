@@ -52,4 +52,7 @@
     <string name="register_hint_admission_year">2011</string>
     <string name="register_button">注册</string>
     
+    <string name="main_rb_first_page">首页</string>
+    <string name="main_rb_find_page">发现</string>
+    <string name="main_rb_mine_page">我的</string>
 </resources>
