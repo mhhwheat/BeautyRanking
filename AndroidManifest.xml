@@ -26,7 +26,9 @@
             
         </activity>
         <activity
-            android:name="org.wheat.ranking.activity."
+
+            android:name="org.wheat.ranking.activity.ImageActivityTest"
+
             android:label="@string/app_name"
             android:theme="@style/titleStyle">
             <intent-filter>
