@@ -5,14 +5,19 @@ import java.util.ArrayList;
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.adapter.RankingFragmentPagerAdapter;
 
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
+
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -20,8 +25,9 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class RankingListActivity extends FragmentActivity 
+public class RankingListActivity extends FragmentActivity implements View.OnClickListener
 {
 	private final int pageCount=3;
 	private ViewPager mViewPager;
@@ -32,6 +38,40 @@ public class RankingListActivity extends FragmentActivity
 	private int bmpWidth;
 	private int offset;
 
+	
+	private ResideMenu resideMenu;
+	private RankingListActivity mContext;
+	private ResideMenuItem itemHome;
+	private ResideMenuItem itemProfile;
+	private ResideMenuItem itemCalendar;
+	private ResideMenuItem itemSettings;
+	
+	private void setUpMenu()
+	{
+		resideMenu=new ResideMenu(this);
+		resideMenu.setBackground(R.drawable.menu_background);
+		resideMenu.attachToActivity(this);
+		resideMenu.setMenuListener(menuListener);
+		resideMenu.setScaleValue(0.6f);
+		
+		itemHome=new ResideMenuItem(this, R.drawable.icon_home, "Home");
+		itemProfile  = new ResideMenuItem(this, R.drawable.icon_profile,  "Profile");
+        itemCalendar = new ResideMenuItem(this, R.drawable.icon_calendar, "Calendar");
+        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
+        
+        itemHome.setOnClickListener(this);
+        itemProfile.setOnClickListener(this);
+        itemCalendar.setOnClickListener(this);
+        itemSettings.setOnClickListener(this);
+        
+        
+        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemProfile, ResideMenu.DIRECTION_LEFT);
+        resideMenu.addMenuItem(itemCalendar, ResideMenu.DIRECTION_RIGHT);
+        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
+        
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -48,6 +88,11 @@ public class RankingListActivity extends FragmentActivity
 		InitImageCusor();
 		Log.w("RankingListActivity", "Initial ViewPager");
 		InitViewPager();
+		
+		mContext=this;
+		setUpMenu();
+		if( savedInstanceState == null )
+            changeFragment(new TabNewFragment());
 	}
 	private void InitTextView()
 	{
@@ -140,8 +185,51 @@ public class RankingListActivity extends FragmentActivity
 		}
 		
 	}
+
+	@Override
+	public void onClick(View view) {
+		// TODO Auto-generated method stub
+		if (view == itemHome){
+            changeFragment(new TestFragment());
+        }else if (view == itemProfile){
+            changeFragment(new TabSumFragment());
+        }else if (view == itemCalendar){
+            changeFragment(new TabNewFragment());
+        }else if (view == itemSettings){
+            changeFragment(new TabNewFragment());
+        }
+
+        resideMenu.closeMenu();
+	}
 	
-	
-	
+	private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
+        @Override
+        public void openMenu() {
+            Toast.makeText(mContext, "Menu is opened!", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void closeMenu() {
+            Toast.makeText(mContext, "Menu is closed!", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		return resideMenu.dispatchTouchEvent(ev);
+	}
+	private void changeFragment(Fragment targetFragment){
+        resideMenu.clearIgnoredViewList();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_fragment, targetFragment, "fragment")
+                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+    }
+    
+    
+	public ResideMenu getResideMenu(){
+        return resideMenu;
+    }
 	
 }

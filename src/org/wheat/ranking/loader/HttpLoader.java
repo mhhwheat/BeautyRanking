@@ -37,6 +37,7 @@ import org.apache.http.util.EntityUtils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class HttpLoader 
 {
@@ -232,6 +233,7 @@ public class HttpLoader
 		if (postData == null || postData.length <= 0 || context == null) {
             return null;
         }
+        
 		context = context.getApplicationContext();
 		
 		HttpClient httpClient=new DefaultHttpClient(createHttpParams(context));
@@ -285,18 +287,47 @@ public class HttpLoader
 	{
 		URL imgUrl;
 		Bitmap bitmap=null;
+		BitmapFactory.Options opts=new BitmapFactory.Options();
+		opts.inJustDecodeBounds=true;
+		
 		 try {
 	            imgUrl = new URL(url);
 	            InputStream is = imgUrl.openConnection().getInputStream();
-	            BufferedInputStream bis = new BufferedInputStream(is);
-	            bitmap = BitmapFactory.decodeStream(bis);
-	            bis.close();
+	            //BufferedInputStream bis = new BufferedInputStream(is);
+	            byte[] buffer=getBytes(is);
+	            BitmapFactory.decodeByteArray(buffer, 0,buffer.length, opts);
+	            //BitmapFactory.decodeStream(is,null,opts);
+	            Log.w("HttpLoader", "图片的高为"+opts.outHeight);
+	            Log.w("HttpLoader", "图片的宽为"+opts.outWidth);
+	            opts.inSampleSize=computeSampleSize(opts, minSideLength, maxNumOfPixels);
+	            Log.w("HttpLoader", "inSampleSize为"+opts.inSampleSize);
+	            opts.inJustDecodeBounds=false;
+	            //bitmap=BitmapFactory.decodeStream(bis, null, opts);
+	            bitmap=BitmapFactory.decodeByteArray(buffer, 0, buffer.length, opts);
+	            is.close();
 	        } catch (MalformedURLException e) {
 	            e.printStackTrace();
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	        }
 	        return bitmap;
+	}
+	
+	private static byte[] getBytes(InputStream is) throws IOException
+	{
+		if(is==null)
+			return null;
+		ByteArrayOutputStream baos=new ByteArrayOutputStream();
+		byte[] b=new byte[1024];
+		int len=0;
+		
+		while((len=is.read(b,0,1024))!=-1)
+		{
+			baos.write(b,0,len);
+			baos.flush();
+		}
+		byte[] bytes=baos.toByteArray();
+		return bytes;
 	}
 	
 	
