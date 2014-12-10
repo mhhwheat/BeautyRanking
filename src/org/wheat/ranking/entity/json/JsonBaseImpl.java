@@ -3,7 +3,8 @@ package org.wheat.ranking.entity.json;
 import java.io.Serializable;
 
 import org.wheat.ranking.entity.ErrMsg;
-import org.wheat.ranking.loader.HttpDataLoader;
+import org.wheat.ranking.httptools.JsonTools;
+import org.wheat.ranking.loader.LoginAndRegister;
 
 import com.google.gson.annotations.SerializedName;
 /**
@@ -69,6 +70,6 @@ public class JsonBaseImpl <T> implements JsonBase<T>,Serializable
 	    @Override
 	    public String toCacheString() 
 	    {
-	    	return HttpDataLoader.toJson(this);
+	    	return JsonTools.toJson(this);
 	    }
 }

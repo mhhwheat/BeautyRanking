@@ -5,7 +5,7 @@ import java.lang.ref.WeakReference;
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.coders.Coder_Md5;
 import org.wheat.ranking.entity.json.UserRegisterJson;
-import org.wheat.ranking.loader.HttpDataLoader;
+import org.wheat.ranking.loader.LoginAndRegister;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -73,7 +73,7 @@ public class RegisterActivity extends Activity
 						{
 							UserRegisterJson json=null;
 							try {
-								json=HttpDataLoader.synRegister(mUserPhoneNumber, Coder_Md5.md5(mPassword), mNikeName, mSex, mSchool, Integer.parseInt(mAdmissionYear));
+								json=LoginAndRegister.synRegister(mUserPhoneNumber, Coder_Md5.md5(mPassword), mNikeName, mSex, mSchool, Integer.parseInt(mAdmissionYear));
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (Throwable e) {

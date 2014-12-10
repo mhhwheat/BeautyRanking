@@ -3,27 +3,23 @@ package org.wheat.ranking.activity;
 import java.util.ArrayList;
 
 import org.wheat.beautyranking.R;
-
 import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
-import org.wheat.ranking.loader.HttpDataLoader;
+import org.wheat.ranking.loader.HttpLoderMethods;
+import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.loader.ImageLoader;
-
 import org.wheat.widget.RefreshListView;
 import org.wheat.widget.RefreshListView.RefreshListener;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -233,7 +229,7 @@ public class TabSumFragment extends Fragment implements RefreshListener
 		public void run() {
 			BeautyIntroductionListJson json=null;
 			try {
-				json=HttpDataLoader.getSumPage(firstIndex, count);
+				json=HttpLoderMethods.getSumPage(firstIndex, count);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}

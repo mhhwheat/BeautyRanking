@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.wheat.beautyranking.R;
-import org.wheat.ranking.loader.HttpDataLoader;
-import org.wheat.ranking.loader.HttpUploadTools;
+import org.wheat.ranking.loader.LoginAndRegister;
+import org.wheat.ranking.loader.HttpUploadMethods;
 import org.wheat.ranking.entity.Comment;
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.Praise;

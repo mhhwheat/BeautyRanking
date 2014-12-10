@@ -180,7 +180,7 @@ public class ImageLoader
 				// 从网络获取
 				Log.w("ImageLoader","从网络获取图片------"+parameters.getUrl());
 				try {
-					result=HttpDataLoader.downLoadBitmap(parameters.getUrl(),parameters.getMinSideLength(),parameters.getMaxNumOfPixels());
+					result=HttpLoderMethods.downLoadBitmap(parameters.getUrl(),parameters.getMinSideLength(),parameters.getMaxNumOfPixels());
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}

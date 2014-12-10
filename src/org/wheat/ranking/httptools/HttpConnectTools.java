@@ -1,4 +1,4 @@
-package org.wheat.ranking.loader;
+package org.wheat.ranking.httptools;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,17 +39,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-public class HttpLoader 
+public class HttpConnectTools 
 {
 	/**
-	 * @deprecated using the get method to post data and recive the json data
+	 * @deprecated using the get method to post data and receive the json data
 	 * @param url   the address
 	 * @param data  data to post in the url ,using the map
 	 * @param headers   set the request parameters ,default null
-	 * @return
+	 * @return   the response with the data
 	 * @throws IOException
 	 */
-	public static String getData(String url,HashMap<String,String> data,HashMap<String,String>headers) throws IOException
+	public static String getReturnJsonData(String url,HashMap<String,String> data,HashMap<String,String>headers) throws IOException
 	{
 		if (url == null) {
             return null;
@@ -84,13 +84,13 @@ public class HttpLoader
 	}
 	/**
 	 * @deprecated using the get method 
-	 * @param url
+	 * @param url  this url without the data
 	 * @param data
 	 * @param headers
 	 * @return the response code (without the data)
 	 * @throws IOException
 	 */
-	public static int  getCode(String url,HashMap<String,String> data,HashMap<String,String>headers) throws IOException
+	public static int  getReturnCode(String url,HashMap<String,String> data,HashMap<String,String>headers) throws IOException
 	{
 		if (url == null) {
             return -1;
@@ -123,6 +123,7 @@ public class HttpLoader
 		
 	}
 	/**
+	 * @author  hogachen
 	 * @deprecated add the data which going to post  to the url paramters
 	 * @param path
 	 * @param params
@@ -141,7 +142,14 @@ public class HttpLoader
          System.out.println("hoga"+sb.toString()); 
          return sb.toString();
 	}
-	
+	/**
+	 * @author mhhwheat
+	 * @deprecated 
+	 * @param url this url have include the data
+	 * @param headers
+	 * @return
+	 * @throws IOException
+	 */
 	public static String get(String url,HashMap<String,String> headers) throws IOException
 	{
 		if (url == null) {
@@ -167,7 +175,14 @@ public class HttpLoader
 		return result;
 		
 	}
-	
+	/**
+	 * @author mhhwheat
+	 * @param url
+	 * @param postData
+	 * @param headers
+	 * @return
+	 * @throws IOException
+	 */
 	public static String post(String url,byte[] postData,HashMap<String,String> headers) throws IOException
 	{
 		if (postData == null || postData.length <= 0) {
@@ -195,7 +210,8 @@ public class HttpLoader
         return result;
 	}
 	/**
-	 * 
+	 * @deprecated using  json to deliver the data
+	 * @author hogachen
 	 * @param url  要请求的url
 	 * @param headers  请求的头部信息
 	 * @param object  要传送的对象
@@ -215,7 +231,7 @@ public class HttpLoader
         }
         addHeaders(httpPost, headers);//加入http报头
         
-        String objectJson=HttpDataLoader.toJson(object);
+        String objectJson=JsonTools.toJson(object);
         httpPost.setEntity(new StringEntity(objectJson));
         //开始请求
         System.out.println("in post withoutdata1");
@@ -255,127 +271,6 @@ public class HttpLoader
 	}
 	*/
 	
-	//下载完整的图片
-	public static Bitmap getFullPhoto(String url,HashMap<String,String> headers) throws IOException
-	{
-		URL imgUrl;
-		Bitmap bitmap=null;
-		 try {
-	            imgUrl = new URL(url);
-	            InputStream is = imgUrl.openConnection().getInputStream();
-	            BufferedInputStream bis = new BufferedInputStream(is);
-	            bitmap = BitmapFactory.decodeStream(bis);
-	            bis.close();
-	        } catch (MalformedURLException e) {
-	            e.printStackTrace();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	        return bitmap;
-	}
-	
-	/**
-	 * 当minSideLength和maxNumOfPixels同时等于-1时,将会下载完整的图片,否则下载缩略图
-	 * @param context
-	 * @param url
-	 * @param headers
-	 * @param minSideLength 最小边长
-	 * @param maxNumOfPixels 像素总数
-	 * @return
-	 */
-	public static Bitmap getPhoto(String url,HashMap<String,String> headers,int minSideLength,int maxNumOfPixels)
-	{
-		URL imgUrl;
-		Bitmap bitmap=null;
-		BitmapFactory.Options opts=new BitmapFactory.Options();
-		opts.inJustDecodeBounds=true;
-		
-		 try {
-	            imgUrl = new URL(url);
-	            InputStream is = imgUrl.openConnection().getInputStream();
-	            //BufferedInputStream bis = new BufferedInputStream(is);
-	            byte[] buffer=getBytes(is);
-	            BitmapFactory.decodeByteArray(buffer, 0,buffer.length, opts);
-	            //BitmapFactory.decodeStream(is,null,opts);
-	            Log.w("HttpLoader", "图片的高为"+opts.outHeight);
-	            Log.w("HttpLoader", "图片的宽为"+opts.outWidth);
-	            opts.inSampleSize=computeSampleSize(opts, minSideLength, maxNumOfPixels);
-	            Log.w("HttpLoader", "inSampleSize为"+opts.inSampleSize);
-	            opts.inJustDecodeBounds=false;
-	            //bitmap=BitmapFactory.decodeStream(bis, null, opts);
-	            bitmap=BitmapFactory.decodeByteArray(buffer, 0, buffer.length, opts);
-	            is.close();
-	        } catch (MalformedURLException e) {
-	            e.printStackTrace();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	        return bitmap;
-	}
-	
-	private static byte[] getBytes(InputStream is) throws IOException
-	{
-		if(is==null)
-			return null;
-		ByteArrayOutputStream baos=new ByteArrayOutputStream();
-		byte[] b=new byte[1024];
-		int len=0;
-		
-		while((len=is.read(b,0,1024))!=-1)
-		{
-			baos.write(b,0,len);
-			baos.flush();
-		}
-		byte[] bytes=baos.toByteArray();
-		return bytes;
-	}
-	
-	
-	/**
-	 * 
-	 * @param options BitmapFactory.options
-	 * @param minSideLength 最小边长
-	 * @param maxNumOfPixels 像素总数
-	 * @return
-	 */
-	public static int computeSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {  
-	    int initialSize = computeInitialSampleSize(options, minSideLength, maxNumOfPixels);  
-	    int roundedSize;  
-	    if (initialSize <= 8) {  
-	        roundedSize = 1;  
-	        while (roundedSize < initialSize) {  
-	            roundedSize <<= 1;  
-	        }  
-	    } else {  
-	        roundedSize = (initialSize + 7) / 8 * 8;  
-	    }  
-	    return roundedSize;  
-	} 
-	
-	/**
-	 * 
-	 * @param options BitmapFactory.options
-	 * @param minSideLength 最小边长
-	 * @param maxNumOfPixels 像素总数
-	 * @return
-	 */
-	private static int computeInitialSampleSize(BitmapFactory.Options options,int minSideLength, int maxNumOfPixels) {  
-	    double w = options.outWidth;  
-	    double h = options.outHeight;  
-	    int lowerBound = (maxNumOfPixels == -1) ? 1 : (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));  
-	    int upperBound = (minSideLength == -1) ? 128 :(int) Math.min(Math.floor(w / minSideLength), Math.floor(h / minSideLength));  
-	    if (upperBound < lowerBound) {  
-	        // return the larger one when there is no overlapping zone.  
-	        return lowerBound;  
-	    }  
-	    if ((maxNumOfPixels == -1) && (minSideLength == -1)) {  
-	        return 1;  
-	    } else if (minSideLength == -1) {  
-	        return lowerBound;  
-	    } else {  
-	        return upperBound;  
-	    }  
-	} 
 	
 	/**
      * 往http请求加入报头

@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.entity.json.UserLoginJson;
-import org.wheat.ranking.loader.HttpDataLoader;
+import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.coders.Coder_Md5;
 
 import android.app.Activity;
@@ -60,7 +60,7 @@ public class LoginActivity extends Activity
 						}
 						UserLoginJson userJson=null;
 						try {
-							userJson = HttpDataLoader.synLogin(userPhoneNumber,Coder_Md5.md5(pwd));
+							userJson = LoginAndRegister.synLogin(userPhoneNumber,Coder_Md5.md5(pwd));
 							if(userJson==null)
 							{
 								toastText="Õ¯¬Á«Î«Û ß∞‹";

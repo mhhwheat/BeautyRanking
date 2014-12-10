@@ -6,7 +6,8 @@ import org.wheat.beautyranking.R;
 import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
-import org.wheat.ranking.loader.HttpDataLoader;
+import org.wheat.ranking.loader.HttpLoderMethods;
+import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.loader.ImageLoader;
 import org.wheat.widget.RefreshListView;
 import org.wheat.widget.RefreshListView.RefreshListener;
@@ -206,7 +207,7 @@ public class TabRiseFragment extends Fragment implements RefreshListener
 	{
 		BeautyIntroductionListJson json=null;
 		try {
-			json=HttpDataLoader.getRisePage(0, PAGE_LENGTH);
+			json=HttpLoderMethods.getRisePage(0, PAGE_LENGTH);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -236,7 +237,7 @@ public class TabRiseFragment extends Fragment implements RefreshListener
 		public void run() {
 			BeautyIntroductionListJson json=null;
 			try {
-				json=HttpDataLoader.getRisePage(firstIndex, count);
+				json=HttpLoderMethods.getRisePage(firstIndex, count);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
