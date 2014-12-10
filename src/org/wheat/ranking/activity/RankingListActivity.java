@@ -5,26 +5,17 @@ import java.util.ArrayList;
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.adapter.RankingFragmentPagerAdapter;
 
-<<<<<<< HEAD
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-=======
-
->>>>>>> 4c7dbfe859c8e5c05a18171dea991769ec858c07
 
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-<<<<<<< HEAD
-=======
-
->>>>>>> 4c7dbfe859c8e5c05a18171dea991769ec858c07
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -32,13 +23,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-<<<<<<< HEAD
 public class RankingListActivity extends SlidingFragmentActivity 
-=======
-
->>>>>>> 4c7dbfe859c8e5c05a18171dea991769ec858c07
 {
 	private final int pageCount=3;
 	private ViewPager mViewPager;
@@ -46,42 +32,9 @@ public class RankingListActivity extends SlidingFragmentActivity
 	private ImageView imageCusor;
 	private TextView tabSum,tabNew,tabRise;
 	private int currIndex;//µ±Ç°Ò³±àºÅ
+	private int bmpWidth;
 	private int offset;
 
-	
-	private ResideMenu resideMenu;
-	private RankingListActivity mContext;
-	private ResideMenuItem itemHome;
-	private ResideMenuItem itemProfile;
-	private ResideMenuItem itemCalendar;
-	private ResideMenuItem itemSettings;
-	
-	private void setUpMenu()
-	{
-		resideMenu=new ResideMenu(this);
-		resideMenu.setBackground(R.drawable.menu_background);
-		resideMenu.attachToActivity(this);
-		resideMenu.setMenuListener(menuListener);
-		resideMenu.setScaleValue(0.6f);
-		
-		itemHome=new ResideMenuItem(this, R.drawable.icon_home, "Home");
-		itemProfile  = new ResideMenuItem(this, R.drawable.icon_profile,  "Profile");
-        itemCalendar = new ResideMenuItem(this, R.drawable.icon_calendar, "Calendar");
-        itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
-        
-        itemHome.setOnClickListener(this);
-        itemProfile.setOnClickListener(this);
-        itemCalendar.setOnClickListener(this);
-        itemSettings.setOnClickListener(this);
-        
-        
-        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemProfile, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemCalendar, ResideMenu.DIRECTION_RIGHT);
-        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
-        
-	}
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -100,11 +53,6 @@ public class RankingListActivity extends SlidingFragmentActivity
 		initMenu();
 		Log.w("RankingListActivity", "Initial ViewPager");
 		InitViewPager();
-		
-		mContext=this;
-		setUpMenu();
-		if( savedInstanceState == null )
-            changeFragment(new TabNewFragment());
 	}
 	private void InitTextView()
 	{
@@ -215,30 +163,9 @@ public class RankingListActivity extends SlidingFragmentActivity
 		}
 		
 	}
-
-	@Override
-	public void onClick(View view) {
-		// TODO Auto-generated method stub
-		if (view == itemHome){
-            changeFragment(new TestFragment());
-        }else if (view == itemProfile){
-            changeFragment(new TabSumFragment());
-        }else if (view == itemCalendar){
-            changeFragment(new TabNewFragment());
-        }else if (view == itemSettings){
-            changeFragment(new TabNewFragment());
-        }
-
-        resideMenu.closeMenu();
-	}
 	
-<<<<<<< HEAD
 	public void showLeftMenu(View view)  
     {  
         getSlidingMenu().showMenu();  
     }
-=======
-	
-	
->>>>>>> 4c7dbfe859c8e5c05a18171dea991769ec858c07
 }
