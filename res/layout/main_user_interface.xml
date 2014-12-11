@@ -6,10 +6,12 @@
     <FrameLayout 
         android:id="@+id/replacing_fragment"
         android:layout_width="fill_parent"
+        android:layout_height="match_parent"
         android:layout_weight="10"/>
 	<RadioGroup 
 	    android:id="@+id/main_radio"
 	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
 	    android:layout_weight="1"
 	    android:orientation="horizontal">
 	    <RadioButton 

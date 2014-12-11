@@ -11,52 +11,52 @@
         android:background="#FFFFFFFF">
 
         <TextView
-            android:id="@+id/tab_sum"
+            android:id="@+id/tab_focus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="@string/sumList"
+            android:text="@string/first_page_focus"
             android:textColor="#000000"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tab_new"
+            android:id="@+id/tab_neighbor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="@string/newList"
+            android:text="@string/first_page_neighbor"
             android:textColor="#000000"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tab_rise"
+            android:id="@+id/tab_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="@string/riseList"
+            android:text="@string/first_page_created"
             android:textColor="#000000"
             android:textSize="15sp" />
 
     </LinearLayout>
     <ImageView 
-        android:id="@+id/ranking_list_cursor"
+        android:id="@+id/first_page_cursor"
         android:layout_width="fill_parent"
         android:layout_height="4dp"
         android:scaleType="matrix"
         android:src="@drawable/cursor"
-        android:contentDescription="@string/ranking_list_cursor_description"
+        android:contentDescription="@string/first_page_cursor_description"
         />
     <android.support.v4.view.ViewPager
-        android:id="@+id/ranking_list_pager"
+        android:id="@+id/first_page_pager"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFFFF"

@@ -323,4 +323,36 @@ public class RefreshListView extends ListView implements OnScrollListener
 		mFooterTextView.setText(R.string.list_footer_more);
 		removeFooterView(mFooterLinearLayout);
 	}
+	
+	/**
+	 * 隐藏RefreshListView的头部
+	 */
+	public void hideHeaderView()
+	{
+		mHeaderLinearLayout.setVisibility(View.GONE);
+	}
+	
+	/**
+	 * 显示RefreshListView的头部
+	 */
+	public void showHeaderView()
+	{
+		mHeaderLinearLayout.setVisibility(View.VISIBLE);
+	}
+	
+	/**
+	 * 隐藏RefreshListView的尾部
+	 */
+	public void hideFooterView()
+	{
+		mFooterLinearLayout.setVisibility(View.GONE);
+	}
+	
+	/**
+	 * 显示RefreshListView的尾部
+	 */
+	public void showFooterView()
+	{
+		mFooterLinearLayout.setVisibility(View.VISIBLE);
+	}
 }

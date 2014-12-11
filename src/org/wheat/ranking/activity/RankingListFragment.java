@@ -1,5 +1,6 @@
 package org.wheat.ranking.activity;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.wheat.beautyranking.R;
@@ -49,6 +50,25 @@ public class RankingListFragment extends Fragment
 		return mView;
 	}
 	
+	
+	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		try {  
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");  
+            childFragmentManager.setAccessible(true);  
+            childFragmentManager.set(this, null);  
+  
+        } catch (NoSuchFieldException e) {  
+            throw new RuntimeException(e);  
+        } catch (IllegalAccessException e) {  
+            throw new RuntimeException(e);  
+        }
+	}
+
+
+
 	private void InitTextView()
 	{
 		tabSum=(TextView)mView.findViewById(R.id.tab_sum);
@@ -143,4 +163,5 @@ public class RankingListFragment extends Fragment
 		}
 		
 	}
+	
 }

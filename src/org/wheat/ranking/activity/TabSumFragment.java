@@ -7,7 +7,6 @@ import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
-import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.loader.ImageLoader;
 import org.wheat.widget.RefreshListView;
 import org.wheat.widget.RefreshListView.RefreshListener;
@@ -16,7 +15,9 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,36 +32,38 @@ public class TabSumFragment extends Fragment implements RefreshListener
 	private RefreshListView listView;
 	private ArrayList<BeautyIntroduction> listData;//保存listview数据项的数组
 	private LayoutInflater mInflater;
-	private ImageLoader mImageLoader;//加载图片的图像
+	private ImageLoader mImageLoader;//加载图片的对象
 	private SumRefreshListAdapter adapter;
+	
+	
 	 @Override
 	 	public void onAttach(Activity activity) {
 	        super.onAttach(activity);
-	        System.out.println("AAAAAAAAAA____onAttach");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onAttach");
 	    }
 
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
-	        System.out.println("AAAAAAAAAA____onCreate");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onCreate");
 	        
 	        //inited
 	        listData=new ArrayList<BeautyIntroduction>();
+	        adapter=new SumRefreshListAdapter();
+//	        adapter.notifyDataSetChanged();
 	        new SumPageThread(new UpdateDataHandler(),0, PAGE_LENGTH).start();
 	        mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
-	        
 	        
 	    }
 
 	    @Override
 	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	        System.out.println("AAAAAAAAAA____onCreateView");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onCreateView");
 	        
 	        View view=inflater.inflate(R.layout.fragment_sum, container, false);
 	        listView=(RefreshListView)view.findViewById(R.id.sumTab);
 			mInflater=inflater;
 			listView.setOnRefreshListener(this);
-			adapter=new SumRefreshListAdapter();
 			listView.setAdapter(adapter);
 			listView.setSelection(1);
 			
@@ -70,49 +73,52 @@ public class TabSumFragment extends Fragment implements RefreshListener
 	    @Override
 	    public void onActivityCreated(Bundle savedInstanceState) {
 	        super.onActivityCreated(savedInstanceState);
-	        System.out.println("AAAAAAAAAA____onActivityCreated");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onActivityCreated");
 	    }
 
 	    @Override
 	    public void onStart() {
 	        super.onStart();
-	        System.out.println("AAAAAAAAAA____onStart");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onStart");
 	    }
 
 	    @Override
 	    public void onResume() {
 	        super.onResume();
-	        System.out.println("AAAAAAAAAA____onResume");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onResume");
+	        listData.clear();
+	        if(adapter!=null)
+	        	adapter.notifyDataSetChanged();
 	    }
 
 	    @Override
 	    public void onPause() {
 	        super.onPause();
-	        System.out.println("AAAAAAAAAA____onPause");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onPause");
 	    }
 
 	    @Override
 	    public void onStop() {
 	        super.onStop();
-	        System.out.println("AAAAAAAAAA____onStop");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onStop");
 	    }
 
 	    @Override
 	    public void onDestroyView() {
 	        super.onDestroyView();
-	        System.out.println("AAAAAAAAAA____onDestroyView");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onDestroyView");
 	    }
 
 	    @Override
 	    public void onDestroy() {
 	        super.onDestroy();
-	        System.out.println("AAAAAAAAAA____onDestroy");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onDestroy");
 	    }
 
 	    @Override
 	    public void onDetach() {
 	        super.onDetach();
-	        System.out.println("AAAAAAAAAA____onDetach");
+	        Log.w("TabSumFragment","AAAAAAAAAA____onDetach");
 	    }
 
 	@Override
@@ -158,6 +164,7 @@ public class TabSumFragment extends Fragment implements RefreshListener
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
+			Log.w("TabSumFragment", "listData.size="+listData.size());
 			return listData.size();
 		}
 
@@ -235,30 +242,53 @@ public class TabSumFragment extends Fragment implements RefreshListener
 			}
 			if(json==null)
 			{
-				System.out.println("json is null-------------->");
+				Log.w("TabSumFragment","json is null-------------->");
 				return;
 			}
-			ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
+			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
 			for(int index=0;index<data.size();index++)
 			{
+				/*
 				listData.add(data.get(index));
+				Log.w("TabSumFragment", "listData size add to"+listData.size());
+				*/
+				
+				Message msg=Message.obtain();
+				msg.obj=data.get(index);
+				msg.what=200;
+				handler.sendMessage(msg);
+				
+				/*
+				final int i = index;
+				handler.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						listData.add((BeautyIntroduction)data.get(i));
+						adapter.notifyDataSetChanged();
+					}
+				});
+				*/
 			}
-			handler.sendEmptyMessage(200);
 			
 		}
 		
 	}
 	public class UpdateDataHandler extends Handler
 	{
-
 		@Override
 		public void handleMessage(Message msg) {
 			if(msg.what==200)
+			{
+				listData.add((BeautyIntroduction)msg.obj);
 				adapter.notifyDataSetChanged();
-			System.out.println("datachanged----------->");
+			}
+			Log.w("TabSumFragment","datachanged----------->");
 		}
 		
 	}
+	/*
 	public class AddTaskThread extends Thread
 	{
 		private String avatarPath;
@@ -274,4 +304,5 @@ public class TabSumFragment extends Fragment implements RefreshListener
 		}
 		
 	}
+	*/
 }

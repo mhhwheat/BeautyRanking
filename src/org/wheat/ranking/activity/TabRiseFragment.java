@@ -7,7 +7,6 @@ import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
-import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.loader.ImageLoader;
 import org.wheat.widget.RefreshListView;
 import org.wheat.widget.RefreshListView.RefreshListener;
@@ -17,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,78 +33,80 @@ public class TabRiseFragment extends Fragment implements RefreshListener
 	private LayoutInflater mInflater;
 	private ImageLoader mImageLoader;//¼ÓÔØÍ¼Æ¬µÄÍ¼Ïñ
 	private RiseRefreshListAdapter adapter;
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		System.out.println("CCCCCCCCCC____onActivityCreated");
-	}
+	
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		System.out.println("CCCCCCCCCC____onAttach");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onAttach");
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("CCCCCCCCCC____onCreated");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onCreated");
 		
 		//inited
 		listData=new ArrayList<BeautyIntroduction>();
+		adapter=new RiseRefreshListAdapter();
 		new RisePageThread(new UpdateDataHandler(),0, PAGE_LENGTH).start();
 		mImageLoader=ImageLoader.getInstance(this.getActivity().getApplicationContext());
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		System.out.println("CCCCCCCCCC____onCreatedView");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onCreatedView");
 		
 		View view=inflater.inflate(R.layout.fragment_rise, container, false);
 		listView=(RefreshListView)view.findViewById(R.id.riseTab);
 		mInflater=inflater;
 		listView.setOnRefreshListener(this);
-		adapter=new RiseRefreshListAdapter();
 		listView.setAdapter(adapter);
 		listView.setSelection(1);
 		
 		return view;
 	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onActivityCreated");
+	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		System.out.println("CCCCCCCCCC____onDestroyView");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onDestroyView");
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		System.out.println("CCCCCCCCCC____onDetach");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onDetach");
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		System.out.println("CCCCCCCCCC____onPause");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onPause");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		System.out.println("CCCCCCCCCC____onResume");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onResume");
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		System.out.println("CCCCCCCCCC____onStart");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onStart");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		System.out.println("CCCCCCCCCC____onStop");
+		Log.w("TabRiseFragment", "CCCCCCCCCC____onStop");
 	}
 	@Override
 	public Object refreshing() 
@@ -203,6 +205,7 @@ public class TabRiseFragment extends Fragment implements RefreshListener
 		public TextView description;
 	}
 	
+	/*
 	public void InitListData()
 	{
 		BeautyIntroductionListJson json=null;
@@ -218,6 +221,7 @@ public class TabRiseFragment extends Fragment implements RefreshListener
 		}
 		listData=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
 	}
+	*/
 	
 	class RisePageThread extends Thread
 	{
@@ -249,9 +253,11 @@ public class TabRiseFragment extends Fragment implements RefreshListener
 			ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
 			for(int index=0;index<data.size();index++)
 			{
-				listData.add(data.get(index));
+				Message msg=Message.obtain();
+				msg.obj=data.get(index);
+				msg.what=200;
+				handler.sendMessage(msg);
 			}
-			handler.sendEmptyMessage(200);
 			
 		}
 		
@@ -262,7 +268,10 @@ public class TabRiseFragment extends Fragment implements RefreshListener
 		@Override
 		public void handleMessage(Message msg) {
 			if(msg.what==200)
+			{
+				listData.add((BeautyIntroduction)msg.obj);
 				adapter.notifyDataSetChanged();
+			}
 		}
 		
 	}

@@ -3,57 +3,66 @@ package org.wheat.ranking.activity;
 import java.util.ArrayList;
 
 import org.wheat.beautyranking.R;
-import org.wheat.ranking.data.ListItem;
+import org.wheat.ranking.entity.BeautyIntroduction;
+import org.wheat.ranking.entity.PhotoParameters;
+import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
+import org.wheat.ranking.loader.HttpLoderMethods;
+import org.wheat.ranking.loader.ImageLoader;
 import org.wheat.widget.RefreshListView;
 import org.wheat.widget.RefreshListView.RefreshListener;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
 
 public class TabNewFragment extends Fragment implements RefreshListener
 {
+	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private RefreshListView listView;
-	private ArrayList<ListItem> listData;
+	private ArrayList<BeautyIntroduction> listData;//保存listview数据项的数组
 	private LayoutInflater mInflater;
+	private ImageLoader mImageLoader;//加载图片的对象
+	private NewRefreshListAdapter adapter;
+	
 	//滚屏的状态
 	//private int localScrollState;
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		System.out.println("BBBBBBBBBB____onActivityCreated");
-	}
+	
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		System.out.println("BBBBBBBBBB____onAttach");
+		Log.w("TabNewFragment","BBBBBBBBBB____onAttach");
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("BBBBBBBBBB____onCreated");
-		listData=new ArrayList<ListItem>();
-		InitListData();
+		Log.w("TabNewFragment","BBBBBBBBBB____onCreated");
+		//inited
+        listData=new ArrayList<BeautyIntroduction>();
+        adapter=new NewRefreshListAdapter();
+        new NewPageThread(new UpdateDataHandler(), 0, PAGE_LENGTH).start();
+        mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		System.out.println("BBBBBBBBBB____onCreatedView");
+		Log.w("TabNewFragment","BBBBBBBBBB____onCreatedView");
 		View view= inflater.inflate(R.layout.fragment_new, container,false);
 		listView=(RefreshListView)view.findViewById(R.id.newTab);
 		mInflater=inflater;
 		listView.setOnRefreshListener(this);
-		listView.setAdapter(new RefreshListAdapter());
+		listView.setAdapter(adapter);
 		listView.setSelection(1);
 		
 		/*
@@ -74,41 +83,50 @@ public class TabNewFragment extends Fragment implements RefreshListener
 		*/
 		return view;
 	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.w("TabNewFragment","BBBBBBBBBB____onActivityCreated");
+	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		System.out.println("BBBBBBBBBB____onDestroyView");
+		Log.w("TabNewFragment","BBBBBBBBBB____onDestroyView");
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		System.out.println("BBBBBBBBBB____onDetach");
+		Log.w("TabNewFragment","BBBBBBBBBB____onDetach");
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		System.out.println("BBBBBBBBBB____onPause");
+		Log.w("TabNewFragment","BBBBBBBBBB____onPause");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		System.out.println("BBBBBBBBBB____onResume");
+		Log.w("TabNewFragment","BBBBBBBBBB____onResume");
+		listData.clear();
+        if(adapter!=null)
+        	adapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		System.out.println("BBBBBBBBBB____onStart");
+		Log.w("TabNewFragment","BBBBBBBBBB____onStart");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		System.out.println("BBBBBBBBBB____onStop");
+		Log.w("TabNewFragment","BBBBBBBBBB____onStop");
 	}
 
 	@Override
@@ -133,11 +151,24 @@ public class TabNewFragment extends Fragment implements RefreshListener
 	@Override
 	public void scrollStateChanged(int scrollState) 
 	{
-		
+		switch(scrollState)
+		{
+		case OnScrollListener.SCROLL_STATE_FLING:
+			mImageLoader.lock();
+			break;
+		case OnScrollListener.SCROLL_STATE_IDLE:
+			mImageLoader.unlock();
+			break;
+		case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+			mImageLoader.lock();
+			break;
+		default:
+			break;
+		}
 	}
 
 
-	public class RefreshListAdapter extends BaseAdapter
+	public class NewRefreshListAdapter extends BaseAdapter
 	{
 
 		@Override
@@ -161,8 +192,8 @@ public class TabNewFragment extends Fragment implements RefreshListener
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) 
 		{
-			System.out.println("------------------------>getView");
-			final ListItem item=listData.get(position);
+			Log.w("TabNewFragment","------------------------>getView");
+			final BeautyIntroduction listItem=listData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
 			{
@@ -177,10 +208,10 @@ public class TabNewFragment extends Fragment implements RefreshListener
 			else
 				holder=(ViewHolder)convertView.getTag();
 			
-			holder.name.setText(item.getName());
-			holder.school.setText(item.getSchool());
-			holder.description.setText(item.getDescription());
-			holder.photo.setImageBitmap(item.getPhoto());
+			holder.name.setText(listItem.getBeautyName());
+			holder.school.setText(listItem.getSchool());
+			holder.description.setText(listItem.getDescription());
+			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 100, 10000), holder.photo);
 			return convertView;
 		}
 		
@@ -192,17 +223,56 @@ public class TabNewFragment extends Fragment implements RefreshListener
 		public TextView school;
 		public TextView description;
 	}
-	public void InitListData()
+	class NewPageThread extends Thread
 	{
-		Bitmap bm=BitmapFactory.decodeResource(getResources(), R.drawable.img);
-		String name="麦华华";
-		String school="广东外语外贸大学";
-		String description="当地时间6月4日，英国伦敦绘公司将亚洲狮的脸描摹在人体模特身上，为伦敦动物学学会分支机构揭幕，呼吁保护濒危生物。";
-		for(int i=0;i<50;i++)
+		private int firstIndex;
+		private int count;
+		private Handler handler;
+		
+		public NewPageThread(Handler handler,int firstIndex,int count)
 		{
-			ListItem item=new ListItem(name, school, description);
-			item.setPhoto(bm);
-			listData.add(item);
+			super();
+			this.firstIndex=firstIndex;
+			this.count=count;
+			this.handler=handler;
 		}
+
+		@Override
+		public void run() {
+			BeautyIntroductionListJson json=null;
+			try {
+				json=HttpLoderMethods.getNewPage(firstIndex, count);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			if(json==null)
+			{
+				Log.w("TabNewFragment","json is null-------------->");
+				return;
+			}
+			ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
+			for(int index=0;index<data.size();index++)
+			{
+				Message msg=Message.obtain();
+				msg.obj=data.get(index);
+				msg.what=200;
+				handler.sendMessage(msg);
+			}
+		}
+	}
+	
+	public class UpdateDataHandler extends Handler
+	{
+
+		@Override
+		public void handleMessage(Message msg) {
+			if(msg.what==200)
+			{
+				listData.add((BeautyIntroduction)msg.obj);
+				adapter.notifyDataSetChanged();
+			}
+			Log.w("TabNewFragment","datachanged----------->");
+		}
+		
 	}
 }
