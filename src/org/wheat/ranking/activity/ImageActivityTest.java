@@ -1,13 +1,17 @@
 package org.wheat.ranking.activity;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.loader.HttpUpdateMethods;
 import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.loader.HttpUploadMethods;
+import org.wheat.ranking.entity.BeautyDetail;
 import org.wheat.ranking.entity.Comment;
 import org.wheat.ranking.entity.ConstantValue;
+import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.Praise;
 import org.wheat.ranking.httptools.*;
 
@@ -88,13 +92,43 @@ public class ImageActivityTest extends Activity
 //							String beautyId="hogachen";
 //							String usernumber="userPhoneNumber";
 //							HttpUploadTools.getMycreatePage(usernumber);
+							
+							
+//							String url=ConstantValue.HttpRoot+"UploadBeautyInfo";
+//							Praise beautyInfo= new Praise();
+//							beautyInfo.setBeautyId(1);
+//							beautyInfo.setUserPhoneNumber("13325412547");
+//							beautyInfo.setPraiseTime(new Date());
+//							
+//							beautyInfo.setPhotoId(2);
+//				
+//							File originFile = new File(Environment.getExternalStorageDirectory(),"1.jpg");
+//							File thumbnail= new File(Environment.getExternalStorageDirectory(),"1.apk");
+//							int statusCode =HttpUploadMethods.UploadPraisePost(beautyInfo);
+//							if(statusCode==ConstantValue.InsertDbSuccess)
+//								System.out.println("插入成功！");
+//							else 
+//								System.out.println("插入失败!");	
+//							System.out.println("返回码："+statusCode);
+							
+							
 							String url=ConstantValue.HttpRoot+"UploadBeautyInfo";
-							HashMap<String,String>beautyInfo= new HashMap<String ,String>();
-							beautyInfo.put("school", "school");
-							beautyInfo.put("description", "description");
+							BeautyDetail beautyInfo= new BeautyDetail();
+							beautyInfo.setBeautyId(15);
+							beautyInfo.setUserPhoneNumber("13325412547");
+							beautyInfo.setConstellation("hoga");
+				
 							File originFile = new File(Environment.getExternalStorageDirectory(),"1.jpg");
 							File thumbnail= new File(Environment.getExternalStorageDirectory(),"1.apk");
-//							HttpUploadTools.uploadNewBeauty(originFile, "originFileName", thumbnail, "thumbnailName", beautyInfo, url);
+							int statusCode =HttpUpdateMethods.updateBeautyInfo(beautyInfo);
+							if(statusCode==ConstantValue.InsertDbSuccess)
+								System.out.println("更新成功！");
+							else 
+								System.out.println("更新失败!");	
+							System.out.println("返回码："+statusCode);
+							
+							
+							
 //							Comment comment = new Comment();
 //							comment.setPhotoID("photoID");
 //							comment.setCommentTime("commentTime");

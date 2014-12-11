@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
+import org.wheat.ranking.entity.BeautyDetail;
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.httptools.HttpConnectTools;
 
@@ -21,11 +22,11 @@ public class HttpUpdateMethods {
 	
 
 	
-	public int updateBeautyInfo(HashMap<String ,String> values){
-		if(values == null)return -1;
+	public static int updateBeautyInfo(BeautyDetail beautyInfo){
+		if(beautyInfo == null)return ConstantValue.ClientParameterErr;
 		int resultCode =-1;
 		try {
-			resultCode = HttpConnectTools.getReturnCode(ConstantValue.HttpRoot+"UpdateBeautyInfo", values, null);
+			resultCode = HttpConnectTools.postJsonReturnCode(ConstantValue.HttpRoot+"UpdateBeautyInfo", beautyInfo, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

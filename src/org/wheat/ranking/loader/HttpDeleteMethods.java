@@ -5,8 +5,24 @@ import java.util.HashMap;
 
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.httptools.HttpConnectTools;
-
+/**
+ * 
+* @ClassName: HttpDeleteMethods 
+* @Description: TODO 
+* @author hogachen
+* @date 2014年12月11日 下午6:40:39 
+*
+ */
 public class HttpDeleteMethods {
+	/**
+	 * 
+	* @Description: TODO delete one beauty all info ,including the photo ,praise and comment
+	* @author hogachen   
+	* @date 2014年12月11日 下午6:41:47 
+	* @version V1.0  
+	* @param beautyId
+	* @return
+	 */
 	public int deleteBeauty(String beautyId){
 		int resultCode=-1;
 		HashMap<String ,String >data = new HashMap<String ,String>();

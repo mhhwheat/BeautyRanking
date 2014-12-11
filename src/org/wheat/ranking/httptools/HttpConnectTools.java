@@ -24,15 +24,18 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.wheat.ranking.entity.json.JsonBaseImpl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -41,6 +44,8 @@ import android.util.Log;
 
 public class HttpConnectTools 
 {
+	private static final int SO_TIMEOUT = 0;
+
 	/**
 	 * @deprecated using the get method to post data and receive the json data
 	 * @param url   the address
@@ -218,7 +223,7 @@ public class HttpConnectTools
 	 * @return	返回的对象，这里只是处理StringEntity
 	 * @throws IOException
 	 */
-	public static String postDataUsingJson(String url,HashMap<String,String> headers,Object object) throws IOException
+	public static Object postJsonReturnJson(String url,HashMap<String,String> headers,Object object) throws IOException
 	{
 		
 		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
@@ -240,9 +245,34 @@ public class HttpConnectTools
         String result=getStringContentFromHttpResponse(rsp);
 //        System.out.println(result);
         
-        return result;
+        if(result!=null){
+        	return JsonTools.fromJson(result, JsonBaseImpl.class);
+        }
+        
+        return null;
 	}
-	
+		public static int postJsonReturnCode(String url,Object object,HashMap<String,String> headers) throws IOException
+	{
+		
+		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		
+		HttpPost httpPost=new HttpPost(url);
+		
+		//http报头
+        if (headers == null) {
+            headers = new HashMap<String, String>();
+        }
+        addHeaders(httpPost, headers);//加入http报头
+        
+        String objectJson=JsonTools.toJson(object);
+        System.out.println(objectJson);
+        httpPost.setEntity(new StringEntity(objectJson));
+        //开始请求
+        System.out.println("in post withoutdata1");
+        HttpResponse rsp=httpClient.execute(httpPost);
+        System.out.println("in post withoutdata2");
+        return rsp.getStatusLine().getStatusCode();
+	}
 	/*
 	public static Bitmap getPhoto(String url,byte[] postData,HashMap<String,String> headers) throws  IOException
 	{
@@ -389,14 +419,19 @@ public class HttpConnectTools
 		BasicHttpParams params = new BasicHttpParams();
 
         // 设置http超时(30秒)
-        HttpConnectionParams.setConnectionTimeout(params, 30000);
+        HttpConnectionParams.setConnectionTimeout(params, 30*1000);
 
-        // 设置socket超时(15秒)->(30秒)-2013-05-14
-        HttpConnectionParams.setSoTimeout(params, 30000);
+        // 设置socket超时(15秒)->(30秒)-2013-05-14 等待数据时间
+        HttpConnectionParams.setSoTimeout(params, 30*1000);
 
+//        Long CONN_MANAGER_TIMEOUT = 500L; //该值就是连接不够用的时候等待超时时间，一定要设置，而且不能太大 ()
+
+        //在提交请求之前 测试连接是否可用
+//        params.setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, true);
         // 设置处理自动处理重定向
         HttpClientParams.setRedirecting(params, true);
-
+        
+        
         return params;
 	}
 }
