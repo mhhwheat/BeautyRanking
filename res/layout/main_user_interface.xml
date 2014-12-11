@@ -7,24 +7,8 @@
         android:id="@+id/replacing_fragment"
         android:layout_width="fill_parent"
         android:layout_weight="10"/>
-	<LinearLayout 
-	    android:layout_width="fill_parent"
-	    android:layout_weight="1"
-	    android:orientation="horizontal">
-	    <TextView 
-	        android:id="@+id/tab_first_page"
-	        android:layout_height="fill_parent"
-	        android:layout_weight="1"/>
-	    <TextView 
-	        android:id="@+id/tab_find_page"
-	        android:layout_height="fill_parent"
-	        android:layout_weight="1"/>
-	    <TextView 
-	        android:id="@+id/tab_mine_page"
-	        android:layout_height="fill_parent"
-	        android:layout_weight="1"/>
-	</LinearLayout>
 	<RadioGroup 
+	    android:id="@+id/main_radio"
 	    android:layout_width="fill_parent"
 	    android:layout_weight="1"
 	    android:orientation="horizontal">

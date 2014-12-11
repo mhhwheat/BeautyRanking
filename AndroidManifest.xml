@@ -27,14 +27,17 @@
         </activity>
         <activity
 
+            android:name="org.wheat.ranking.activity.RankingListActivity"
+
+            android:label="@string/app_name"
+            android:theme="@style/titleStyle">
+        </activity>
+        <activity
+
             android:name="org.wheat.ranking.activity.ImageActivityTest"
 
             android:label="@string/app_name"
             android:theme="@style/titleStyle">
-            <intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
         </activity>
         <activity 
             android:name="org.wheat.ranking.activity.PhotoCommentActivity">
@@ -47,6 +50,14 @@
             
         </activity>
         -->
+        <activity 
+            android:name="org.wheat.ranking.activity.MainInterfaceActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+        </activity>
     </application>
 
 </manifest>
