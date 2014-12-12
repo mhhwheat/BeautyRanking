@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.loader.HttpDeleteMethods;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.HttpUpdateMethods;
 import org.wheat.ranking.loader.LoginAndRegister;
@@ -16,6 +17,7 @@ import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoList;
 import org.wheat.ranking.entity.Praise;
+import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.httptools.*;
 
 import android.app.Activity;
@@ -115,9 +117,20 @@ public class ImageActivityTest extends Activity
 //							System.out.println("返回码："+statusCode);
 							
 							
-							String beautyId  = "18825162413";
-							BeautyIntroductionList list = HttpLoderMethods.getMyFollowPage(beautyId);
+//							String beautyId  = "18825162413";
+//							double lat=0.0;
+//							double lng = 0.0;
+//							BeautyIntroductionListJson list = HttpLoderMethods.getMyNeighourPage(lat,lng);
+//							if(list==null){
+//								System.out.println("链接建立失败");
+//							}else if(list.getCode()==ConstantValue.getDataSuccess){
+//								System.out.println("数据获取成功");
+//								
+//							}else System.out.println("建立链接成功，但是获取数据失败，失败代码："+list.getCode());
 					
+							int beautyId=16;
+							int code = HttpDeleteMethods.deleteBeauty(beautyId);
+							System.out.println("返回码为："+code);
 //							String url=ConstantValue.HttpRoot+"UploadBeautyInfo";
 //							BeautyDetail beautyInfo= new BeautyDetail();
 //							beautyInfo.setBeautyId(100);

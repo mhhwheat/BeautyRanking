@@ -23,26 +23,35 @@ public class HttpDeleteMethods {
 	* @param beautyId
 	* @return
 	 */
-	public int deleteBeauty(String beautyId){
-		int resultCode=-1;
-		HashMap<String ,String >data = new HashMap<String ,String>();
-		data.put("beautyId", beautyId);
-		try {
-			resultCode = HttpConnectTools.getReturnCode(ConstantValue.HttpRoot+"DeleteBeauty", data, null);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return resultCode;
+	public static int deleteBeauty(int beautyId){
+		return deleteMethod(ConstantValue.HttpRoot+"DeleteBeauty?beautyId="+beautyId);
 	}
 	
 	
-	public int deletePhoto(String photoId){
+	public  static int deletePhoto(int photoId){
+		return deleteMethod(ConstantValue.HttpRoot+"DeletePhoto?photoId="+photoId);
+	}
+	
+	
+	
+	public static int deleteFollow(int beautyId,String userPhoneNumber){
+		return deleteMethod(ConstantValue.HttpRoot+"DeleteFollow?beautyId="+
+	beautyId+"&userPhoneNumber="+userPhoneNumber);
+
+	}
+	
+	
+	public static int deleteComment(int commentId){
+		return deleteMethod(ConstantValue.HttpRoot+"DeleteComment?commentId="+commentId);
+	}
+	
+	
+	
+	
+	public static int deleteMethod(String url){
 		int resultCode = -1;
-		HashMap<String ,String>data = new HashMap<String ,String>();
-		data .put("photoId",photoId);
 		try {
-			resultCode = HttpConnectTools.getReturnCode(ConstantValue.HttpRoot+"DeletePhoto", data, null);
+			resultCode = HttpConnectTools.getReturnCode(url, null, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
