@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class BeautyIntroduction 
 {
+	@SerializedName("beautyId")
+	private int beautyId;
 	/*
 	 * beauty的真实名字
 	 */
@@ -66,5 +68,11 @@ public class BeautyIntroduction
 	public String getAvatarPath()
 	{
 		return this.mAvatarPath;
+	}
+	public void setBeautyId(int beautyId){
+		this.beautyId=beautyId;
+	}
+	public int getBeautyId(){
+		return this.beautyId;
 	}
 }

@@ -149,7 +149,7 @@ public class HttpConnectTools
 	}
 	/**
 	 * @author mhhwheat
-	 * @deprecated 
+	 * @description get data and return json data 
 	 * @param url this url have include the data
 	 * @param headers
 	 * @return
@@ -383,6 +383,7 @@ public class HttpConnectTools
             }
             return EntityUtils.toString(entity);
     	}
+    	System.out.println("´íÎó´úÂë £º "+rsp.getStatusLine().getStatusCode());
     	return null;
     }
     

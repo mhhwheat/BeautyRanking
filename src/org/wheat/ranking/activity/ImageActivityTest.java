@@ -5,13 +5,16 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.HttpUpdateMethods;
 import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.loader.HttpUploadMethods;
 import org.wheat.ranking.entity.BeautyDetail;
+import org.wheat.ranking.entity.BeautyIntroductionList;
 import org.wheat.ranking.entity.Comment;
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.Photo;
+import org.wheat.ranking.entity.PhotoList;
 import org.wheat.ranking.entity.Praise;
 import org.wheat.ranking.httptools.*;
 
@@ -112,20 +115,23 @@ public class ImageActivityTest extends Activity
 //							System.out.println("返回码："+statusCode);
 							
 							
-							String url=ConstantValue.HttpRoot+"UploadBeautyInfo";
-							BeautyDetail beautyInfo= new BeautyDetail();
-							beautyInfo.setBeautyId(15);
-							beautyInfo.setUserPhoneNumber("13325412547");
-							beautyInfo.setConstellation("hoga");
-				
-							File originFile = new File(Environment.getExternalStorageDirectory(),"1.jpg");
-							File thumbnail= new File(Environment.getExternalStorageDirectory(),"1.apk");
-							int statusCode =HttpUpdateMethods.updateBeautyInfo(beautyInfo);
-							if(statusCode==ConstantValue.InsertDbSuccess)
-								System.out.println("更新成功！");
-							else 
-								System.out.println("更新失败!");	
-							System.out.println("返回码："+statusCode);
+							String beautyId  = "18825162413";
+							BeautyIntroductionList list = HttpLoderMethods.getMyFollowPage(beautyId);
+					
+//							String url=ConstantValue.HttpRoot+"UploadBeautyInfo";
+//							BeautyDetail beautyInfo= new BeautyDetail();
+//							beautyInfo.setBeautyId(100);
+//							beautyInfo.setUserPhoneNumber("13325412547");
+//							beautyInfo.setConstellation("hoga");
+//				
+//							File originFile = new File(Environment.getExternalStorageDirectory(),"1.jpg");
+//							File thumbnail= new File(Environment.getExternalStorageDirectory(),"1.apk");
+//							int statusCode =HttpUpdateMethods.updateBeautyInfo(beautyInfo);
+//							if(statusCode==ConstantValue.InsertDbSuccess)
+//								System.out.println("更新成功！");
+//							else 
+//								System.out.println("更新失败!");	
+//							System.out.println("返回码："+statusCode);
 							
 							
 							
