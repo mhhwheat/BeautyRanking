@@ -15,60 +15,68 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
-import android.support.v4.app.Fragment;
-import android.text.format.DateUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
 
-/**
- * description:飙升榜Fragment
+/** 
+ * description
  * @author wheat
  * date: 2014-12-14  
- * time: 下午9:23:01
+ * time: 下午9:27:44
  */
-public class TabRiseFragment extends Fragment implements OnScrollListener
+public class FollowFragment extends Fragment implements OnScrollListener
 {
+
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private PullToRefreshListView mPullToRefreshListView;
 	private List<BeautyIntroduction> mListData;//保存listview数据项的数组
 	private LayoutInflater mInflater;
 	private ImageLoader mImageLoader;//加载图片的对象
-	private RiseRefreshListAdapter adapter;
+	private FollowRefreshListAdapter adapter;
 	
-
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		mListData=new ArrayList<BeautyIntroduction>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
-		adapter=new RiseRefreshListAdapter();
+		adapter=new FollowRefreshListAdapter();
 		new UpdateDataTask(0, PAGE_LENGTH).execute();
 	}
+	
+	
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-mInflater=inflater;
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		mInflater=inflater;
 		
-		View view=inflater.inflate(R.layout.fragment_rise, container, false);
-		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.rise_refresh_list_view);
+		View view=inflater.inflate(R.layout.fragment_follow, container, false);
+		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.follow_refresh_list_view);
 		
 		mPullToRefreshListView.setAdapter(adapter);
 		initialListViewListener();
 		
 		return view;
 	}
-	
+
+
+
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
@@ -96,7 +104,7 @@ mInflater=inflater;
 	}
 	
 	
-	public class RiseRefreshListAdapter extends BaseAdapter
+	public class FollowRefreshListAdapter extends BaseAdapter
 	{
 
 		@Override
@@ -121,8 +129,8 @@ mInflater=inflater;
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) 
-		{
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
 			final BeautyIntroduction listItem=mListData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
@@ -138,13 +146,12 @@ mInflater=inflater;
 			else
 				holder=(ViewHolder)convertView.getTag();
 			
-				holder.name.setText(listItem.getBeautyName());
-				holder.school.setText(listItem.getSchool());
-				holder.description.setText(listItem.getDescription());
+			holder.name.setText(listItem.getBeautyName());
+			holder.school.setText(listItem.getSchool());
+			holder.description.setText(listItem.getDescription());
+			//new AddTaskThread(listItem.getAvatarPath(), holder.photo).start();
+			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 100, 10000), holder.photo);
 			
-			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), -1, -1), holder.photo);
-			System.out.println("Rise Fragment----------->getView");
-			System.out.println("path"+listItem.getAvatarPath());
 			
 			return convertView;
 		}
@@ -156,6 +163,7 @@ mInflater=inflater;
 			public TextView school;
 			public TextView description;
 		}
+		
 	}
 	
 	private void initialListViewListener()
@@ -198,7 +206,7 @@ mInflater=inflater;
 		protected ArrayList<BeautyIntroduction> doInBackground(Void... params) {
 			BeautyIntroductionListJson json=null;
 			try {
-				json=HttpLoderMethods.getRisePage(firstIndex, count);
+				json=HttpLoderMethods.getSumPage(firstIndex, count);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -221,6 +229,5 @@ mInflater=inflater;
 		}
 		
 	}
-	
-	
+
 }

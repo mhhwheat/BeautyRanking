@@ -10,6 +10,12 @@ import android.view.Window;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
+/**
+ * description:主界面，包含RankingListFragment,MainPageFragment,
+ * @author wheat
+ * date: 2014-12-11  
+ * time: 下午9:23:54
+ */
 public class MainInterfaceActivity extends FragmentActivity
 {
 	private RadioGroup mRadioGroup;
@@ -40,7 +46,7 @@ public class MainInterfaceActivity extends FragmentActivity
 				if(mFirstPageFragment==null)
 				{
 					Log.w("MainInterfaceActivity", "mFirstPageFragment is null!");
-					mFirstPageFragment=new FocusOnFragment();
+					mFirstPageFragment=new FollowFragment();
 				}
 				replaceFragment(mFirstPageFragment, R.id.replacing_fragment);
 				break;

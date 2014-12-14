@@ -1,6 +1,7 @@
 package org.wheat.ranking.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.entity.BeautyIntroduction;
@@ -8,149 +9,64 @@ import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
-import org.wheat.widget.RefreshListView;
-import org.wheat.widget.RefreshListView.RefreshListener;
 
-import android.app.Activity;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
-public class TabNewFragment extends Fragment implements RefreshListener
+public class TabNewFragment extends Fragment implements OnScrollListener
 {
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
-	private RefreshListView listView;
-	private ArrayList<BeautyIntroduction> listData;//保存listview数据项的数组
+	private PullToRefreshListView mPullToRefreshListView;
+	private List<BeautyIntroduction> mListData;//保存listview数据项的数组
 	private LayoutInflater mInflater;
 	private ImageLoader mImageLoader;//加载图片的对象
 	private NewRefreshListAdapter adapter;
 	
-	//滚屏的状态
-	//private int localScrollState;
-	
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		Log.w("TabNewFragment","BBBBBBBBBB____onAttach");
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.w("TabNewFragment","BBBBBBBBBB____onCreated");
-		//inited
-        listData=new ArrayList<BeautyIntroduction>();
-        adapter=new NewRefreshListAdapter();
-        new NewPageThread(new UpdateDataHandler(), 0, PAGE_LENGTH).start();
-        mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
+		mListData=new ArrayList<BeautyIntroduction>();
+		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
+		adapter=new NewRefreshListAdapter();
+		new UpdateDataTask(0, PAGE_LENGTH).execute();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		Log.w("TabNewFragment","BBBBBBBBBB____onCreatedView");
-		View view= inflater.inflate(R.layout.fragment_new, container,false);
-		listView=(RefreshListView)view.findViewById(R.id.newTab);
-		mInflater=inflater;
-		listView.setOnRefreshListener(this);
-		listView.setAdapter(adapter);
-		listView.setSelection(1);
+mInflater=inflater;
 		
-		/*
-		listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) 
-			{
-				localScrollState=scrollState;
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				
-			}
-		});
-		*/
+		View view=inflater.inflate(R.layout.fragment_new, container, false);
+		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.new_refresh_list_view);
+		
+		mPullToRefreshListView.setAdapter(adapter);
+		initialListViewListener();
+		
 		return view;
 	}
 	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.w("TabNewFragment","BBBBBBBBBB____onActivityCreated");
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		Log.w("TabNewFragment","BBBBBBBBBB____onDestroyView");
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		Log.w("TabNewFragment","BBBBBBBBBB____onDetach");
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		Log.w("TabNewFragment","BBBBBBBBBB____onPause");
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		Log.w("TabNewFragment","BBBBBBBBBB____onResume");
-		listData.clear();
-        if(adapter!=null)
-        	adapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		Log.w("TabNewFragment","BBBBBBBBBB____onStart");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		Log.w("TabNewFragment","BBBBBBBBBB____onStop");
-	}
-
-	@Override
-	public Object refreshing() 
-	{
-		return null;
-	}
-
-	@Override
-	public void refreshed(Object obj) 
-	{
-		
-	}
-
-	@Override
-	public void more() 
-	{
-		
-	}
-	
 	
 	@Override
-	public void scrollStateChanged(int scrollState) 
-	{
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
 		switch(scrollState)
 		{
 		case OnScrollListener.SCROLL_STATE_FLING:
@@ -167,6 +83,13 @@ public class TabNewFragment extends Fragment implements RefreshListener
 		}
 	}
 
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	public class NewRefreshListAdapter extends BaseAdapter
 	{
@@ -174,7 +97,10 @@ public class TabNewFragment extends Fragment implements RefreshListener
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return listData.size();
+			if(mListData!=null)
+				return mListData.size();
+			else 
+				return 0;
 		}
 
 		@Override
@@ -193,7 +119,7 @@ public class TabNewFragment extends Fragment implements RefreshListener
 		public View getView(int position, View convertView, ViewGroup parent) 
 		{
 			Log.w("TabNewFragment","------------------------>getView");
-			final BeautyIntroduction listItem=listData.get(position);
+			final BeautyIntroduction listItem=mListData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
 			{
@@ -214,31 +140,54 @@ public class TabNewFragment extends Fragment implements RefreshListener
 			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 100, 10000), holder.photo);
 			return convertView;
 		}
-		
+		private final class ViewHolder
+		{
+			public ImageView photo;
+			public TextView name;
+			public TextView school;
+			public TextView description;
+		}
 	}
-	public final class ViewHolder
+	
+	private void initialListViewListener()
 	{
-		public ImageView photo;
-		public TextView name;
-		public TextView school;
-		public TextView description;
+		mPullToRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+				
+				// Update the LastUpdatedLabel
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				new UpdateDataTask(0, PAGE_LENGTH).execute();
+			}
+		});
+		
+		mPullToRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
+
+			@Override
+			public void onLastItemVisible() {
+				Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
-	class NewPageThread extends Thread
+
+	
+	private class UpdateDataTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
 	{
 		private int firstIndex;
 		private int count;
-		private Handler handler;
 		
-		public NewPageThread(Handler handler,int firstIndex,int count)
+		public UpdateDataTask(int firstIndex,int count)
 		{
 			super();
 			this.firstIndex=firstIndex;
 			this.count=count;
-			this.handler=handler;
 		}
 
 		@Override
-		public void run() {
+		protected ArrayList<BeautyIntroduction> doInBackground(Void... params) {
 			BeautyIntroductionListJson json=null;
 			try {
 				json=HttpLoderMethods.getNewPage(firstIndex, count);
@@ -247,32 +196,24 @@ public class TabNewFragment extends Fragment implements RefreshListener
 			}
 			if(json==null)
 			{
-				Log.w("TabNewFragment","json is null-------------->");
-				return;
+				Log.w("TabSumFragment","json is null------------->");
+				return null;
 			}
-			ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
-			for(int index=0;index<data.size();index++)
-			{
-				Message msg=Message.obtain();
-				msg.obj=data.get(index);
-				msg.what=200;
-				handler.sendMessage(msg);
-			}
+			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
+			return data;
 		}
-	}
-	
-	public class UpdateDataHandler extends Handler
-	{
 
 		@Override
-		public void handleMessage(Message msg) {
-			if(msg.what==200)
-			{
-				listData.add((BeautyIntroduction)msg.obj);
-				adapter.notifyDataSetChanged();
-			}
-			Log.w("TabNewFragment","datachanged----------->");
+		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
+			
+			mListData=result;
+			adapter.notifyDataSetChanged();
+			mPullToRefreshListView.onRefreshComplete();
+			super.onPostExecute(result);
 		}
 		
+		
+		
 	}
+	
 }

@@ -23,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -31,12 +33,12 @@ import android.widget.Toast;
 
 
 /**
- * 
+ * 显示附近人物的Fragment
  * @author wheat
  * date: 2014-12-13  
  * time: 下午1:07:52
  */
-public class NeighborFragment extends Fragment
+public class NeighborFragment extends Fragment implements OnScrollListener
 {
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private PullToRefreshListView mPullToRefreshListView;
@@ -51,7 +53,6 @@ public class NeighborFragment extends Fragment
 		mListData=new ArrayList<BeautyIntroduction>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new NeighborListAdapter();
-		initialListViewListener();
 		new UpdateDataTask(0, PAGE_LENGTH).execute();
 	}
 
@@ -64,8 +65,35 @@ public class NeighborFragment extends Fragment
 		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.neighbor_list);
 		
 		mPullToRefreshListView.setAdapter(adapter);
+		initialListViewListener();
 		
 		return view;
+	}
+	
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		switch(scrollState)
+		{
+		case OnScrollListener.SCROLL_STATE_FLING:
+			mImageLoader.lock();
+			break;
+		case OnScrollListener.SCROLL_STATE_IDLE:
+			mImageLoader.unlock();
+			break;
+		case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+			mImageLoader.lock();
+			break;
+		default:
+			break;
+		}
+		
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public class NeighborListAdapter extends BaseAdapter
@@ -74,7 +102,10 @@ public class NeighborFragment extends Fragment
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return mListData.size();
+			if(mListData!=null)
+				return mListData.size();
+			else 
+				return 0;
 		}
 
 		@Override
@@ -150,6 +181,8 @@ public class NeighborFragment extends Fragment
 			}
 		});
 	}
+	
+	
 	private class UpdateDataTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
 	{
 		private int firstIndex;
@@ -172,7 +205,7 @@ public class NeighborFragment extends Fragment
 			}
 			if(json==null)
 			{
-				Log.w("TabSumFragment","json is null-------------->");
+				Log.w("TabSumFragment","json is null------------->");
 				return null;
 			}
 			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
@@ -191,4 +224,5 @@ public class NeighborFragment extends Fragment
 		
 		
 	}
+
 }
