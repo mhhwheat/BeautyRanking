@@ -17,6 +17,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,11 +56,17 @@ public class RefreshListView extends ListView implements OnScrollListener
 
     private Object mRefreshObject = null;
     private RefreshListener mRefreshListener = null;
+    private OnLastItemVisibleListener mOnLastItemVisibleListener;
+    private boolean mLastItemVisible=false;
     
     
     public void setOnRefreshListener(RefreshListener refreshListener) {
         this.mRefreshListener = refreshListener;
     }
+    
+    public final void setOnLastItemVisibleListener(OnLastItemVisibleListener listener) {
+		mOnLastItemVisibleListener = listener;
+	}
 
     public RefreshListView(Context context) {
         this(context, null);
@@ -251,6 +258,10 @@ public class RefreshListView extends ListView implements OnScrollListener
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) 
 	{
+		if (null != mOnLastItemVisibleListener) {
+			mLastItemVisible = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount - 1);
+		}
+		
 		if(mCurrentScrollState==SCROLL_STATE_TOUCH_SCROLL
 				&&firstVisibleItem==0
 				&&mHeaderLinearLayout.getBottom()>=0
@@ -295,8 +306,22 @@ public class RefreshListView extends ListView implements OnScrollListener
 	{
 		mCurrentScrollState=scrollState;
 		mRefreshListener.scrollStateChanged(scrollState);
+		
+		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && null != mOnLastItemVisibleListener && mLastItemVisible) {
+			mOnLastItemVisibleListener.onLastItemVisible();
+		}
 	}
 	
+	
+	
+	@Override
+	public void setAdapter(ListAdapter adapter) {
+		super.setAdapter(adapter);
+		setSelection(1);
+	}
+
+
+
 	//提供接口，在类外可以选择更新listView的方式和内容
 	public interface RefreshListener
 	{
@@ -305,6 +330,17 @@ public class RefreshListView extends ListView implements OnScrollListener
 		void more();
 		void scrollStateChanged(int scrollState);
 	}
+	
+	//提供这个接口，当最后一项可见时，onLastItemVisible()方法就会被调用
+	public static interface OnLastItemVisibleListener {
+
+		/**
+		 * Called when the user has scrolled to the end of the list
+		 */
+		public void onLastItemVisible();
+
+	}
+	
 	public void finishFootView()
 	{
 		mFooterProgressBar.setVisibility(View.GONE);

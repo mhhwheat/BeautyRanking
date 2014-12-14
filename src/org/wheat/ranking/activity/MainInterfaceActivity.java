@@ -40,18 +40,18 @@ public class MainInterfaceActivity extends FragmentActivity
 				if(mFirstPageFragment==null)
 				{
 					Log.w("MainInterfaceActivity", "mFirstPageFragment is null!");
-					mFirstPageFragment=new RankingListFragment();
+					mFirstPageFragment=new FocusOnFragment();
 				}
 				replaceFragment(mFirstPageFragment, R.id.replacing_fragment);
 				break;
 			case R.id.rb_find_page:
 				if(mFindPageFragment==null)
-					mFindPageFragment=new TabNewFragment();
+					mFindPageFragment=new RankingListFragment();
 				replaceFragment(mFindPageFragment, R.id.replacing_fragment);
 				break;
 			case R.id.rb_mine_page:
 				if(mMinePageFragment==null)
-					mMinePageFragment=new TabRiseFragment();
+					mMinePageFragment=new NeighborFragment();
 				replaceFragment(mMinePageFragment, R.id.replacing_fragment);
 				break;
 			}
