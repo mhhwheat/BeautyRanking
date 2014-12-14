@@ -45,8 +45,8 @@ public class HttpUploadMethods {
 		try {
 			uploadOriginCode=uploadPhoto(originFile, originFileName);
 			uploadThumbCode=uploadPhoto(thumbnail, thumbnailName);
-			if(uploadOriginCode==ConstantValue.uploadPhotoSuccess
-					&&uploadThumbCode==ConstantValue.uploadPhotoSuccess){//只有在上传成功两张图片的时候才插入信息到数据库
+			if(uploadOriginCode==ConstantValue.operateSuccess
+					&&uploadThumbCode==ConstantValue.operateSuccess){//只有在上传成功两张图片的时候才插入信息到数据库
 				statusCode=HttpConnectTools.getReturnCode
 						(ConstantValue.HttpRoot+"UploadBeautyInfo", beautyInfo,null);	
 				System.out.println("上传beauty信息返回码："+statusCode);
@@ -65,8 +65,8 @@ public class HttpUploadMethods {
 		try {
 			uploadOriginCode=uploadPhoto(originFile, originFileName);
 			uploadThumbCode=uploadPhoto(thumbnail, thumbnailName);
-			if(uploadOriginCode==ConstantValue.uploadPhotoSuccess
-					&&uploadThumbCode==ConstantValue.uploadPhotoSuccess){//只有在上传成功两张图片的时候才插入信息到数据库
+			if(uploadOriginCode==ConstantValue.operateSuccess
+					&&uploadThumbCode==ConstantValue.operateSuccess){//只有在上传成功两张图片的时候才插入信息到数据库
 				statusCode=HttpConnectTools.postJsonReturnCode
 						(ConstantValue.HttpRoot+"UploadBeautyInfo", beautyInfo,null);	
 				System.out.println("上传beauty信息返回码："+statusCode);
@@ -103,8 +103,8 @@ public class HttpUploadMethods {
 		try {
 			uploadOriginCode=uploadPhoto(originFile, originFileName);
 			uploadThumbCode=uploadPhoto(thumbnail, thumbnailName);
-			if(uploadOriginCode==ConstantValue.uploadPhotoSuccess
-					&&uploadThumbCode==ConstantValue.uploadPhotoSuccess){
+			if(uploadOriginCode==ConstantValue.operateSuccess
+					&&uploadThumbCode==ConstantValue.operateSuccess){
 				statusCode=HttpConnectTools.getReturnCode(ConstantValue.HttpRoot+"UploadOneBeautyPhoto", photo,null);
 				
 			}
@@ -123,8 +123,8 @@ public class HttpUploadMethods {
 		try {
 			uploadOriginCode=uploadPhoto(originFile, originFileName);
 			uploadThumbCode=uploadPhoto(thumbnail, thumbnailName);
-			if(uploadOriginCode==ConstantValue.uploadPhotoSuccess
-					&&uploadThumbCode==ConstantValue.uploadPhotoSuccess){//只有在上传成功两张图片的时候才插入信息到数据库
+			if(uploadOriginCode==ConstantValue.operateSuccess
+					&&uploadThumbCode==ConstantValue.operateSuccess){//只有在上传成功两张图片的时候才插入信息到数据库
 				statusCode=HttpConnectTools.postJsonReturnCode
 						(ConstantValue.HttpRoot+"UploadOneBeautyPhoto", photo,null);	
 				System.out.println("上传photo信息返回码："+statusCode);
@@ -229,7 +229,7 @@ public class HttpUploadMethods {
 		System.out.println(response.getStatusLine());
 		//这里不用自定义的statusCode，因为上传失败的原因很多，只有当系统返回正常信息时才认为上传成功
 		if(response.getStatusLine().getStatusCode()==HttpStatus.SC_OK)
-			return ConstantValue.uploadPhotoSuccess;//上传成功
+			return ConstantValue.operateSuccess;//上传成功
 		else return ConstantValue.uploadPhotoFailed;//上传失败
 //		if (resEntity != null) {
 //			System.out.println(EntityUtils.toString(resEntity));

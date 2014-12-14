@@ -8,6 +8,7 @@ import org.wheat.ranking.entity.BeautyIntroductionList;
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoList;
+import org.wheat.ranking.entity.json.BeautyDetailJson;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.httptools.BitmapTools;
@@ -18,7 +19,7 @@ import android.graphics.Bitmap;
 /**
  * 
 * @ClassName: HttpLoderMethods 
-* @Description: 所有的获取数据的方法，只要是没有获取到数据就会得到一个null值
+* @Description: 所有的获取数据的方法,只要返回null值就是建立链接失败
 * @author hogachen
 * @date 2014年12月12日 下午4:14:16 
 *
@@ -27,44 +28,46 @@ public class HttpLoderMethods {
 
 
 	
-	public static BeautyIntroductionList getMycreatePage(String userPhoneNumber)throws Exception{
+	public static BeautyIntroductionListJson getMycreatePage(String userPhoneNumber)throws Exception{
 		String myCreateJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyCreateBeauty?userPhoneNumber="+userPhoneNumber,null);
 		if(myCreateJson == null)return null;
 		BeautyIntroductionListJson beautyInJson=JsonTools.
 				fromJson(new String(myCreateJson.getBytes("8859_1"),"UTF-8"), BeautyIntroductionListJson.class);
-		BeautyIntroductionList beautyInList=beautyInJson.getData();
-		for(BeautyIntroduction beautyIn: beautyInList.getIntroductionList()){
-			System.out.println(beautyIn.getBeautyName());
-		}
-		return beautyInList;
+//		BeautyIntroductionList beautyInList=beautyInJson.getData();
+//		for(BeautyIntroduction beautyIn: beautyInList.getIntroductionList()){
+//			System.out.println(beautyIn.getBeautyName());
+//		}
+		return beautyInJson;
 	}
 
 
-	public static BeautyIntroductionList getMyFollowPage(String userPhoneNumber)throws Exception{
+	public static BeautyIntroductionListJson getMyFollowPage(String userPhoneNumber)throws Exception{
 		String myFollowJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyFollowPage?userPhoneNumber="+userPhoneNumber,null);
 		if (myFollowJson == null)return null;
 		BeautyIntroductionListJson beautyInJson=JsonTools.
 				fromJson(new String(myFollowJson.getBytes("8859_1"),"UTF-8"), BeautyIntroductionListJson.class);
-		BeautyIntroductionList beautyInList=beautyInJson.getData();
-		for(BeautyIntroduction beautyIn: beautyInList.getIntroductionList()){
-			System.out.println(beautyIn.getBeautyName());
-		}
 		
-		return beautyInList;
+		return beautyInJson;
 	}
 	
-	
-	public static BeautyIntroductionList getMyNeighourPage(String userPhoneNumber)throws Exception{
+	/**
+	 * 
+	* @Description: TODO
+	* @author hogachen   
+	* @date 2014年12月12日 下午7:28:10 
+	* @version V1.0  
+	* @param userPhoneNumber
+	* @return  null 表示建立链接失败，非null表示建立链接成功，但是数据不一定获取成功
+	* @throws Exception
+	 */
+	public static BeautyIntroductionListJson getMyNeighourPage(double lat,double lng)throws Exception{
 
-		String myNeighourJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyFollowPage?userPhoneNumber="+userPhoneNumber,null);
+		String myNeighourJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetNeighour?lat="+lat+"&lng="+lng,null);
 		if(myNeighourJson == null )return null;		
 		BeautyIntroductionListJson beautyInJson=JsonTools.
 				fromJson(new String(myNeighourJson.getBytes("8859_1"),"UTF-8"), BeautyIntroductionListJson.class);
-		BeautyIntroductionList beautyInList=beautyInJson.getData();
-		for(BeautyIntroduction beautyIn: beautyInList.getIntroductionList()){
-			System.out.println(beautyIn.getBeautyName());
-		}
-		return beautyInList;
+
+		return beautyInJson;
 	}
 	
 	/**
@@ -77,33 +80,28 @@ public class HttpLoderMethods {
 	* @return if can't get  the data , return null
 	* @throws Exception
 	 */
-	public static PhotoList getBeautyAllPhotos(int  beautyId)throws Exception{
+	public static PhotoListJson getBeautyAllPhotos(int  beautyId)throws Exception{
 		String photoListStr=HttpConnectTools.get( ConstantValue.HttpRoot+"GetOneBeautyAllPhotos?beautyId="+beautyId,null);
 		if(photoListStr==null){
 			return null;
 		}
 		PhotoListJson photoListJson=JsonTools.
 				fromJson(new String(photoListStr.getBytes("8859_1"),"UTF-8"), PhotoListJson.class);
-		PhotoList photoList=photoListJson.getData();
-		for(Photo photo: photoList.getPhotoList()){
-			System.out.println(photo.getPhotoPath());
-		}
-		return photoList;
+		return photoListJson;
 	}
 	
 	
 	
 	
 	
-	public static BeautyDetail getBeautyDetail (int  beautyId)throws Exception{
+	public static BeautyDetailJson getBeautyDetail (int  beautyId)throws Exception{
 		String beautyDetailStr=HttpConnectTools.get( ConstantValue.HttpRoot+"GetBeautyDetail?beautyId="+beautyId,null);
 		if(beautyDetailStr==null){
 			return null;
 		}
-		BeautyDetail beautyDetail=JsonTools.
-				fromJson(new String(beautyDetailStr.getBytes("8859_1"),"UTF-8"), BeautyDetail.class);
+		BeautyDetailJson beautyDetail=JsonTools.
+				fromJson(new String(beautyDetailStr.getBytes("8859_1"),"UTF-8"),BeautyDetailJson.class);
 		
-		System.out.println(beautyDetail.getBirthday());
 		return beautyDetail;
 	}
 	

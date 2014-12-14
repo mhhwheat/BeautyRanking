@@ -152,7 +152,7 @@ public class HttpConnectTools
 	 * @description get data and return json data 
 	 * @param url this url have include the data
 	 * @param headers
-	 * @return
+	 * @return  null 表示链接失败 ，只要链接成功就会有数据，但不一定是获取数据成功，有可能是数据不存在[或者数据库查找失败等]
 	 * @throws IOException
 	 */
 	public static String get(String url,HashMap<String,String> headers) throws IOException
