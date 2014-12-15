@@ -11,7 +11,7 @@
         android:background="#FFFFFFFF">
 
         <TextView
-            android:id="@+id/tab_focus"
+            android:id="@+id/tab_follow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -35,7 +35,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/tab_created"
+            android:id="@+id/tab_my_created"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

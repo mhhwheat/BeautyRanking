@@ -21,7 +21,13 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+/**
+ * 
+ * description:发现标签对应的Fragment(包括TabSumFragment,TabNewFragment,TabRiseFragment)
+ * @author wheat
+ * date: 2014-12-10  
+ * time: 上午9:43:40
+ */
 public class RankingListFragment extends Fragment
 {
 	private final int pageCount=3;
@@ -140,6 +146,7 @@ public class RankingListFragment extends Fragment
 	public class RankingPageChangeListener implements OnPageChangeListener
 	{
 		private int one=offset;
+		
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
 			// TODO Auto-generated method stub
