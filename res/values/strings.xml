@@ -73,4 +73,7 @@
 	<string name="not_updated_yet">暂未更新过</string>
 	<string name="updated_at">上次更新于%1$s前</string>
 	<string name="time_error">时间有问题</string>
+	
+	<!-- BeautyPersonalPage strings -->
+	<string name="beauty_personal_contenDescription">头像</string>
 </resources>
