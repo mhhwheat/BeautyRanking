@@ -28,8 +28,9 @@ public class HttpLoderMethods {
 
 
 	
-	public static BeautyIntroductionListJson getMycreatePage(String userPhoneNumber)throws Exception{
-		String myCreateJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyCreateBeauty?userPhoneNumber="+userPhoneNumber,null);
+	public static BeautyIntroductionListJson getMycreatePage(int firstIndex,int count,String userPhoneNumber)throws Exception{
+		String myCreateJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyCreateBeauty?userPhoneNumber="+userPhoneNumber
+				+"&firstIndex="+firstIndex+"&count="+count,null);
 		if(myCreateJson == null)return null;
 		BeautyIntroductionListJson beautyInJson=JsonTools.
 				fromJson(new String(myCreateJson.getBytes("8859_1"),"UTF-8"), BeautyIntroductionListJson.class);
@@ -41,8 +42,9 @@ public class HttpLoderMethods {
 	}
 
 
-	public static BeautyIntroductionListJson getMyFollowPage(String userPhoneNumber)throws Exception{
-		String myFollowJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyFollowPage?userPhoneNumber="+userPhoneNumber,null);
+	public static BeautyIntroductionListJson getMyFollowPage(int firstIndex,int count,String userPhoneNumber)throws Exception{
+		String myFollowJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyFollowPage?userPhoneNumber="+userPhoneNumber
+				+"&firstIndex="+firstIndex+"&count="+count,null);
 		if (myFollowJson == null)return null;
 		BeautyIntroductionListJson beautyInJson=JsonTools.
 				fromJson(new String(myFollowJson.getBytes("8859_1"),"UTF-8"), BeautyIntroductionListJson.class);
@@ -60,9 +62,10 @@ public class HttpLoderMethods {
 	* @return  null 表示建立链接失败，非null表示建立链接成功，但是数据不一定获取成功
 	* @throws Exception
 	 */
-	public static BeautyIntroductionListJson getMyNeighourPage(double lat,double lng)throws Exception{
+	public static BeautyIntroductionListJson getMyNeighourPage(int firstIndex,int count,double lat,double lng)throws Exception{
 
-		String myNeighourJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetNeighour?lat="+lat+"&lng="+lng,null);
+		String myNeighourJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetNeighour?lat="+lat+"&lng="+lng
+				+"&firstIndex="+firstIndex+"&count="+count,null);
 		if(myNeighourJson == null )return null;		
 		BeautyIntroductionListJson beautyInJson=JsonTools.
 				fromJson(new String(myNeighourJson.getBytes("8859_1"),"UTF-8"), BeautyIntroductionListJson.class);
@@ -80,8 +83,9 @@ public class HttpLoderMethods {
 	* @return if can't get  the data , return null
 	* @throws Exception
 	 */
-	public static PhotoListJson getBeautyAllPhotos(int  beautyId)throws Exception{
-		String photoListStr=HttpConnectTools.get( ConstantValue.HttpRoot+"GetOneBeautyAllPhotos?beautyId="+beautyId,null);
+	public static PhotoListJson getBeautyAllPhotos(int firstIndex,int count,int  beautyId)throws Exception{
+		String photoListStr=HttpConnectTools.get( ConstantValue.HttpRoot+"GetOneBeautyAllPhotos?beautyId="+beautyId
+				+"&firstIndex="+firstIndex+"&count="+count,null);
 		if(photoListStr==null){
 			return null;
 		}
