@@ -10,12 +10,12 @@
         android:textSize="20sp"
         android:textColor="#192F06"
         android:padding="12dip"
-        android:text="@string/list_footer_more"/>
+        android:text="@string/list_footer_loading"/>
     <ProgressBar android:id="@+id/refresh_list_footer_progressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         style="?android:attr/progressBarStyleSmall"
-        android:visibility="gone">
+        android:visibility="visible">
     </ProgressBar>
 </LinearLayout>

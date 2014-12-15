@@ -27,6 +27,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
@@ -46,6 +47,11 @@ public class MyCreatedFragment extends Fragment implements OnScrollListener
 	private ImageLoader mImageLoader;//加载图片的对象
 	private MyCreatedRefreshListAdapter adapter;
 	
+	private boolean isLoadingMore=false;//防止重复开启异步加载线程
+	private View mFooterView;
+	private TextView tvFooterText;
+	private ProgressBar pbFooterLoading;
+	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,15 +61,24 @@ public class MyCreatedFragment extends Fragment implements OnScrollListener
 		adapter=new MyCreatedRefreshListAdapter();
 		new UpdateDataTask().execute();
 	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater=inflater;
 		
+		
 		View view=inflater.inflate(R.layout.fragment_my_created, container, false);
 		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.my_created_refresh_list_view);
 		
+		mActualListView=mPullToRefreshListView.getRefreshableView();
+		mFooterView=inflater.inflate(R.layout.refresh_list_footer, null);
+		pbFooterLoading=(ProgressBar)mFooterView.findViewById(R.id.refresh_list_footer_progressbar);
+		tvFooterText=(TextView)mFooterView.findViewById(R.id.refresh_list_footer_text);
+		
+		
 		mPullToRefreshListView.setAdapter(adapter);
+		mActualListView.addFooterView(mFooterView);
 		initialListViewListener();
 		
 		return view;
@@ -174,14 +189,22 @@ public class MyCreatedFragment extends Fragment implements OnScrollListener
 
 			@Override
 			public void onLastItemVisible() {
-				Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
+				if(!isLoadingMore)
+				{
+					isLoadingMore=true;
+					pbFooterLoading.setVisibility(View.VISIBLE);
+					tvFooterText.setText(R.string.list_footer_loading);
+					new LoadMoreTask(mListData.size(), PAGE_LENGTH).execute();
+					Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
+				}
+				
 			}
 		});
 	}
 	
 	/**
 	 * 
-	 * description
+	 * description:刷新ListView内容的异步线程
 	 * @author wheat
 	 * date: 2014-12-15  
 	 * time: 上午10:37:59
@@ -214,10 +237,23 @@ public class MyCreatedFragment extends Fragment implements OnScrollListener
 				adapter.notifyDataSetChanged();
 			}
 			mPullToRefreshListView.onRefreshComplete();
+			if(result==null)
+				onLoadComplete(true);
+			else
+				onLoadComplete(false);
+			
 			super.onPostExecute(result);
 		}
 		
 	}
+	
+	/**
+	 * 
+	 * description：加载更多内容的异步线程
+	 * @author wheat
+	 * date: 2014-12-15  
+	 * time: 下午5:10:57
+	 */
 	private class LoadMoreTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
 	{
 		private int firstIndex;
@@ -249,15 +285,33 @@ public class MyCreatedFragment extends Fragment implements OnScrollListener
 
 		@Override
 		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
-			synchronized (mListData) {
-				mListData.addAll(result);
-				adapter.notifyDataSetChanged();
+			if(result!=null)
+			{
+				synchronized (mListData) {
+					mListData.addAll(result);
+					adapter.notifyDataSetChanged();
+				}
+				onLoadComplete(false);
 			}
+			else
+				onLoadComplete(true);
 			super.onPostExecute(result);
 		}
 		
-		
-		
+	}
+	
+	/**
+	 * 
+	 * @param wasLoadNothing 加载完成后，是否内容没有增加,true表示内容没有增加,false表示内容增加了
+	 */
+	private void onLoadComplete(boolean wasLoadNothing)
+	{
+		isLoadingMore=false;
+		if(wasLoadNothing)
+		{
+			pbFooterLoading.setVisibility(View.GONE);
+			tvFooterText.setText(R.string.list_footer_no_more);
+		}
 	}
 	
 	

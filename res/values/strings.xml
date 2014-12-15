@@ -21,6 +21,7 @@
 	
     <string name="list_footer_more">更多</string>
     <string name="list_footer_loading">正在加载</string>
+    <string name="list_footer_no_more">已没有更多内容</string>
     
     
     <string name="name_label">姓名：</string>

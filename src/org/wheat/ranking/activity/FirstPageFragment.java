@@ -105,7 +105,7 @@ public class FirstPageFragment extends Fragment
 	 */
 	private void InitImageCusor()
 	{
-		imageCusor=(ImageView)mView.findViewById(R.id.ranking_list_cursor);
+		imageCusor=(ImageView)mView.findViewById(R.id.first_page_cursor);
 		DisplayMetrics dm=new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth=dm.widthPixels;
