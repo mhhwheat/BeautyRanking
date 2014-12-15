@@ -34,11 +34,15 @@ public class ConstantValue {
 
 	public static int getDataFailed=1010;
 
-	public static int deletePhotoFailed=1012;
-	public static int deleteBeautyFailed=1014;
-	//成功状态
-	public static int operateSuccess=1000;
+	public static int deleRecordNotExist=1012;//要删除的记录不存在
+
+
+	public static int delBeautyButNotPhoto=1017;
 	
+	public static int SocketTimeoutException=1018;//接收数据超时
+	
+	public static int ReUploadFailed=1019;
+	public static int ReUploadSuccess=1020;
 	
 	
 	/**
@@ -48,4 +52,7 @@ public class ConstantValue {
 	public static int DBException=1013;//数据库执行SQL语句出项错误
 	
 	public static int DataNotFoundInDB=1014;//数据库没有相关数据
+	
+	//成功状态
+	public static int operateSuccess=1000;
 }

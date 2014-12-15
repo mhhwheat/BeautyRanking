@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,15 +27,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.json.JsonBaseImpl;
 
 import android.content.Context;
@@ -47,7 +51,7 @@ public class HttpConnectTools
 	private static final int SO_TIMEOUT = 0;
 
 	/**
-	 * @deprecated using the get method to post data and receive the json data
+	 * @description using the get method to post data and receive the json data
 	 * @param url   the address
 	 * @param data  data to post in the url ,using the map
 	 * @param headers   set the request parameters ,default null
@@ -88,7 +92,7 @@ public class HttpConnectTools
 		
 	}
 	/**
-	 * @deprecated using the get method 
+	 * @description using the get method 
 	 * @param url  this url without the data
 	 * @param data
 	 * @param headers
@@ -129,7 +133,7 @@ public class HttpConnectTools
 	}
 	/**
 	 * @author  hogachen
-	 * @deprecated add the data which going to post  to the url paramters
+	 * @description add the data which going to post  to the url paramters
 	 * @param path
 	 * @param params
 	 * @param enc
@@ -194,8 +198,8 @@ public class HttpConnectTools
             return null;
         }
 		
-		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
-		
+		DefaultHttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0,false));
 		HttpPost httpPost=new HttpPost(url);
 		
 		//http报头
@@ -215,7 +219,7 @@ public class HttpConnectTools
         return result;
 	}
 	/**
-	 * @deprecated using  json to deliver the data
+	 * @description using  json to deliver the data
 	 * @author hogachen
 	 * @param url  要请求的url
 	 * @param headers  请求的头部信息
@@ -226,7 +230,8 @@ public class HttpConnectTools
 	public static Object postJsonReturnJson(String url,HashMap<String,String> headers,Object object) throws IOException
 	{
 		
-		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		DefaultHttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0,false));
 		
 		HttpPost httpPost=new HttpPost(url);
 		
@@ -237,7 +242,10 @@ public class HttpConnectTools
         addHeaders(httpPost, headers);//加入http报头
         
         String objectJson=JsonTools.toJson(object);
+        
         httpPost.setEntity(new StringEntity(objectJson));
+        
+    
         //开始请求
         System.out.println("in post withoutdata1");
         HttpResponse rsp=httpClient.execute(httpPost);
@@ -251,28 +259,70 @@ public class HttpConnectTools
         
         return null;
 	}
-		public static int postJsonReturnCode(String url,Object object,HashMap<String,String> headers) throws IOException
-	{
+	/**
+	 * 
+	* @Description: TODO 使用post方法传送数据对象到服务端，禁止获取数据超时重传
+	* 但是要继续测试能否重传，自己手动重传，直到超过一定时间（或者超时了，直接就标记为服务器不可用）
+	* @author hogachen   
+	* @date 2014年12月14日 下午7:35:11 
+	* @version V1.0  
+	* @param url
+	* @param object
+	* @param headers
+	* @return
+	* @throws IOException
+	 */
+	public static int postJsonReturnCode(String url, Object object,
+			HashMap<String, String> headers) {
+
+		DefaultHttpClient httpClient = new DefaultHttpClient(createHttpParams());
+		// 禁止获取数据超时重传,避免插入重复数据
+		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(
+						0, false));
+		HttpPost httpPost = new HttpPost(url);
+
+		// http报头
+		if (headers == null) {
+			headers = new HashMap<String, String>();
+		}
+		// 加入http报头
+		addHeaders(httpPost, headers);
+
 		
-		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
 		
-		HttpPost httpPost=new HttpPost(url);
-		
-		//http报头
-        if (headers == null) {
-            headers = new HashMap<String, String>();
-        }
-        addHeaders(httpPost, headers);//加入http报头
-        
-        String objectJson=JsonTools.toJson(object);
-        System.out.println(objectJson);
-        httpPost.setEntity(new StringEntity(objectJson));
-        //开始请求
-        System.out.println("in post withoutdata1");
-        HttpResponse rsp=httpClient.execute(httpPost);
-        System.out.println("in post withoutdata2");
-        return rsp.getStatusLine().getStatusCode();
+		String objectJson = JsonTools.toJson(object);
+		// 写入流
+		ByteArrayEntity entity;
+		try {
+			entity = new ByteArrayEntity(objectJson.getBytes("UTF-8"));
+			httpPost.setEntity(entity);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+
+		/**
+		 * 此处不可以setStringEntity，会乱码，不知道为什么
+		 */
+		// System.out.println(encodeObjectJson);
+		// httpPost.setEntity(new StringEntity(encodeObjectJson));
+		// 开始请求
+		System.out.println("in post withoutdata1");
+		HttpResponse rsp=null;
+		try {
+			rsp = httpClient.execute(httpPost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return ConstantValue.SocketTimeoutException;
+		}
+		System.out.println("in post withoutdata2");
+		return rsp.getStatusLine().getStatusCode();
 	}
+	
+	
+	
+	
 	/*
 	public static Bitmap getPhoto(String url,byte[] postData,HashMap<String,String> headers) throws  IOException
 	{
@@ -417,14 +467,18 @@ public class HttpConnectTools
 	 */
 	public static HttpParams createHttpParams()
 	{
-		BasicHttpParams params = new BasicHttpParams();
+		HttpParams params = new BasicHttpParams();
+		
 
         // 设置http超时(30秒)
-        HttpConnectionParams.setConnectionTimeout(params, 30*1000);
+        HttpConnectionParams.setConnectionTimeout(params, 2*1000);
 
         // 设置socket超时(15秒)->(30秒)-2013-05-14 等待数据时间
         HttpConnectionParams.setSoTimeout(params, 30*1000);
 
+        ConnManagerParams.setTimeout(params, 1000); //从连接池中获取连接的超时时间  
+        
+        
 //        Long CONN_MANAGER_TIMEOUT = 500L; //该值就是连接不够用的时候等待超时时间，一定要设置，而且不能太大 ()
 
         //在提交请求之前 测试连接是否可用

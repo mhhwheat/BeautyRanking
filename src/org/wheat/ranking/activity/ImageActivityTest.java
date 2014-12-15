@@ -21,11 +21,15 @@ import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.httptools.*;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -128,14 +132,42 @@ public class ImageActivityTest extends Activity
 //								
 //							}else System.out.println("建立链接成功，但是获取数据失败，失败代码："+list.getCode());
 					
-							int beautyId=16;
-							int code = HttpDeleteMethods.deleteBeauty(beautyId);
-							System.out.println("返回码为："+code);
+//							int beautyId=4;
+//							String userPhoneNumber="18825162413";
+//							for(int i=0;i<1;i++){
+//								int code = HttpDeleteMethods.deletePhoto(beautyId);
+//								System.out.println("返回码为："+code);
+//							}
+							
+							LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);  
+							
+//						     Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+						     System.out.println("latitude ");
+						     LocationManager mgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);  
+						     Location location = mgr.getLastKnownLocation(bundle.getString("provider"));  
+						     while(location  == null)  
+						     {  
+						       mgr.requestLocationUpdates("gps", 60000, 1, locationListener);  
+						     } 
+
+						     double latitude = location.getLatitude();     //经度   
+						     double longitude = location.getLongitude(); //纬度   
+						     double altitude =  location.getAltitude();     //海拔  
+						     Log.v("tag", "latitude " + latitude + "  longitude:" + longitude + " altitude:" + altitude);
+						     System.out.println("latitude " + latitude + "  longitude:" + longitude + " altitude:" + altitude);
+							
 //							String url=ConstantValue.HttpRoot+"UploadBeautyInfo";
 //							BeautyDetail beautyInfo= new BeautyDetail();
-//							beautyInfo.setBeautyId(100);
-//							beautyInfo.setUserPhoneNumber("13325412547");
-//							beautyInfo.setConstellation("hoga");
+////							beautyInfo.setBeautyId(100);
+//							beautyInfo.setUserPhoneNumber("18825162413");
+//							beautyInfo.setConstellation("金牛座");
+//							beautyInfo.setDescription("安静的看风景快乐的风景");
+//							beautyInfo.setCreateTime(new Date());
+//							File originFile = new File(Environment.getExternalStorageDirectory(),"1.jpg");
+//							File thumbnail= new File(Environment.getExternalStorageDirectory(),"1.jpg");
+//							
+//							int code = HttpUploadMethods.UploadBeautyInfoPost(originFile, "originFileName.jpg", 
+//									thumbnail, "thumbnailName.apk", beautyInfo);
 //				
 //							File originFile = new File(Environment.getExternalStorageDirectory(),"1.jpg");
 //							File thumbnail= new File(Environment.getExternalStorageDirectory(),"1.apk");
