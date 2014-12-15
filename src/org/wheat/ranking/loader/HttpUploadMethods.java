@@ -2,6 +2,7 @@ package org.wheat.ranking.loader;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
@@ -27,7 +28,7 @@ public class HttpUploadMethods {
 
 	/**
 	 * @author hogachen
-	 * @deprecated  创建全新的beauty，跟上传一张照片只有url不同而已
+	 * @description  创建全新的beauty，跟上传一张照片只有url不同而已
 	 * 
 	 * @param originFile  原图片文件
 	 * @param originFileName 原图片名字
@@ -72,8 +73,17 @@ public class HttpUploadMethods {
 				System.out.println("上传beauty信息返回码："+statusCode);
 			}
 		} catch (Exception e) {	
+			
 			e.printStackTrace();
+			/**
+			 * 当捕获到异常的时候，需要休眠30秒，再查询数据库，看是否
+			 * 插入成功，是的话不管界面，否则告诉客户端上传失败
+			 * 
+			 * 算了，跟微信一样，直接说发送失败就好了
+			 */
+			return ConstantValue.SocketTimeoutException;
 		}
+		System.out.println("statusCode "+statusCode);
 		return statusCode;
 	}
 	
@@ -245,4 +255,26 @@ public class HttpUploadMethods {
 //			return "上传失败！";
 	}
 	
+	/**
+	 * 
+	* @Description: TODO  测试在发生socketTimeOut之后，查询数据库是否插入数据成功
+	* @author hogachen   
+	* @date 2014年12月14日 下午8:43:21 
+	* @version V1.0  
+	* @param data
+	* @return
+	 */
+	public static int TestIfUploadSuccess(HashMap<String ,String>data){
+		int code =-1;
+		String url = "";
+		try {
+			code = HttpConnectTools.getReturnCode(url, data, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ConstantValue.ReUploadFailed;
+		}
+		return code;
+		
+	}
 }

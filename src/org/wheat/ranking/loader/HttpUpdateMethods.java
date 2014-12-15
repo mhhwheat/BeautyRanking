@@ -27,7 +27,7 @@ public class HttpUpdateMethods {
 		int resultCode =-1;
 		try {
 			resultCode = HttpConnectTools.postJsonReturnCode(ConstantValue.HttpRoot+"UpdateBeautyInfo", beautyInfo, null);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
