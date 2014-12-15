@@ -138,24 +138,6 @@ public class ImageActivityTest extends Activity
 //								int code = HttpDeleteMethods.deletePhoto(beautyId);
 //								System.out.println("返回码为："+code);
 //							}
-							
-							LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);  
-							
-//						     Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-						     System.out.println("latitude ");
-						     LocationManager mgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);  
-						     Location location = mgr.getLastKnownLocation(bundle.getString("provider"));  
-						     while(location  == null)  
-						     {  
-						       mgr.requestLocationUpdates("gps", 60000, 1, locationListener);  
-						     } 
-
-						     double latitude = location.getLatitude();     //经度   
-						     double longitude = location.getLongitude(); //纬度   
-						     double altitude =  location.getAltitude();     //海拔  
-						     Log.v("tag", "latitude " + latitude + "  longitude:" + longitude + " altitude:" + altitude);
-						     System.out.println("latitude " + latitude + "  longitude:" + longitude + " altitude:" + altitude);
-							
 //							String url=ConstantValue.HttpRoot+"UploadBeautyInfo";
 //							BeautyDetail beautyInfo= new BeautyDetail();
 ////							beautyInfo.setBeautyId(100);
