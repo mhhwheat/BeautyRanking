@@ -1,6 +1,7 @@
 package org.wheat.ranking.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.entity.BeautyIntroduction;
@@ -8,140 +9,69 @@ import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
-import org.wheat.widget.RefreshListView;
-import org.wheat.widget.RefreshListView.RefreshListener;
 
-import android.app.Activity;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
-public class TabSumFragment extends Fragment implements RefreshListener
+/**
+ * description:总排行榜Fragment
+ * @author wheat
+ * date: 2014-12-14  
+ * time: 下午9:22:15
+ */
+public class TabSumFragment extends Fragment implements OnScrollListener
 {
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
-	private RefreshListView listView;
-	private ArrayList<BeautyIntroduction> listData;//保存listview数据项的数组
+	private PullToRefreshListView mPullToRefreshListView;
+	private List<BeautyIntroduction> mListData;//保存listview数据项的数组
 	private LayoutInflater mInflater;
 	private ImageLoader mImageLoader;//加载图片的对象
 	private SumRefreshListAdapter adapter;
 	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+        mListData=new ArrayList<BeautyIntroduction>();
+		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
+		adapter=new SumRefreshListAdapter();
+		new UpdateDataTask(0, PAGE_LENGTH).execute();
+		}
 	
-	 @Override
-	 	public void onAttach(Activity activity) {
-	        super.onAttach(activity);
-	        Log.w("TabSumFragment","AAAAAAAAAA____onAttach");
-	    }
-
-	    @Override
-	    public void onCreate(Bundle savedInstanceState) {
-	        super.onCreate(savedInstanceState);
-	        Log.w("TabSumFragment","AAAAAAAAAA____onCreate");
-	        
-	        //inited
-	        listData=new ArrayList<BeautyIntroduction>();
-	        adapter=new SumRefreshListAdapter();
-//	        adapter.notifyDataSetChanged();
-	        new SumPageThread(new UpdateDataHandler(),0, PAGE_LENGTH).start();
-	        mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
-	        
-	    }
-
-	    @Override
-	    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	        Log.w("TabSumFragment","AAAAAAAAAA____onCreateView");
-	        
-	        View view=inflater.inflate(R.layout.fragment_sum, container, false);
-	        listView=(RefreshListView)view.findViewById(R.id.sumTab);
-			mInflater=inflater;
-			listView.setOnRefreshListener(this);
-			listView.setAdapter(adapter);
-			listView.setSelection(1);
-			
-			return view;
-	    }
-
-	    @Override
-	    public void onActivityCreated(Bundle savedInstanceState) {
-	        super.onActivityCreated(savedInstanceState);
-	        Log.w("TabSumFragment","AAAAAAAAAA____onActivityCreated");
-	    }
-
-	    @Override
-	    public void onStart() {
-	        super.onStart();
-	        Log.w("TabSumFragment","AAAAAAAAAA____onStart");
-	    }
-
-	    @Override
-	    public void onResume() {
-	        super.onResume();
-	        Log.w("TabSumFragment","AAAAAAAAAA____onResume");
-	        listData.clear();
-	        if(adapter!=null)
-	        	adapter.notifyDataSetChanged();
-	    }
-
-	    @Override
-	    public void onPause() {
-	        super.onPause();
-	        Log.w("TabSumFragment","AAAAAAAAAA____onPause");
-	    }
-
-	    @Override
-	    public void onStop() {
-	        super.onStop();
-	        Log.w("TabSumFragment","AAAAAAAAAA____onStop");
-	    }
-
-	    @Override
-	    public void onDestroyView() {
-	        super.onDestroyView();
-	        Log.w("TabSumFragment","AAAAAAAAAA____onDestroyView");
-	    }
-
-	    @Override
-	    public void onDestroy() {
-	        super.onDestroy();
-	        Log.w("TabSumFragment","AAAAAAAAAA____onDestroy");
-	    }
-
-	    @Override
-	    public void onDetach() {
-	        super.onDetach();
-	        Log.w("TabSumFragment","AAAAAAAAAA____onDetach");
-	    }
-
-	@Override
-	public Object refreshing() 
-	{
-		return null;
-	}
-
-	@Override
-	public void refreshed(Object obj) 
-	{
-		
-	}
-
-	@Override
-	public void more() 
-	{
-		
-	}
 	
 	@Override
-	public void scrollStateChanged(int scrollState) 
-	{
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    	mInflater=inflater;
+		
+		View view=inflater.inflate(R.layout.fragment_sum, container, false);
+		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.sum_refresh_list_view);
+		
+		mPullToRefreshListView.setAdapter(adapter);
+		initialListViewListener();
+		
+		return view;
+    }
+	    
+	
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		switch(scrollState)
 		{
 		case OnScrollListener.SCROLL_STATE_FLING:
@@ -157,6 +87,13 @@ public class TabSumFragment extends Fragment implements RefreshListener
 			break;
 		}
 	}
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	
 	public class SumRefreshListAdapter extends BaseAdapter
 	{
@@ -164,8 +101,10 @@ public class TabSumFragment extends Fragment implements RefreshListener
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			Log.w("TabSumFragment", "listData.size="+listData.size());
-			return listData.size();
+			if(mListData!=null)
+				return mListData.size();
+			else 
+				return 0;
 		}
 
 		@Override
@@ -183,7 +122,7 @@ public class TabSumFragment extends Fragment implements RefreshListener
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) 
 		{
-			final BeautyIntroduction listItem=listData.get(position);
+			final BeautyIntroduction listItem=mListData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
 			{
@@ -208,32 +147,55 @@ public class TabSumFragment extends Fragment implements RefreshListener
 			return convertView;
 		}
 		
+		private final class ViewHolder
+		{
+			public ImageView photo;
+			public TextView name;
+			public TextView school;
+			public TextView description;
+		}
 	}
 	
-	public final class ViewHolder
+	
+	
+	private void initialListViewListener()
 	{
-		public ImageView photo;
-		public TextView name;
-		public TextView school;
-		public TextView description;
+		mPullToRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+				
+				// Update the LastUpdatedLabel
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				new UpdateDataTask(0, PAGE_LENGTH).execute();
+			}
+		});
+		
+		mPullToRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
+
+			@Override
+			public void onLastItemVisible() {
+				Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 	
-	class SumPageThread extends Thread
+	private class UpdateDataTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
 	{
 		private int firstIndex;
 		private int count;
-		private Handler handler;
 		
-		public SumPageThread(Handler handler,int firstIndex,int count)
+		public UpdateDataTask(int firstIndex,int count)
 		{
 			super();
 			this.firstIndex=firstIndex;
 			this.count=count;
-			this.handler=handler;
 		}
 
 		@Override
-		public void run() {
+		protected ArrayList<BeautyIntroduction> doInBackground(Void... params) {
 			BeautyIntroductionListJson json=null;
 			try {
 				json=HttpLoderMethods.getSumPage(firstIndex, count);
@@ -242,67 +204,21 @@ public class TabSumFragment extends Fragment implements RefreshListener
 			}
 			if(json==null)
 			{
-				Log.w("TabSumFragment","json is null-------------->");
-				return;
+				Log.w("TabSumFragment","json is null------------->");
+				return null;
 			}
 			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
-			for(int index=0;index<data.size();index++)
-			{
-				/*
-				listData.add(data.get(index));
-				Log.w("TabSumFragment", "listData size add to"+listData.size());
-				*/
-				
-				Message msg=Message.obtain();
-				msg.obj=data.get(index);
-				msg.what=200;
-				handler.sendMessage(msg);
-				
-				/*
-				final int i = index;
-				handler.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						listData.add((BeautyIntroduction)data.get(i));
-						adapter.notifyDataSetChanged();
-					}
-				});
-				*/
-			}
+			return data;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
 			
+			mListData=result;
+			adapter.notifyDataSetChanged();
+			mPullToRefreshListView.onRefreshComplete();
+			super.onPostExecute(result);
 		}
 		
 	}
-	public class UpdateDataHandler extends Handler
-	{
-		@Override
-		public void handleMessage(Message msg) {
-			if(msg.what==200)
-			{
-				listData.add((BeautyIntroduction)msg.obj);
-				adapter.notifyDataSetChanged();
-			}
-			Log.w("TabSumFragment","datachanged----------->");
-		}
-		
-	}
-	/*
-	public class AddTaskThread extends Thread
-	{
-		private String avatarPath;
-		private ImageView view;
-		public AddTaskThread(String path,ImageView view)
-		{
-			this.avatarPath=path;
-			this.view=view;
-		}
-		@Override
-		public void run() {
-			mImageLoader.addTask(new PhotoParameters(avatarPath, -1, -1), view);
-		}
-		
-	}
-	*/
 }

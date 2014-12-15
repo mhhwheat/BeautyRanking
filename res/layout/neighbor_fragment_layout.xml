@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/new_refresh_list_view"
+        android:id="@+id/neighbor_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" 
         android:cacheColorHint="#00000000"
