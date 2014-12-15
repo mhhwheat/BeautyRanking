@@ -27,6 +27,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
@@ -46,13 +47,20 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 	private ImageLoader mImageLoader;//加载图片的对象
 	private SumRefreshListAdapter adapter;
 	
+	private boolean isLoadingMore=false;//防止重复开启异步加载线程
+	private View mFooterView;
+	private TextView tvFooterText;
+	private ProgressBar pbFooterLoading;
+	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         mListData=new ArrayList<BeautyIntroduction>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new SumRefreshListAdapter();
-		new UpdateDataTask(0, PAGE_LENGTH).execute();
+		new UpdateDataTask().execute();
 		}
 	
 	
@@ -62,8 +70,13 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 		
 		View view=inflater.inflate(R.layout.fragment_sum, container, false);
 		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.sum_refresh_list_view);
+		mActualListView=mPullToRefreshListView.getRefreshableView();
+		mFooterView=inflater.inflate(R.layout.refresh_list_footer, null);
+		pbFooterLoading=(ProgressBar)mFooterView.findViewById(R.id.refresh_list_footer_progressbar);
+		tvFooterText=(TextView)mFooterView.findViewById(R.id.refresh_list_footer_text);
 		
 		mPullToRefreshListView.setAdapter(adapter);
+		mActualListView.addFooterView(mFooterView);
 		initialListViewListener();
 		
 		return view;
@@ -169,7 +182,7 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 				
 				// Update the LastUpdatedLabel
 				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-				new UpdateDataTask(0, PAGE_LENGTH).execute();
+				new UpdateDataTask().execute();
 			}
 		});
 		
@@ -177,17 +190,69 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 
 			@Override
 			public void onLastItemVisible() {
-				Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
+				if(!isLoadingMore)
+				{
+					isLoadingMore=true;
+					pbFooterLoading.setVisibility(View.VISIBLE);
+					tvFooterText.setText(R.string.list_footer_loading);
+					new LoadMoreTask(mListData.size(), PAGE_LENGTH).execute();
+					Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
 	
+	/**
+	 * 
+	 * description:刷新ListView内容的异步线程
+	 * @author wheat
+	 * date: 2014-12-15  
+	 * time: 上午10:37:59
+	 */
 	private class UpdateDataTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
+	{
+
+		@Override
+		protected ArrayList<BeautyIntroduction> doInBackground(Void... params) {
+			BeautyIntroductionListJson json=null;
+			try {
+				json=HttpLoderMethods.getSumPage(0, PAGE_LENGTH);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			if(json==null)
+			{
+				Log.w("TabSumFragment","json is null------------->");
+				return null;
+			}
+			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
+			return data;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
+			
+			mListData=result;
+			adapter.notifyDataSetChanged();
+			mPullToRefreshListView.onRefreshComplete();
+			super.onPostExecute(result);
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * description：加载更多内容的异步线程
+	 * @author wheat
+	 * date: 2014-12-15  
+	 * time: 下午5:10:57
+	 */
+	private class LoadMoreTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
 	{
 		private int firstIndex;
 		private int count;
 		
-		public UpdateDataTask(int firstIndex,int count)
+		public LoadMoreTask(int firstIndex,int count)
 		{
 			super();
 			this.firstIndex=firstIndex;
@@ -213,12 +278,32 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 
 		@Override
 		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
-			
-			mListData=result;
-			adapter.notifyDataSetChanged();
-			mPullToRefreshListView.onRefreshComplete();
+			if(result!=null)
+			{
+				synchronized (mListData) {
+					mListData.addAll(result);
+					adapter.notifyDataSetChanged();
+				}
+				onLoadComplete(false);
+			}
+			else
+				onLoadComplete(true);
 			super.onPostExecute(result);
 		}
 		
+	}
+	
+	/**
+	 * 
+	 * @param wasLoadNothing 加载完成后，是否内容没有增加,true表示内容没有增加,false表示内容增加了
+	 */
+	private void onLoadComplete(boolean wasLoadNothing)
+	{
+		isLoadingMore=false;
+		if(wasLoadNothing)
+		{
+			pbFooterLoading.setVisibility(View.GONE);
+			tvFooterText.setText(R.string.list_footer_no_more);
+		}
 	}
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Window;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -20,6 +21,7 @@ public class MainInterfaceActivity extends FragmentActivity
 {
 	private RadioGroup mRadioGroup;
 	
+	
 	private Fragment mFirstPageFragment;
 	private Fragment mFindPageFragment;
 	private Fragment mMinePageFragment;
@@ -32,6 +34,9 @@ public class MainInterfaceActivity extends FragmentActivity
 		
 		mRadioGroup=(RadioGroup)findViewById(R.id.main_radio);
 		mRadioGroup.setOnCheckedChangeListener(new CheckedChangeListener());
+		
+		//把首页设置为初始化页面
+		mRadioGroup.check(R.id.rb_first_page);
 	}
 	
 	public class CheckedChangeListener implements OnCheckedChangeListener
