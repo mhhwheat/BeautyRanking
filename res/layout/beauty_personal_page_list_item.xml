@@ -51,26 +51,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp">
-        <ImageView 
-            android:id="@+id/beauty_personal_praise_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_toLeftOf="@id/beauty_personal_praise_times"
-            android:contentDescription="@string/beauty_personal_contenDescription"/>
-        <TextView 
-            android:id="@+id/beauty_personal_praise_times"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/beauty_personal_comment_button"
-            android:textSize="15sp"
-            android:text="123"/>
-        <ImageView 
-            android:id="@+id/beauty_personal_comment_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_toLeftOf="@id/beauty_personal_comment_times"
-            android:layout_marginRight="5dp"
-            android:contentDescription="@string/beauty_personal_contenDescription"/>
         <TextView 
             android:id="@+id/beauty_personal_comment_times"
             android:layout_width="wrap_content"
@@ -79,6 +59,27 @@
             android:layout_marginRight="5dp"
             android:textSize="15sp"
             android:text="123"/>
+        <ImageView 
+            android:id="@+id/beauty_personal_comment_button"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/beauty_personal_comment_times"
+            android:contentDescription="@string/beauty_personal_contenDescription"/>
+         <TextView 
+            android:id="@+id/beauty_personal_praise_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/beauty_personal_comment_button"
+            android:textSize="15sp"
+            android:text="456"/>
+        <ImageView 
+            android:id="@+id/beauty_personal_praise_button"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toLeftOf="@id/beauty_personal_praise_times"
+            android:contentDescription="@string/beauty_personal_contenDescription"/>
     </RelativeLayout>
+ 
 
 </LinearLayout>
