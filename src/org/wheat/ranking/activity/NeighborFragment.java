@@ -162,7 +162,7 @@ public class NeighborFragment extends Fragment implements OnScrollListener
 		}
 		
 		
-		public final class ViewHolder
+		private final class ViewHolder
 		{
 			public ImageView photo;
 			public TextView name;

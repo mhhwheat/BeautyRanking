@@ -78,7 +78,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_toLeftOf="@id/beauty_personal_praise_times"
-            android:contentDescription="@string/beauty_personal_contenDescription"/>
+            android:contentDescription="@string/beauty_personal_contenDescription"
+            android:src="@drawable/praise"/>
     </RelativeLayout>
  
 
