@@ -2,7 +2,9 @@ package org.wheat.ranking.activity;
 
 import java.lang.ref.WeakReference;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.json.UserLoginJson;
 import org.wheat.ranking.loader.LoginAndRegister;
 import org.wheat.ranking.coders.Coder_Md5;
@@ -47,6 +49,7 @@ public class LoginActivity extends Activity
 					@Override
 					public void run() 
 					{
+						System.out.println("login button is on click");
 						String userPhoneNumber=etUserId.getText().toString().trim();
 						String pwd=etPassword.getText().toString().trim();
 						String toastText;
@@ -85,11 +88,20 @@ public class LoginActivity extends Activity
 							}
 							if(jsonCode==1)
 							{
-								 Intent intent=new Intent(LoginActivity.this,RankingListActivity.class);
-								 startActivity(intent);
+								UserLoginPreference preference=UserLoginPreference.getInstance(getApplicationContext());
+								preference.SetuserPhoneNumber(userPhoneNumber);
+								preference.SetPassword(pwd);
+								Intent intent=new Intent(LoginActivity.this,MainInterfaceActivity.class);
+								startActivity(intent);
 							}
-						} catch (Throwable e) {
-							e.printStackTrace();
+						} catch (ConnectTimeoutException e) {
+							toastText="ÍøÂçÁ¬½Ó³¬Ê±";
+							msg.obj=toastText;
+							loginHandler.sendMessage(msg);
+							return;
+						}catch(Throwable th)
+						{
+							th.printStackTrace();
 						}
 						
 					}
