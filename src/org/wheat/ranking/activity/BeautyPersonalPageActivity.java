@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
+import org.wheat.ranking.entity.Praise;
 import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
@@ -26,6 +28,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -44,8 +47,11 @@ import android.widget.Toast;
  */
 public class BeautyPersonalPageActivity extends Activity implements OnScrollListener
 {
-	private int mDeviceScreenWidth;
-	private int mBeautyId;//该页面显示该BeautyId对应的Beauty的所有图片
+	//private final int mDeviceScreenWidth=getDeviceScreenWidth();//设备屏幕宽度
+	private final int mBeautyId=getBeautyIdFromIntent();//该页面显示该BeautyId对应的Beauty的所有图片
+	private final String mLoginUserPhoneNumber=getLoginUserPhoneNumber();//设备上登录的用户的手机号码
+	
+	
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private PullToRefreshListView mPullToRefreshListView;
 	private List<Photo> mListData;//保存listview数据项的数组
@@ -62,7 +68,6 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mBeautyId=getBeautyIdFromIntent();
 		setContentView(R.layout.beauty_personal_page_layout);
 		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mListData=new ArrayList<Photo>();
@@ -80,7 +85,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		mActualListView.addFooterView(mFooterView);
 		
 		initialListViewListener();
-		
+		new UpdateDataTask().execute();
 	}
 	
 	@Override
@@ -147,16 +152,22 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				holder.tvPraiseTimes=(TextView)convertView.findViewById(R.id.beauty_personal_praise_times);
 				holder.ivCommentButton=(ImageView)convertView.findViewById(R.id.beauty_personal_comment_button);
 				holder.tvCommentTimes=(TextView)convertView.findViewById(R.id.beauty_personal_comment_times);
+				
+				holder.ivPraiseButton.setOnClickListener(new PraiseButtonOnClickListener());
+				holder.ivCommentButton.setOnClickListener(new CommentButtonOnClickListener());
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
 			int minSideLength=holder.ivPhoto.getWidth();
 			holder.tvPublishTime.setText(getDifferenceFromDate(photo.getUploadTime()));
 			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),minSideLength , 2*minSideLength*minSideLength), holder.ivPhoto);
+			holder.ivPraiseButton.setTag(photo);
 			holder.tvPraiseTimes.setText(String.valueOf(photo.getPraiseCount()));
+			holder.ivCommentButton.setTag(photo);
 			holder.tvCommentTimes.setText(String.valueOf(photo.getCommentCount()));
 			return convertView;
 		}
+		
 		private final class ViewHolder
 		{
 			public ImageView ivUserAvatar;
@@ -216,7 +227,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		protected ArrayList<Photo> doInBackground(Void... params) {
 			PhotoListJson json=null;
 			try {
-				json=HttpLoderMethods.getBeautyAllPhotos(0, PAGE_LENGTH, mBeautyId);
+				json=HttpLoderMethods.getBeautyAllPhotos(0, PAGE_LENGTH, mBeautyId,mLoginUserPhoneNumber);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -272,7 +283,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		protected ArrayList<Photo> doInBackground(Void... params) {
 			PhotoListJson json=null;
 			try {
-				json=HttpLoderMethods.getBeautyAllPhotos(firstIndex, count, mBeautyId);
+				json=HttpLoderMethods.getBeautyAllPhotos(firstIndex, count, mBeautyId,mLoginUserPhoneNumber);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -355,5 +366,65 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			return second+new String("秒前");
 		}
 	}
+	
+	private class PraiseButtonOnClickListener implements OnClickListener
+	{
+		private Photo photoDetails;
+		@Override
+		public void onClick(View v) {
+			photoDetails=(Photo)v.getTag();
+			ImageView view=(ImageView)v;
+			if(photoDetails.getIsPraise())
+			{
+				photoDetails.setIspraise(false);
+				view.setImageResource(R.drawable.praise);
+				//add praise_record
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Praise mPraise=new Praise();
+						mPraise.setBeautyId(mBeautyId);
+						mPraise.setPhotoId(photoDetails.getPhotoId());
+						mPraise.setPraiseTime(new Date());
+						mPraise.setUserPhoneNumber(mLoginUserPhoneNumber);
+					}
+				}).start();
+			}
+			else
+			{
+				photoDetails.setIspraise(true);
+				view.setImageResource(R.drawable.praise_select);
+				//delete praise_record
+			}
+		}
+		
+	}
+	
+	private class CommentButtonOnClickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v) {
+			
+		}
+		
+	}
+	
+	//从SharePreference中获取用户的手机号码
+	private String getLoginUserPhoneNumber()
+	{
+		UserLoginPreference preference=UserLoginPreference.getInstance(getApplicationContext());
+		return preference.getuserPhoneNumber();
+	}
+	
+	/*
+	private int getDeviceScreenWidth()
+	{
+		DisplayMetrics dm=new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm.widthPixels;
+	}
+	*/
 	
 }

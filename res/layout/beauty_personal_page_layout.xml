@@ -16,4 +16,11 @@
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true"
         />
+    <TextView 
+        android:id="@+id/beauty_personal_page_publish_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:textSize="20sp"
+        android:text="发帖"/>
 </LinearLayout>
