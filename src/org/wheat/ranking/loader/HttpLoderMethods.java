@@ -83,9 +83,9 @@ public class HttpLoderMethods {
 	* @return if can't get  the data , return null
 	* @throws Exception
 	 */
-	public static PhotoListJson getBeautyAllPhotos(int firstIndex,int count,int  beautyId)throws Exception{
+	public static PhotoListJson getBeautyAllPhotos(int firstIndex,int count,int  beautyId,String userPhoneNumber)throws Exception{
 		String photoListStr=HttpConnectTools.get( ConstantValue.HttpRoot+"GetOneBeautyAllPhotos?beautyId="+beautyId
-				+"&firstIndex="+firstIndex+"&count="+count,null);
+				+"&firstIndex="+firstIndex+"&count="+count+"&userPhoneNumber="+userPhoneNumber,null);
 		if(photoListStr==null){
 			return null;
 		}

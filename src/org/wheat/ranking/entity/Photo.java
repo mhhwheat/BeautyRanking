@@ -6,16 +6,22 @@ import java.util.Date;
 import com.google.gson.annotations.SerializedName;
 public class Photo  
 {
-
+	//是否被赞过了
+	@SerializedName("isPraise")
+	private boolean isPraise;
+	@SerializedName("description")
+	private String description;
 	//属于哪个beauty的beautyId
 	@SerializedName("beautyId")
 	private int beautyId;
+	@SerializedName("photoId")
+	private int photoId;
 	//照片id
 	@SerializedName("commentCount")
-	private int commentCount;
+	private int commentCount=0;
 	//mm的id
 	@SerializedName("praiseCount")
-	private int praiseCount;
+	private int praiseCount=0;
 	//照片在本地的路径
 	@SerializedName("photoPath")
 	private String photoPath;
@@ -33,6 +39,20 @@ public class Photo
 		this.photoPath=photoPath;
 		this.userPhoneNumber=userPhoneNumber;
 		this.uploadTime=uploadTime;
+	}
+	public void setDescription(String description)
+	{
+		this.description=description;
+	}
+	public String getDescription()
+	{
+		return this.description;
+	}
+	public void setIspraise(boolean praise){
+		this.isPraise=praise;
+	}
+	public boolean getIsPraise(){
+		return this.isPraise;
 	}
 	public void setBeautyId(int beautyId){
 		this.beautyId=beautyId;
@@ -80,5 +100,12 @@ public class Photo
 	{
 		return this.uploadTime;
 	}
-	
+	public void setPhotoId(int photoId)
+	{
+		this.photoId=photoId;
+	}
+	public int getPhotoId()
+	{
+		return this.photoId;
+	}
 }

@@ -96,7 +96,7 @@ public class HttpUploadMethods {
 	
 	
 	/**
-	 * @deprecated 与上面的方法只有url不一样
+	 * @description 与上面的方法只有url不一样
 	 * @param originFile
 	 * @param originFileName
 	 * @param thumbnail
