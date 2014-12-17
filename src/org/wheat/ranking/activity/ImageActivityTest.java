@@ -45,6 +45,7 @@ public class ImageActivityTest extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.atext);
 		image=(ImageView)findViewById(R.id.testImage);
 		bt=(Button)findViewById(R.id.showImage);
@@ -186,6 +187,8 @@ public class ImageActivityTest extends Activity
 				}.start();
 			}
 		});
+	
+	
 	}
 	
 }

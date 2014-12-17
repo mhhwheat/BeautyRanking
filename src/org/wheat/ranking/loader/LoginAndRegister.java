@@ -1,35 +1,16 @@
 package org.wheat.ranking.loader;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Random;
 
-import org.wheat.ranking.coders.Aes;
-import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
+import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.json.UserLoginJson;
 import org.wheat.ranking.entity.json.UserRegisterJson;
 import org.wheat.ranking.httptools.EncryptUrlParamsTools;
 import org.wheat.ranking.httptools.HttpConnectTools;
 import org.wheat.ranking.httptools.JsonTools;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.util.Base64;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 public class LoginAndRegister 
 {
-	
-	
-	private static final String HttpRoot="http://192.168.202.236:8080/BeautyRankingServer";
-	
-	
-	
-	
 	
 	/**
 	 * ÓÃ»§µÇÂ¼
@@ -45,7 +26,7 @@ public class LoginAndRegister
 		hm.put("userPhoneNumber", userPhoneNumber);
 		hm.put("password", password);
 		byte[] data=EncryptUrlParamsTools.encryptParamsToPost(hm);
-		String json=HttpConnectTools.post( HttpRoot+"/servlet/BeautyRankingLogin", data,null);
+		String json=HttpConnectTools.post( ConstantValue.HttpRoot+"/servlet/BeautyRankingLogin", data,null);
 		if(json==null)
 		{
 			return null;
@@ -75,7 +56,7 @@ public class LoginAndRegister
 		hm.put("school", school);
 		hm.put("admissionYear", Integer.valueOf(admissionYear).toString());
 		byte[] data=EncryptUrlParamsTools.encryptParamsToPost(hm);
-		String json=HttpConnectTools.post( HttpRoot+"/servlet/RegisterUserServlet", data, null);
+		String json=HttpConnectTools.post( ConstantValue.HttpRoot+"/servlet/RegisterUserServlet", data, null);
 		if(json==null)
 		{
 			return null;
