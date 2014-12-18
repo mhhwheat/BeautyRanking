@@ -199,38 +199,42 @@ mInflater=inflater;
 	 * date: 2014-12-15  
 	 * time: ÉÏÎç10:37:59
 	 */
-	private class UpdateDataTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
+	private class UpdateDataTask extends AsyncTask<Void, Void, BeautyIntroductionListJson>
 	{
-
 		@Override
-		protected ArrayList<BeautyIntroduction> doInBackground(Void... params) {
+		protected BeautyIntroductionListJson doInBackground(Void... params) {
 			BeautyIntroductionListJson json=null;
 			try {
 				json=HttpLoderMethods.getNewPage(0, PAGE_LENGTH);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			if(json==null)
-			{
-				Log.w("TabSumFragment","json is null------------->");
-				return null;
-			}
-			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
-			return data;
+//			if(json==null)
+//			{
+//				Log.w("TabSumFragment","json is null------------->");
+//				return null;
+//			}
+//			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
+			return json;
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
-			
-			if(result!=null)
+		protected void onPostExecute(BeautyIntroductionListJson result) {
+			if(result!=null&&result.getCode()==1000)
 			{
 				synchronized (mListData) {
 					mListData.clear();
-					mListData=result;
+					mListData=result.getData().getIntroductionList();
 					adapter.notifyDataSetChanged();
 				}
 			}
 			mPullToRefreshListView.onRefreshComplete();
+			
+			if(result==null)
+				onLoadComplete(true);
+			else
+				onLoadComplete(false);
+			
 			super.onPostExecute(result);
 		}
 		
@@ -243,7 +247,7 @@ mInflater=inflater;
 	 * date: 2014-12-15  
 	 * time: ÏÂÎç5:10:57
 	 */
-	private class LoadMoreTask extends AsyncTask<Void, Void, ArrayList<BeautyIntroduction>>
+	private class LoadMoreTask extends AsyncTask<Void, Void, BeautyIntroductionListJson>
 	{
 		private int firstIndex;
 		private int count;
@@ -256,28 +260,28 @@ mInflater=inflater;
 		}
 
 		@Override
-		protected ArrayList<BeautyIntroduction> doInBackground(Void... params) {
+		protected BeautyIntroductionListJson doInBackground(Void... params) {
 			BeautyIntroductionListJson json=null;
 			try {
-				json=HttpLoderMethods.getSumPage(firstIndex, count);
+				json=HttpLoderMethods.getNewPage(firstIndex, count);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			if(json==null)
-			{
-				Log.w("TabSumFragment","json is null------------->");
-				return null;
-			}
-			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
-			return data;
+//			if(json==null)
+//			{
+//				Log.w("TabSumFragment","json is null------------->");
+//				return null;
+//			}
+//			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
+			return json;
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
-			if(result!=null)
+		protected void onPostExecute(BeautyIntroductionListJson result) {
+			if(result!=null&&result.getCode()==1000)
 			{
 				synchronized (mListData) {
-					mListData.addAll(result);
+					mListData.addAll(result.getData().getIntroductionList());
 					adapter.notifyDataSetChanged();
 				}
 				onLoadComplete(false);
@@ -286,6 +290,7 @@ mInflater=inflater;
 				onLoadComplete(true);
 			super.onPostExecute(result);
 		}
+		
 	}
 	
 	/**
