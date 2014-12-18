@@ -237,11 +237,13 @@ public class FollowFragment extends Fragment implements OnScrollListener
 
 		@Override
 		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
-			
-			synchronized (mListData) {
-				mListData.clear();
-				mListData=result;
-				adapter.notifyDataSetChanged();
+			if(result!=null)
+			{
+				synchronized (mListData) {
+					mListData.clear();
+					mListData=result;
+					adapter.notifyDataSetChanged();
+				}
 			}
 			mPullToRefreshListView.onRefreshComplete();
 			

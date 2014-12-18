@@ -4,6 +4,7 @@ import org.wheat.beautyranking.R;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
 /** 
@@ -23,5 +24,10 @@ public class ImageViewTestActivity extends Activity
 		imageView=(ImageView)findViewById(R.id.image_test_photo);
 		imageView.setImageResource(R.drawable.liu);
 	}
-	
+	private int getDeviceScreenWidth()
+	{
+		DisplayMetrics dm=new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm.widthPixels;
+	}
 }

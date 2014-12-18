@@ -20,6 +20,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleLis
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -47,9 +48,9 @@ import android.widget.Toast;
  */
 public class BeautyPersonalPageActivity extends Activity implements OnScrollListener
 {
-	//private final int mDeviceScreenWidth=getDeviceScreenWidth();//设备屏幕宽度
-	private final int mBeautyId=getBeautyIdFromIntent();//该页面显示该BeautyId对应的Beauty的所有图片
-	private final String mLoginUserPhoneNumber=getLoginUserPhoneNumber();//设备上登录的用户的手机号码
+//	private final int mDeviceScreenWidth=getDeviceScreenWidth();//设备屏幕宽度
+	private int mBeautyId;//该页面显示该BeautyId对应的Beauty的所有图片
+	private String mLoginUserPhoneNumber;//设备上登录的用户的手机号码
 	
 	
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
@@ -69,6 +70,9 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.beauty_personal_page_layout);
+		
+		mBeautyId=getBeautyIdFromIntent();
+		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
 		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mListData=new ArrayList<Photo>();
 		mImageLoader=ImageLoader.getInstance(this);
@@ -159,6 +163,8 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			else
 				holder=(ViewHolder)convertView.getTag();
 			int minSideLength=holder.ivPhoto.getWidth();
+			mImageLoader.addTask(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
+			holder.tvUserNikeName.setText(photo.getNickName());
 			holder.tvPublishTime.setText(getDifferenceFromDate(photo.getUploadTime()));
 			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),minSideLength , 2*minSideLength*minSideLength), holder.ivPhoto);
 			holder.ivPraiseButton.setTag(photo);
@@ -221,32 +227,36 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	 * date: 2014-12-15  
 	 * time: 上午10:37:59
 	 */
-	private class UpdateDataTask extends AsyncTask<Void, Void, ArrayList<Photo>>
+	private class UpdateDataTask extends AsyncTask<Void, Void, PhotoListJson>
 	{
 		@Override
-		protected ArrayList<Photo> doInBackground(Void... params) {
+		protected PhotoListJson doInBackground(Void... params) {
 			PhotoListJson json=null;
 			try {
 				json=HttpLoderMethods.getBeautyAllPhotos(0, PAGE_LENGTH, mBeautyId,mLoginUserPhoneNumber);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			if(json==null)
-			{
-				Log.w("TabSumFragment","json is null------------->");
-				return null;
-			}
-			final ArrayList<Photo> data=(ArrayList<Photo>)json.getData().getPhotoList();
-			return data;
+//			if(json==null)
+//			{
+//				Log.w("TabSumFragment","json is null------------>");
+//				return null;
+//			}
+//			if(json.getData()==null)
+//				return null;
+//			final ArrayList<Photo> data=(ArrayList<Photo>)json.getData().getPhotoList();
+			return json;
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<Photo> result) {
-			
-			synchronized (mListData) {
-				mListData.clear();
-				mListData=result;
-				adapter.notifyDataSetChanged();
+		protected void onPostExecute(PhotoListJson result) {
+			if(result!=null&&result.getCode()==1000)
+			{
+				synchronized (mListData) {
+					mListData.clear();
+					mListData=result.getData().getPhotoList();
+					adapter.notifyDataSetChanged();
+				}
 			}
 			mPullToRefreshListView.onRefreshComplete();
 			
@@ -327,16 +337,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		}
 	}
 	
-	/**
-	 * 通过Intent获取上一个Activity传来的BeautyId;
-	 * @return
-	 */
-	private int getBeautyIdFromIntent()
-	{
-		Intent intent=getIntent();
-		Bundle bundle=intent.getExtras();
-		return bundle.getInt("mBeautyID");
-	}
+	
 	
 	private String getDifferenceFromDate(Date date)
 	{
@@ -409,6 +410,18 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			
 		}
 		
+	}
+	
+	/**
+	 * 通过Intent获取上一个Activity传来的BeautyId;
+	 * @return
+	 */
+	private int getBeautyIdFromIntent()
+	{
+//		Intent intent=getIntent();
+//		Bundle bundle=intent.getExtras();
+//		return bundle.getInt("mBeautyID");
+		return 8;
 	}
 	
 	//从SharePreference中获取用户的手机号码

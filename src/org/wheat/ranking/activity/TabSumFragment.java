@@ -231,9 +231,14 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 
 		@Override
 		protected void onPostExecute(ArrayList<BeautyIntroduction> result) {
-			
-			mListData=result;
-			adapter.notifyDataSetChanged();
+			if(result!=null)
+			{
+				synchronized (mListData) {
+					mListData.clear();
+					mListData=result;
+					adapter.notifyDataSetChanged();
+				}
+			}
 			mPullToRefreshListView.onRefreshComplete();
 			super.onPostExecute(result);
 		}
