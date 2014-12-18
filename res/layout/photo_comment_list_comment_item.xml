@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
+	<ImageView 
+	    android:id="@+id/photo_comment_user_avatar"
+	    android:layout_width="30dp"
+	    android:layout_height="30dp"
+	    android:contentDescription="@string/content_description"/>
 	<TextView 
-	    android:id="@+id/tvPhotoComment_comment"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:singleLine="false"
-	    android:layout_marginLeft="5dp"
-	    android:layout_marginTop="5dp"
-	    android:layout_marginRight="5dp"
-	    android:text="好漂亮的mm"/>
-	<TextView
-	    android:id="@+id/tvCommenter"
+	    android:id="@+id/photo_comment_user_nike_name"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_below="@id/tvPhotoComment_comment"
-	    android:textColor="#FF0000FF"
+	    android:layout_toRightOf="@id/photo_comment_user_avatar"
 	    android:textSize="12sp"
-        android:text="疯狂豆芽"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"/>
-	<TextView
-	    android:id="@+id/tvCommentTime"
+	    android:text="豆芽"/>
+	<TextView 
+	    android:id="@+id/photo_comment_comment_time"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_below="@id/tvPhotoComment_comment"
-	    android:layout_alignParentRight="true"
-	    android:layout_marginRight="5dp"
+	    android:layout_toRightOf="@id/photo_comment_user_avatar"
+	    android:layout_below="@id/photo_comment_user_nike_name"
 	    android:textSize="12sp"
 	    android:textColor="#FF696969"
-	    android:text="23小时前"/>"
+	    android:text="12小时前"/>
+	<TextView 
+	    android:id="@+id/photo_comment_comment_content"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_toRightOf="@id/photo_comment_user_avatar"
+	    android:layout_below="@id/photo_comment_user_avatar"
+	    android:textSize="15sp"
+	    android:text="对面的女孩真可爱对面的女孩真可爱"/>
 </RelativeLayout>

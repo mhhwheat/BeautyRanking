@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <ImageView 
+        android:id="@+id/photo_comment_header_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/content_description"/>
+    <TextView
+        android:id="@+id/photo_comment_header_nike_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/photo_comment_header_avatar"
+        android:textSize="15sp"
+        android:text="豆芽"/>
+    <TextView 
+        android:id="@+id/photo_comment_header_publish_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/photo_comment_header_avatar"
+        android:layout_below="@id/photo_comment_header_nike_name"
+        android:textSize="15sp"
+        android:textColor="#FF696969"
+        android:text="16小时前"/>
+    <ImageView 
+        android:id="@+id/photo_comment_header_photo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/photo_comment_header_avatar"
+        android:contentDescription="@string/content_description"/>
+    <TextView 
+        android:id="@+id/photo_comment_header_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/photo_comment_header_photo"
+        android:textSize="17sp"
+        android:text="对面的女孩真可爱"/>
+</RelativeLayout>
