@@ -36,7 +36,8 @@
     <string name="avatar_description">详细信息中的头像</string>
     <string name="beauty_info_school">学校</string>
     <string name="beauty_info_admission_year">入学年份</string>
-    <string name="beauty_info_birthday">生日</string>
+    <string name="location">地理位置</string>
+    <string name="beauty_info_birthday">微信</string>
     <string name="beauty_info_constellation">星座</string>
     <string name="beauty_info_description">印象</string>
     <string name="beauty_info_album">个人相册</string>

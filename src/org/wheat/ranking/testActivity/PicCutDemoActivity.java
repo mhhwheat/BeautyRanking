@@ -7,7 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.BeautyDetail;
+import org.wheat.ranking.entity.ConstantValue;
+import org.wheat.ranking.entity.Location;
+import org.wheat.ranking.httptools.BitmapTools;
+import org.wheat.ranking.httptools.DateFormatTools;
+import org.wheat.ranking.loader.HttpUploadMethods;
+import org.wheat.ranking.location.NetLocation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +29,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -31,20 +39,29 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class PicCutDemoActivity extends Activity implements OnClickListener {
 
 	private ImageView iv = null;
 	private EditText edt_beauty_info_school=null;
 	private EditText edt_beauty_info_admission=null;
-	private EditText edt_beauty_info_birthday=null;
+	private EditText edt_beauty_info_birthday=null;//实际上改为微信号
+	private TextView textview_location=null;//实际上是地理信息
 	private EditText edt_beauty_info_constellation=null;
 	private EditText edt_beauty_info_description=null;
 	private Button btn_submit=null;
 	private String tp = null;
 
 	private String photoName = null;
+	private Location location =null;
 
+	
+	
+	File tempfile =null;
+	//生成的图片的文件名，为了方便，设置一个公共变量
+	String filename=null;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,10 +81,23 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 		edt_beauty_info_birthday=(EditText)findViewById(R.id.beauty_info_birthday);
 		edt_beauty_info_constellation=(EditText)findViewById(R.id.beauty_info_constellation);
 		edt_beauty_info_description=(EditText)findViewById(R.id.beauty_info_description);
+		textview_location=(TextView)findViewById(R.id.textview_location);
 		btn_submit= (Button)findViewById(R.id.submit);
 		iv.setOnClickListener(this);
+		threadToGetLocation();
 	}
-
+	/**
+	 * 
+	* @Description: 开启 一个线程去获取地理位置
+	* @author hogachen   
+	* @date 2014年12月18日 下午8:47:23 
+	* @version V1.0
+	 */
+	private void threadToGetLocation(){
+		Intent intent = new Intent();
+		intent.setClass(PicCutDemoActivity.this, NetLocation.class);
+		startActivityForResult(intent,0);  
+	}
 	/**
 	 * 控件点击事件实现
 	 * 
@@ -81,7 +111,7 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 			ShowPickDialog();
 			break;
 		case R.id.submit:
-			BeautyDetail beauty=null;
+			BeautyDetail beauty=getDataFromEditText();
 			uploadBeautyInfo(beauty);
 		default:
 			break;
@@ -134,10 +164,21 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		// 如果是直接从相册获取
+		//获取地理位置信息
+		case 0:
+			Bundle bundle =data.getExtras(); 
+			if(bundle!=null){
+				 this.location.setLat(bundle.getDouble("lat"));
+		         this.location.setLng(bundle.getDouble("lng"));
+		         this.location.setLocationMessage(bundle.getString("message"));
+		         textview_location.setText(this.location.getLocationMessage());
+			}	
+		// 如果是直接从相册获取	
 		case 1:
 			if (data != null) {
 				setPicToView(data.getData());
+				tempfile = new File(data.getData().getPath());
+				System.out.println("tempfile.getAbsolutePath()  "+tempfile.getAbsolutePath());
 			}
 
 			break;
@@ -148,9 +189,9 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 				setPicToView(data.getData());
 			}
 			if (data == null) {
-				File temp = new File(Environment.getExternalStorageDirectory()
+				tempfile = new File(Environment.getExternalStorageDirectory()
 						+ "/" + photoName);
-				setPicToView(Uri.fromFile(temp));
+				setPicToView(Uri.fromFile(tempfile));
 			}
 			break;
 		// 取得裁剪后的图片
@@ -238,6 +279,36 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 
 	/**
 	 * 
+	* @Description: 从文本控件中获取数据生成beautyDetail
+	* @author hogachen   
+	* @date 2014年12月18日 下午9:16:13 
+	* @version V1.0  
+	* @return
+	 */
+	private BeautyDetail getDataFromEditText(){
+		BeautyDetail beauty= new BeautyDetail();
+		String  school=edt_beauty_info_school.getText().toString();
+		String  birthday=edt_beauty_info_birthday.getText().toString();
+		String  constellation=edt_beauty_info_constellation.getText().toString();
+		String  description = edt_beauty_info_description.getText().toString();
+		Date createTime=new Date();
+		beauty.setBirthday(birthday);
+		beauty.setConstellation(constellation);
+		beauty.setDescription(description);
+		beauty.setSchool(school);
+		beauty.setCreateTime(createTime);
+		
+		UserLoginPreference localfile=UserLoginPreference.getInstance(this);
+		String userPhoneNumber = localfile .getuserPhoneNumber();
+		beauty.setUserPhoneNumber(userPhoneNumber);
+		filename = userPhoneNumber+DateFormatTools.data2String(createTime);
+		beauty.setAvatarPath(filename+".jpg");
+		beauty.setLat(location.getLat());
+		beauty.setLng(location.getLng());
+		return beauty;
+	}
+	/**
+	 * 
 	* @Description: 将新创建beauty 上传到服务器
 	* @author hogachen   
 	* @date 2014年12月18日 下午7:40:13 
@@ -245,7 +316,20 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 	* @param beautyInfo
 	* @return
 	 */
-	private int uploadBeautyInfo(BeautyDetail beautyInfo){
-		return 1;
+	private void uploadBeautyInfo(BeautyDetail beautyInfo){
+		File thumbnailfile = new File(Environment.getExternalStorageDirectory()
+				+ "/tempThumbnailFile" );
+		BitmapTools.compressBmpToFile(tempfile,thumbnailfile);
+		int code = HttpUploadMethods.UploadBeautyInfoPost
+		(tempfile, beautyInfo.getAvatarPath(), thumbnailfile, filename+"thumb.jpg", beautyInfo);
+		if(code == ConstantValue.operateSuccess){
+			Toast.makeText(getApplicationContext(), "发布成功",
+				     Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(getApplicationContext(), "发布失败,错误代码为:"+code,
+				     Toast.LENGTH_SHORT).show();
+		}
+
 	}
+	
 }

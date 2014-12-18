@@ -2,6 +2,8 @@ package org.wheat.ranking.httptools;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.util.Base64;
 import android.util.Log;
 
 public class BitmapTools {
@@ -135,5 +139,42 @@ public class BitmapTools {
 		        return upperBound;  
 		    }  
 		} 
+		
+		/**
+		 * 
+		* @Description: 由原文件生成缩略图
+		* @author hogachen   
+		* @date 2014年12月18日 下午9:14:52 
+		* @version V1.0  
+		* @param originFile
+		* @return
+		 */
+//		public static File genThumbnailFile(File originFile){
+//			 Bitmap bitmap = ThumbnailUtils.extractThumbnail(bitmap, 51, 108); 
+//			return new File("");
+//		}
+		
+		public static void compressBmpToFile(File originFile,File thumbnailFile){
+			Bitmap bmp = BitmapFactory.decodeFile(originFile.getPath());
+		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		    int options = 80;//个人喜欢从80开始,
+		    bmp.compress(Bitmap.CompressFormat.JPEG, options, baos);
+		    while (baos.toByteArray().length / 1024 > 100) { 
+		      baos.reset();
+		      options -= 10;
+		      bmp.compress(Bitmap.CompressFormat.JPEG, options, baos);
+		    }
+		    try {
+		      FileOutputStream fos = new FileOutputStream(thumbnailFile);
+		      fos.write(baos.toByteArray());
+		      fos.flush();
+		      fos.close();
+		    } catch (Exception e) {
+		      e.printStackTrace();
+		    }
+		  }
+		
+		
+		
 		
 }

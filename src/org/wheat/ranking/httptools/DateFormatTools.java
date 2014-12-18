@@ -21,4 +21,9 @@ public class DateFormatTools {
 	public static java.sql.Date utilDate2SqlDate(java.util.Date utilDate){
 		return new java.sql.Date(utilDate.getTime());
 	}
+	public static  String data2String(java.util.Date date){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String datestr = sdf.format(date);
+		return datestr;
+	}
 }
