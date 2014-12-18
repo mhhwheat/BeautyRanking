@@ -20,13 +20,11 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleLis
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -115,7 +113,6 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	private class BeautyPersonalPageListAdapter extends BaseAdapter
@@ -260,7 +257,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			}
 			mPullToRefreshListView.onRefreshComplete();
 			
-			if(result==null)
+			if(result==null||result.getCode()!=1000)
 				onLoadComplete(true);
 			else
 				onLoadComplete(false);
@@ -277,7 +274,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	 * date: 2014-12-15  
 	 * time: ÏÂÎç5:10:57
 	 */
-	private class LoadMoreTask extends AsyncTask<Void, Void, ArrayList<Photo>>
+	private class LoadMoreTask extends AsyncTask<Void, Void, PhotoListJson>
 	{
 		private int firstIndex;
 		private int count;
@@ -290,28 +287,28 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		}
 
 		@Override
-		protected ArrayList<Photo> doInBackground(Void... params) {
+		protected PhotoListJson doInBackground(Void... params) {
 			PhotoListJson json=null;
 			try {
 				json=HttpLoderMethods.getBeautyAllPhotos(firstIndex, count, mBeautyId,mLoginUserPhoneNumber);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			if(json==null)
-			{
-				Log.w("TabSumFragment","json is null------------->");
-				return null;
-			}
-			final ArrayList<Photo> data=(ArrayList<Photo>)json.getData().getPhotoList();
-			return data;
+//			if(json==null)
+//			{
+//				Log.w("TabSumFragment","json is null------------->");
+//				return null;
+//			}
+//			final ArrayList<Photo> data=(ArrayList<Photo>)json.getData().getPhotoList();
+			return json;
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<Photo> result) {
-			if(result!=null)
+		protected void onPostExecute(PhotoListJson result) {
+			if(result!=null&&result.getCode()==1000)
 			{
 				synchronized (mListData) {
-					mListData.addAll(result);
+					mListData.addAll(result.getData().getPhotoList());
 					adapter.notifyDataSetChanged();
 				}
 				onLoadComplete(false);

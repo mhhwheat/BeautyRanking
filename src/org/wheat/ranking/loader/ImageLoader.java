@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class ImageLoader 
 {
@@ -272,6 +273,16 @@ public class ImageLoader
 				{
 					Bitmap bitmap=(Bitmap)msg.obj;
 					Log.w("ImageLoader", "setImageBitmap in handler-------->");
+					if(parameters.getMinSideLength()==-1&&parameters.getMaxNumOfPixels()==-1)
+					{
+						//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
+						int width=img.getWidth();
+						int picWidth=bitmap.getWidth();
+						int picHeight=bitmap.getHeight();
+						int height = (int) (width * 1.0 / picWidth * picHeight);
+						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,height);
+						img.setLayoutParams(params);
+					}
 					img.setImageBitmap(bitmap);
 				}
 			}
