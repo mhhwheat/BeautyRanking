@@ -1,6 +1,6 @@
 package org.wheat.ranking.entity;
 
-public class Location {
+public class MyLocation {
 	private double lat=0.0 ;
 	private double lng=0.0;
 	private String locationMessage;

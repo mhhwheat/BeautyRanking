@@ -22,7 +22,7 @@ public class DateFormatTools {
 		return new java.sql.Date(utilDate.getTime());
 	}
 	public static  String data2String(java.util.Date date){
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String datestr = sdf.format(date);
 		return datestr;
 	}

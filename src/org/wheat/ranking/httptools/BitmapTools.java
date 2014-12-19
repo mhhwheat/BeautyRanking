@@ -3,6 +3,8 @@ package org.wheat.ranking.httptools;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -153,22 +155,50 @@ public class BitmapTools {
 //			 Bitmap bitmap = ThumbnailUtils.extractThumbnail(bitmap, 51, 108); 
 //			return new File("");
 //		}
-		
+		/**
+		 * 
+		* @Description: 压缩图片直到小于100k
+		* @author hogachen   
+		* @date 2014年12月19日 下午6:17:37 
+		* @version V1.0  
+		* @param originFile
+		* @param thumbnailFile
+		 */
 		public static void compressBmpToFile(File originFile,File thumbnailFile){
-			Bitmap bmp = BitmapFactory.decodeFile(originFile.getPath());
+			Bitmap bmp=null;
+			try {
+				FileInputStream in = new FileInputStream(originFile);
+				bmp = BitmapFactory.decodeStream(in);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+//			Bitmap bmp = BitmapFactory.decodeFile(originFile.getAbsolutePath()+".jpg");
+			
+//			System.out.println("originfile path:"+originFile.getAbsolutePath()+".jpg");
+//			System.out.println(bmp.getWidth());
 		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		    int options = 80;//个人喜欢从80开始,
 		    bmp.compress(Bitmap.CompressFormat.JPEG, options, baos);
 		    while (baos.toByteArray().length / 1024 > 100) { 
-		      baos.reset();
-		      options -= 10;
+		    	if(options<=10){
+		    		options-=2;
+		    	}
+		    	else{
+		    		options -= 10;
+		    	}
+		      
+		      if(options==10)break;
+		      baos.reset();//reset一定要在options之后，不然会空！！
 		      bmp.compress(Bitmap.CompressFormat.JPEG, options, baos);
+		      System.out.println("图片质量："+options);
 		    }
 		    try {
 		      FileOutputStream fos = new FileOutputStream(thumbnailFile);
 		      fos.write(baos.toByteArray());
 		      fos.flush();
 		      fos.close();
+		      baos.close();
 		    } catch (Exception e) {
 		      e.printStackTrace();
 		    }

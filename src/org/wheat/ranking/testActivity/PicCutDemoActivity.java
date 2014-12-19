@@ -10,17 +10,23 @@ import org.wheat.beautyranking.R;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.BeautyDetail;
 import org.wheat.ranking.entity.ConstantValue;
-import org.wheat.ranking.entity.Location;
+import org.wheat.ranking.entity.MyLocation;
 import org.wheat.ranking.httptools.BitmapTools;
 import org.wheat.ranking.httptools.DateFormatTools;
 import org.wheat.ranking.loader.HttpUploadMethods;
 import org.wheat.ranking.location.NetLocation;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.LocationManagerProxy;
+import com.amap.api.location.LocationProviderProxy;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,6 +34,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.View;
@@ -39,14 +47,21 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 
-public class PicCutDemoActivity extends Activity implements OnClickListener {
+public class PicCutDemoActivity extends Activity implements OnClickListener, AMapLocationListener {
 
+
+	/**
+	 * 高德地图定位信息
+	 */
+	private LocationManagerProxy mLocationManagerProxy;
+	private  MyLocation myLocation = new MyLocation();;
+	
+	
 	private ImageView iv = null;
 	private EditText edt_beauty_info_school=null;
 	private EditText edt_beauty_info_admission=null;
@@ -58,7 +73,7 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 	private String tp = null;
 
 	private String photoName = null;
-	private Location location =null;
+
 
 	
 	
@@ -66,12 +81,33 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 	//生成的图片的文件名，为了方便，设置一个公共变量
 	String filename=null;
 	/** Called when the activity is first created. */
+	
+	Handler submitHandler=null;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_new_beauty);
 		// 初始化
 		init();
+		// 开启界面的时候就定位
+		mLocationManagerProxy = LocationManagerProxy.getInstance(this);
+		mLocationManagerProxy.setGpsEnable(false);
+		mLocationManagerProxy.requestLocationData(
+				LocationProviderProxy.AMapNetwork, -1, 150, this);
+		// toast handler
+		submitHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what == ConstantValue.operateSuccess) {
+					Toast.makeText(getApplicationContext(), "发布成功",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"发布失败,错误代码为:" + msg.what, Toast.LENGTH_SHORT)
+							.show();
+				}
+			}
+		};
 	}
 
 	/**
@@ -87,35 +123,42 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 		textview_location=(TextView)findViewById(R.id.textview_location);
 		btn_submit= (Button)findViewById(R.id.submit);
 		iv.setOnClickListener(this);
-		threadToGetLocation();
+//		threadToGetLocation();
+		btn_submit.setOnClickListener(submitListener);
 	}
-	/**
-	 * 
-	* @Description: 开启 一个线程去获取地理位置
-	* @author hogachen   
-	* @date 2014年12月18日 下午8:47:23 
-	* @version V1.0
-	 */
-	private void threadToGetLocation(){
-		Intent intent = new Intent();
-		intent.setClass(PicCutDemoActivity.this, NetLocation.class);
-		startActivityForResult(intent,0);  
-	}
+	
+	
+	OnClickListener submitListener = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			Thread submitThread= new Thread(){
+				public void run(){
+					BeautyDetail beauty=getDataFromEditText();
+					uploadBeautyInfo(beauty);
+				}
+			};
+			// TODO Auto-generated method stub
+			submitThread.start();
+		}
+	};
+
+	
 	/**
 	 * 控件点击事件实现
 	 * 
 	 * 因为有朋友问不同控件的背景图裁剪怎么实现， 我就在这个地方用了三个控件，只为了自己记录学习 大家觉得没用的可以跳过啦
 	 */
 	@Override
-	public void onClick(View v) {
+	public void onClick(View v) { 
 		switch (v.getId()) {
 
 		case R.id.imageView1:
 			ShowPickDialog();
 			break;
 		case R.id.submit:
-			BeautyDetail beauty=getDataFromEditText();
-			uploadBeautyInfo(beauty);
+			
+			break;
 		default:
 			break;
 		}
@@ -169,19 +212,26 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 		switch (requestCode) {
 		//获取地理位置信息
 		case 0:
-			Bundle bundle =data.getExtras(); 
-			if(bundle!=null){
-				 this.location.setLat(bundle.getDouble("lat"));
-		         this.location.setLng(bundle.getDouble("lng"));
-		         this.location.setLocationMessage(bundle.getString("message"));
-		         textview_location.setText(this.location.getLocationMessage());
+			System.out.println("return the map");
+			if(data!=null&&data.getExtras()!=null){
+				
+				Bundle bundle =data.getExtras(); 
+				 this.myLocation.setLat(bundle.getDouble("lat"));
+		         this.myLocation.setLng(bundle.getDouble("lng"));
+		         this.myLocation.setLocationMessage(bundle.getString("message"));
+		         textview_location.setText(this.myLocation.getLocationMessage());
+		         System.out.println(this.myLocation.getLocationMessage());
 			}	
+			break;
 		// 如果是直接从相册获取	
 		case 1:
 			if (data != null) {
 				setPicToView(data.getData());
-				tempfile = new File(data.getData().getPath());
+				
+				String photoPath=getUriPath(data.getData());
+				tempfile = new File(photoPath);
 				System.out.println("tempfile.getAbsolutePath()  "+tempfile.getAbsolutePath());
+				System.out.println("photoPath  "+photoPath);
 			}
 
 			break;
@@ -190,6 +240,8 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 
 			if (data != null && data.getData() != null) {
 				setPicToView(data.getData());
+				String photoPath=getUriPath(data.getData());
+				tempfile = new File(photoPath);
 			}
 			if (data == null) {
 				tempfile = new File(Environment.getExternalStorageDirectory()
@@ -209,6 +261,18 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
+	private String getUriPath(Uri originalUri){
+		
+		// 这里开始的第二部分，获取图片的路径： 
+		String[] proj = {MediaStore.Images.Media.DATA}; 
+		Cursor cursor = managedQuery(originalUri, proj, null, null, null); 
+		//按我个人理解 这个是获得用户选择的图片的索引值 
+		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA); 
+		cursor.moveToFirst(); 
+		//最后根据索引值获取图片路径 
+		String path = cursor.getString(column_index);
+		return path;
+	}
 	/**
 	 * 保存裁剪之后的图片数据
 	 * 
@@ -306,8 +370,8 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 		beauty.setUserPhoneNumber(userPhoneNumber);
 		filename = userPhoneNumber+DateFormatTools.data2String(createTime);
 		beauty.setAvatarPath(filename+".jpg");
-		beauty.setLat(location.getLat());
-		beauty.setLng(location.getLng());
+		beauty.setLat(myLocation.getLat());
+		beauty.setLng(myLocation.getLng());
 		return beauty;
 	}
 	/**
@@ -320,19 +384,50 @@ public class PicCutDemoActivity extends Activity implements OnClickListener {
 	* @return
 	 */
 	private void uploadBeautyInfo(BeautyDetail beautyInfo){
+		Message msg = new Message();
+		if(tempfile == null ){
+			msg.what=-2;//表示没有选择图片
+			submitHandler.sendMessage(msg);
+			return;
+		}
 		File thumbnailfile = new File(Environment.getExternalStorageDirectory()
-				+ "/tempThumbnailFile" );
+				+ "/atest/tempThumbnailFile.jpg" );
 		BitmapTools.compressBmpToFile(tempfile,thumbnailfile);
+		
 		int code = HttpUploadMethods.UploadBeautyInfoPost
 		(tempfile, beautyInfo.getAvatarPath(), thumbnailfile, filename+"thumb.jpg", beautyInfo);
-		if(code == ConstantValue.operateSuccess){
-			Toast.makeText(getApplicationContext(), "发布成功",
-				     Toast.LENGTH_SHORT).show();
-		}else{
-			Toast.makeText(getApplicationContext(), "发布失败,错误代码为:"+code,
-				     Toast.LENGTH_SHORT).show();
-		}
+		
+		msg.what=code;
+		submitHandler.sendMessage(msg);
 
+	}
+
+	//下面是高德地图的定位方法
+	@Override
+	public void onLocationChanged(android.location.Location location) {}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+	@Override
+	public void onProviderEnabled(String provider) {}
+
+	@Override
+	public void onProviderDisabled(String provider) {}
+
+	@Override
+	public void onLocationChanged(AMapLocation amapLocation) {
+		// TODO Auto-generated method stub
+		if (amapLocation!=null&&amapLocation.getAMapException().getErrorCode() == 0) {
+			// 定位成功回调信息，设置相关消息
+			
+			this.myLocation.setLat(amapLocation.getLatitude());
+			this.myLocation.setLng(amapLocation.getLongitude());
+			this.myLocation.setLocationMessage(amapLocation.getAddress());
+			this.textview_location.setText(amapLocation.getAddress());
+		}else{
+			this.textview_location.setText("定位失败");
+		}
 	}
 	
 }
