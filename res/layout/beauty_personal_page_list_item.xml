@@ -17,7 +17,7 @@
             android:contentDescription="@string/beauty_personal_contenDescription"/>
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_vertical">
             <TextView 
@@ -53,35 +53,47 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp">
-        <TextView 
-            android:id="@+id/beauty_personal_comment_times"
+        <LinearLayout 
+            android:id="@+id/beauty_personal_comment_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:textSize="15sp"
-            android:text="123"/>
-        <ImageView 
-            android:id="@+id/beauty_personal_comment_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/beauty_personal_comment_times"
-            android:contentDescription="@string/beauty_personal_contenDescription"/>
-         <TextView 
-            android:id="@+id/beauty_personal_praise_times"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true">
+            <ImageView 
+            	android:id="@+id/beauty_personal_comment_button"
+            	android:layout_width="20dp"
+            	android:layout_height="20dp"
+            	android:layout_marginRight="5dp"
+            	android:contentDescription="@string/beauty_personal_contenDescription"/>
+            <TextView 
+            	android:id="@+id/beauty_personal_comment_times"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_marginRight="5dp"
+            	android:textSize="15sp"
+            	android:text="123"/>
+        
+        </LinearLayout>
+
+        <LinearLayout 
+            android:id="@+id/beauty_personal_praise_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/beauty_personal_comment_button"
-            android:textSize="15sp"
-            android:text="456"/>
-        <ImageView 
-            android:id="@+id/beauty_personal_praise_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_toLeftOf="@id/beauty_personal_praise_times"
-            android:contentDescription="@string/beauty_personal_contenDescription"
-            android:src="@drawable/praise"/>
+            android:orientation="horizontal"
+            android:layout_toLeftOf="@id/beauty_personal_comment_area">
+            <ImageView 
+            	android:id="@+id/beauty_personal_praise_button"
+            	android:layout_width="20dp"
+            	android:layout_height="20dp"
+            	android:contentDescription="@string/beauty_personal_contenDescription"
+            	android:src="@drawable/praise"/>
+            <TextView 
+            	android:id="@+id/beauty_personal_praise_times"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:textSize="15sp"
+            	android:text="456"/>
+        </LinearLayout>
     </RelativeLayout>
  
 

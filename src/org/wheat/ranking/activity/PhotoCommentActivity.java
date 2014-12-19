@@ -198,11 +198,14 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 	private Photo getPhotoFromIntent()
 	{
 		Intent intent=this.getIntent();
-		return (Photo)intent.getSerializableExtra("photo");
-//		Photo photo=new Photo();
-//		photo.setAvatarPath(intent.getStringExtra("avatarPath"));
-//		photo.setNickName(intent.getStringExtra("nickname"));
-//		photo.setPhotoDescription(intent.getStringExtra("photoDescription"));
+		//return (Photo)intent.getSerializableExtra("photo");
+		Bundle bundle=intent.getExtras();
+		Photo photo=new Photo();
+		photo.setAvatarPath(bundle.getString("avatarPath"));
+		photo.setNickName(bundle.getString("nickName"));
+		photo.setPhotoDescription(bundle.getString("photoDescription"));
+		photo.setPhotoId(bundle.getInt("photoId"));
+		return photo;
 		
 	}
 	

@@ -35,15 +35,6 @@ public class Photo
 	//上传时间
 	@SerializedName("uploadTime")
 	private Date uploadTime;
-	public Photo(){}
-	public Photo(int commentCount,int praiseCount,String photoPath,String userPhoneNumber,Date uploadTime)
-	{
-		this.commentCount=commentCount;
-		this.praiseCount=praiseCount;
-		this.photoPath=photoPath;
-		this.userPhoneNumber=userPhoneNumber;
-		this.uploadTime=uploadTime;
-	}
 	public void setAvatarPath(String userAvatar)
 	{
 		this.avatarPath=userAvatar;
