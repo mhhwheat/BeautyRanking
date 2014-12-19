@@ -180,7 +180,7 @@ public class HttpUploadMethods {
 	
 	/**
 	 * @author hogachen
-	 * @deprecated upload praise using the get method
+	 * @description upload praise using the get method
 	 * @param comment
 	 * @throws Exception
 	 */

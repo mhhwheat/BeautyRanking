@@ -1,7 +1,6 @@
 package org.wheat.ranking.loader;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.httptools.HttpConnectTools;

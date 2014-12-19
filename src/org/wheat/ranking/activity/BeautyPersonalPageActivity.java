@@ -159,6 +159,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
+			
 			int minSideLength=holder.ivPhoto.getWidth();
 			mImageLoader.addTask(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
 			holder.tvUserNikeName.setText(photo.getNickName());
