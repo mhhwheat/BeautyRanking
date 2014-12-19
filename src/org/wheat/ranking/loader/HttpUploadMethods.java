@@ -1,6 +1,5 @@
 package org.wheat.ranking.loader;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,14 +14,10 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.wheat.ranking.entity.BeautyDetail;
-import org.wheat.ranking.entity.BeautyIntroduction;
-import org.wheat.ranking.entity.BeautyIntroductionList;
 import org.wheat.ranking.entity.Comment;
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.Praise;
-import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
-import org.wheat.ranking.entity.json.CommentJson;
 import org.wheat.ranking.httptools.HttpConnectTools;
 public class HttpUploadMethods {
 
@@ -159,7 +154,7 @@ public class HttpUploadMethods {
 	 * @throws Exception
 	 */
 	public static void UploadPraiseGet(Praise praise,String beautyId)throws Exception{
-		HashMap<String  ,String>values= new HashMap<String,String>();
+		HashMap<String  ,String> values= new HashMap<String,String>();
 		values.put("photoId",praise.getPhotoId()+"");
 		values.put("userPhoneNumber",praise.getUserPhoneNumber()+"");
 		values.put("praiseTime",praise.getPraiseTime().toGMTString());
@@ -170,6 +165,8 @@ public class HttpUploadMethods {
 	public static int UploadPraisePost(Praise praise)throws Exception{
 		return HttpConnectTools.postJsonReturnCode(ConstantValue.HttpRoot+"UploadPraise", praise,null);
 	}
+	
+	
 
 	
 	
@@ -180,7 +177,7 @@ public class HttpUploadMethods {
 	
 	/**
 	 * @author hogachen
-	 * @deprecated upload praise using the get method
+	 * @description upload praise using the get method
 	 * @param comment
 	 * @throws Exception
 	 */

@@ -1,18 +1,6 @@
 package org.wheat.ranking.loader;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreProtocolPNames;
 import org.wheat.ranking.entity.BeautyDetail;
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.httptools.HttpConnectTools;

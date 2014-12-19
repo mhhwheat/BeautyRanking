@@ -12,6 +12,7 @@ import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.Praise;
 import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
+import org.wheat.ranking.loader.HttpUploadMethods;
 import org.wheat.ranking.loader.ImageLoader;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -90,6 +91,31 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		new UpdateDataTask().execute();
 	}
 	
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		int position=-1;
+		int count=-1;
+		if(data!=null)
+		{
+			if(requestCode==1)
+			{
+				position=data.getIntExtra("position", -1);
+				count=data.getIntExtra("count", -1);
+			}
+		}
+		if(position!=1&&mListData.size()>=position&&count>0)
+		{
+			mListData.get(position).setCommentCount(mListData.get(position).getCommentCount()+count);
+			adapter.notifyDataSetChanged();
+		}
+	}
+
+
+
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
@@ -154,19 +180,30 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				holder.ivCommentButton=(ImageView)convertView.findViewById(R.id.beauty_personal_comment_button);
 				holder.tvCommentTimes=(TextView)convertView.findViewById(R.id.beauty_personal_comment_times);
 				
-				holder.ivPraiseButton.setOnClickListener(new PraiseButtonOnClickListener());
-				holder.ivCommentButton.setOnClickListener(new CommentButtonOnClickListener());
+				View PraiseView=convertView.findViewById(R.id.beauty_personal_praise_area);
+				View CommentView=convertView.findViewById(R.id.beauty_personal_comment_area);
+				PraiseView.setOnClickListener(new PraiseAreaOnClickListener());
+				CommentView.setOnClickListener(new CommentAreaOnClickListener());
+//				holder.ivPraiseButton.setOnClickListener(new PraiseButtonOnClickListener());
+//				holder.ivCommentButton.setOnClickListener(new CommentButtonOnClickListener());
+				convertView.setTag(holder);
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
-			int minSideLength=holder.ivPhoto.getWidth();
+			
 			mImageLoader.addTask(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
 			holder.tvUserNikeName.setText(photo.getNickName());
 			holder.tvPublishTime.setText(getDifferenceFromDate(photo.getUploadTime()));
-			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),minSideLength , 2*minSideLength*minSideLength), holder.ivPhoto);
+			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),-1 , -1), holder.ivPhoto);
+			if(photo.getIsPraise())
+			{
+				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);
+			}
+			else
+				holder.ivPraiseButton.setImageResource(R.drawable.praise);
 			holder.ivPraiseButton.setTag(photo);
 			holder.tvPraiseTimes.setText(String.valueOf(photo.getPraiseCount()));
-			holder.ivCommentButton.setTag(photo);
+			holder.tvCommentTimes.setTag(photo);
 			holder.tvCommentTimes.setText(String.valueOf(photo.getCommentCount()));
 			return convertView;
 		}
@@ -236,7 +273,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			}
 //			if(json==null)
 //			{
-//				Log.w("TabSumFragment","json is null------------>");
+//				Log.w("TabSumFragment","json is null----------->");
 //				return null;
 //			}
 //			if(json.getData()==null)
@@ -365,17 +402,23 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		}
 	}
 	
-	private class PraiseButtonOnClickListener implements OnClickListener
+	private class PraiseAreaOnClickListener implements OnClickListener
 	{
 		private Photo photoDetails;
+		private ImageView ivPraiseButton;
+		private TextView tvPraiseTimes;
 		@Override
 		public void onClick(View v) {
-			photoDetails=(Photo)v.getTag();
-			ImageView view=(ImageView)v;
-			if(photoDetails.getIsPraise())
+			ivPraiseButton=(ImageView)v.findViewById(R.id.beauty_personal_praise_button);
+			tvPraiseTimes=(TextView)v.findViewById(R.id.beauty_personal_praise_times);
+			photoDetails=(Photo)ivPraiseButton.getTag();
+			if(!photoDetails.getIsPraise())
 			{
-				photoDetails.setIspraise(false);
-				view.setImageResource(R.drawable.praise);
+				photoDetails.setIspraise(true);
+				photoDetails.setPraiseCount(photoDetails.getPraiseCount()+1);
+//				tvPraiseTimes.setText(String.valueOf(photoDetails.getPraiseCount()));
+//				ivPraiseButton.setImageResource(R.drawable.praise_select);
+				adapter.notifyDataSetChanged();
 				//add praise_record
 				new Thread(new Runnable() {
 					
@@ -386,25 +429,39 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 						mPraise.setPhotoId(photoDetails.getPhotoId());
 						mPraise.setPraiseTime(new Date());
 						mPraise.setUserPhoneNumber(mLoginUserPhoneNumber);
+						try {
+							HttpUploadMethods.UploadPraisePost(mPraise);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}).start();
 			}
 			else
 			{
-				photoDetails.setIspraise(true);
-				view.setImageResource(R.drawable.praise_select);
-				//delete praise_record
+				
 			}
 		}
 		
 	}
 	
-	private class CommentButtonOnClickListener implements OnClickListener
+	private class CommentAreaOnClickListener implements OnClickListener
 	{
-
+		private Photo mPhotoDetails;
+		private TextView tvCommentTimes;
 		@Override
 		public void onClick(View v) {
-			
+			tvCommentTimes=(TextView)v.findViewById(R.id.beauty_personal_comment_times);
+			mPhotoDetails=(Photo)tvCommentTimes.getTag();
+			Intent intent=new Intent(BeautyPersonalPageActivity.this,PhotoCommentActivity.class);
+			Bundle bundle=new Bundle();
+			bundle.putString("avatarPath", mPhotoDetails.getAvatarPath());
+			bundle.putString("nickName", mPhotoDetails.getNickName());
+			bundle.putString("photoDescription", mPhotoDetails.getPhotoDescription());
+			bundle.putInt("photoId", mPhotoDetails.getPhotoId());
+			intent.putExtras(bundle);
+			startActivityForResult(intent, 1);
 		}
 		
 	}

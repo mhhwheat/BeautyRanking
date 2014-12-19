@@ -1,13 +1,6 @@
 package org.wheat.ranking.loader;
 
-import java.util.HashMap;
-
-import org.wheat.ranking.entity.BeautyDetail;
-import org.wheat.ranking.entity.BeautyIntroduction;
-import org.wheat.ranking.entity.BeautyIntroductionList;
 import org.wheat.ranking.entity.ConstantValue;
-import org.wheat.ranking.entity.Photo;
-import org.wheat.ranking.entity.PhotoList;
 import org.wheat.ranking.entity.json.BeautyDetailJson;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.entity.json.PhotoListJson;
