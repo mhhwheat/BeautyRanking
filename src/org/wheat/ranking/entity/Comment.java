@@ -7,6 +7,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Comment
 {
+	//评论ID
+	@SerializedName("commentId")
+	private int commentID;
+	
 	//照片ID
 	@SerializedName("photoId")
 	private int photoID;
@@ -30,6 +34,16 @@ public class Comment
 	//评论的内容
 	@SerializedName("commentContent")
 	private String commentContent;
+	
+	public void setCommentID(int commentID)
+	{
+		this.commentID=commentID;
+	}
+	
+	public int getCommentID()
+	{
+		return this.commentID;
+	}
 	
 	public void setPhotoID(int photoID)
 	{

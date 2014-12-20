@@ -406,11 +406,9 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	{
 		private Photo photoDetails;
 		private ImageView ivPraiseButton;
-		private TextView tvPraiseTimes;
 		@Override
 		public void onClick(View v) {
 			ivPraiseButton=(ImageView)v.findViewById(R.id.beauty_personal_praise_button);
-			tvPraiseTimes=(TextView)v.findViewById(R.id.beauty_personal_praise_times);
 			photoDetails=(Photo)ivPraiseButton.getTag();
 			if(!photoDetails.getIsPraise())
 			{
@@ -419,7 +417,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 //				tvPraiseTimes.setText(String.valueOf(photoDetails.getPraiseCount()));
 //				ivPraiseButton.setImageResource(R.drawable.praise_select);
 				adapter.notifyDataSetChanged();
-				//add praise_record
+				//add  praise_record
 				new Thread(new Runnable() {
 					
 					@Override
@@ -458,6 +456,8 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			Bundle bundle=new Bundle();
 			bundle.putString("avatarPath", mPhotoDetails.getAvatarPath());
 			bundle.putString("nickName", mPhotoDetails.getNickName());
+			bundle.putSerializable("uploadTime", mPhotoDetails.getUploadTime());
+			bundle.putString("photoPath", mPhotoDetails.getPhotoPath());
 			bundle.putString("photoDescription", mPhotoDetails.getPhotoDescription());
 			bundle.putInt("photoId", mPhotoDetails.getPhotoId());
 			intent.putExtras(bundle);

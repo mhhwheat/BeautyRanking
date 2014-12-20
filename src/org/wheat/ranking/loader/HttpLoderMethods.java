@@ -1,8 +1,10 @@
 package org.wheat.ranking.loader;
 
+
 import org.wheat.ranking.entity.ConstantValue;
 import org.wheat.ranking.entity.json.BeautyDetailJson;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
+import org.wheat.ranking.entity.json.CommentListJson;
 import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.httptools.BitmapTools;
 import org.wheat.ranking.httptools.HttpConnectTools;
@@ -100,6 +102,15 @@ public class HttpLoderMethods {
 				fromJson(new String(beautyDetailStr.getBytes("8859_1"),"UTF-8"),BeautyDetailJson.class);
 		
 		return beautyDetail;
+	}
+	
+	public static CommentListJson getPhotoComments(int firstIndex,int count,int photoId) throws Exception
+	{
+		String json=HttpConnectTools.get(ConstantValue.HttpRoot+"servlet/GetPhotoComments?photoId="+photoId+"&firstIndex="+firstIndex+"&count="+count, null);
+		if(json==null)
+			return null;
+		CommentListJson commentListJson=JsonTools.fromJson(new String(json.getBytes("8859_1"),"UTF-8"), CommentListJson.class);
+		return commentListJson;
 	}
 	
 	

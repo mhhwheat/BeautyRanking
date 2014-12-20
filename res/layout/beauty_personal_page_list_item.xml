@@ -64,6 +64,7 @@
             	android:layout_width="20dp"
             	android:layout_height="20dp"
             	android:layout_marginRight="5dp"
+            	android:src="@drawable/praise"
             	android:contentDescription="@string/beauty_personal_contenDescription"/>
             <TextView 
             	android:id="@+id/beauty_personal_comment_times"
