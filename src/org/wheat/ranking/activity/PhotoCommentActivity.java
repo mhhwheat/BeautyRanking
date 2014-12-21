@@ -15,18 +15,27 @@ import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
 
 import android.app.Activity;
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,11 +66,18 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 //	private TextView tvFooterText;
 //	private ProgressBar pbFooterLoading;
 	
+	
+	//弹出的编辑窗口
+	private PopupWindow mPopWindow;
+	private Button btComment;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.photo_comment_layout);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.photo_comment_title);
 		
 		mCurrentPhoto=getPhotoFromIntent();
 		
@@ -71,12 +87,14 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		adapter=new PhotoCommentListAdapter();
 		
 		mListView=(ListView)findViewById(R.id.photo_comment_list_view);
+		btComment=(Button)findViewById(R.id.photo_comment_comment_button);
 		initialHeader();
 //		initialFooter();
 		
 		mListView.addHeaderView(mHeaderView);
 //		mListView.addFooterView(mFooterView);
 		mListView.setAdapter(adapter);
+		btComment.setOnClickListener(new CommentOnClickListener());
 		
 		new UpdateCommentsTask().execute();
 		
@@ -262,6 +280,38 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 			isLoadingMore=false;
 		}
 		
+		
+	}
+	
+	private class CommentOnClickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v) {
+			showPopupView(btComment);
+		}
+		
+		
+		
+	}
+	private void showPopupView(View parent)
+	{
+		if(mPopWindow==null)
+		{
+			View view=mInflater.inflate(R.layout.photo_comment_popup_edit_text, null);
+			mPopWindow=new PopupWindow(view, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+		}
+		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
+		mPopWindow.setFocusable(true);
+		// 设置允许在外点击消失
+		mPopWindow.setOutsideTouchable(true);
+		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
+		ColorDrawable dw = new ColorDrawable(0X00000000);
+		mPopWindow.setBackgroundDrawable(dw);
+		//软键盘不会挡着popupwindow
+		mPopWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		//设置菜单显示的位置
+		mPopWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
 		
 	}
 	
