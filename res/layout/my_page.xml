@@ -30,7 +30,7 @@
             android:text="text"/>
     </LinearLayout>
     
-    
+
     <ListView
         android:id="@+id/my_page_listview"
         android:layout_below="@id/mypageinfo"
