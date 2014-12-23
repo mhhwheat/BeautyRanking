@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/beauty_personal_page_refresh_list_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" 
@@ -13,14 +14,9 @@
         android:fadingEdge="none"
         android:fastScrollEnabled="false"
         android:footerDividersEnabled="true"
-        android:headerDividersEnabled="false"
+        android:headerDividersEnabled="true"
         android:smoothScrollbar="true"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/arrow_up"
         />
-    <TextView 
-        android:id="@+id/beauty_personal_page_publish_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textSize="20sp"
-        android:text="发帖"/>
 </LinearLayout>

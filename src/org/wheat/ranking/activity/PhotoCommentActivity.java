@@ -10,21 +10,32 @@ import org.wheat.beautyranking.R;
 import org.wheat.ranking.entity.Comment;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
+import org.wheat.ranking.entity.json.CommentListJson;
+import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
 
 import android.app.Activity;
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,16 +61,23 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 	private ImageView ivHeaderPhoto;
 	private TextView tvHeaderPhotoDescription;
 	
-	//Footer
-	private View mFooterView;
-	private TextView tvFooterText;
-	private ProgressBar pbFooterLoading;
+//	//Footer
+//	private View mFooterView;
+//	private TextView tvFooterText;
+//	private ProgressBar pbFooterLoading;
+	
+	
+	//弹出的编辑窗口
+	private PopupWindow mPopWindow;
+	private Button btComment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.photo_comment_layout);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.photo_comment_title);
 		
 		mCurrentPhoto=getPhotoFromIntent();
 		
@@ -69,13 +87,16 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		adapter=new PhotoCommentListAdapter();
 		
 		mListView=(ListView)findViewById(R.id.photo_comment_list_view);
+		btComment=(Button)findViewById(R.id.photo_comment_comment_button);
 		initialHeader();
-		initialFooter();
+//		initialFooter();
 		
 		mListView.addHeaderView(mHeaderView);
-		mListView.addFooterView(mFooterView);
+//		mListView.addFooterView(mFooterView);
 		mListView.setAdapter(adapter);
+		btComment.setOnClickListener(new CommentOnClickListener());
 		
+		new UpdateCommentsTask().execute();
 		
 	}
 	
@@ -95,12 +116,12 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		tvHeaderPhotoDescription.setText(mCurrentPhoto.getPhotoDescription());
 	}
 	
-	private void initialFooter()
-	{
-		mFooterView=mInflater.inflate(R.layout.photo_comment_list_footer, null);
-		tvFooterText=(TextView)mFooterView.findViewById(R.id.photo_comment_list_footer_text);
-		pbFooterLoading=(ProgressBar)mFooterView.findViewById(R.id.photo_comment_list_footer_progressbar);
-	}
+//	private void initialFooter()
+//	{
+//		mFooterView=mInflater.inflate(R.layout.photo_comment_list_footer, null);
+//		tvFooterText=(TextView)mFooterView.findViewById(R.id.photo_comment_list_footer_text);
+//		pbFooterLoading=(ProgressBar)mFooterView.findViewById(R.id.photo_comment_list_footer_progressbar);
+//	}
 	
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -173,6 +194,12 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
+			
+			mImageLoader.addTask(new PhotoParameters(comment.getUserAvatar(), holder.ivUserAvatar.getWidth(), holder.ivUserAvatar.getWidth()*holder.ivUserAvatar.getHeight()), holder.ivUserAvatar);
+			holder.tvUserNickName.setText(comment.getUserNickName());
+			holder.tvCommentTime.setText(getDifferenceFromDate(comment.getCommentTime()));
+			holder.tvCommentContent.setText(comment.getCommentContent());
+			
 			return convertView;
 		}
 		
@@ -185,12 +212,116 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		}
 	}
 	
+	private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentListJson>
+	{
+
+		@Override
+		protected CommentListJson doInBackground(Void... params) {
+			CommentListJson json=null;
+			try{
+				json=HttpLoderMethods.getPhotoComments(0, COMMENT_LENGTH, mCurrentPhoto.getPhotoId());
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			return json;
+		}
+
+		@Override
+		protected void onPostExecute(CommentListJson result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			if(result!=null&&result.getCode()==1000)
+			{
+				synchronized (mListData) {
+					List<Comment> list=result.getData().getCommentList();
+					mListData.clear();
+					for(Comment comment:list)
+					{
+						mListData.add(comment);
+					}
+					adapter.notifyDataSetChanged();
+				}
+			}
+		}
+	}
+	
+	private class LoadMoreTask extends AsyncTask<Void, Void, CommentListJson>
+	{
+
+		@Override
+		protected CommentListJson doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			CommentListJson json=null;
+			try{
+				json=HttpLoderMethods.getPhotoComments(mListData.size(), COMMENT_LENGTH, mCurrentPhoto.getPhotoId());
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			return json;
+		}
+
+		@Override
+		protected void onPostExecute(CommentListJson result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			if(result!=null&&result.getCode()==1000)
+			{
+				synchronized (mListData) {
+					List<Comment> list=result.getData().getCommentList();
+					for(Comment comment:list)
+					{
+						mListData.add(comment);
+					}
+					adapter.notifyDataSetChanged();
+				}
+			}
+			isLoadingMore=false;
+		}
+		
+		
+	}
+	
+	private class CommentOnClickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v) {
+			showPopupView(btComment);
+		}
+		
+		
+		
+	}
+	private void showPopupView(View parent)
+	{
+		if(mPopWindow==null)
+		{
+			View view=mInflater.inflate(R.layout.photo_comment_popup_edit_text, null);
+			mPopWindow=new PopupWindow(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
+		}
+		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
+		mPopWindow.setFocusable(true);
+		// 设置允许在外点击消失
+		mPopWindow.setOutsideTouchable(true);
+		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
+		ColorDrawable dw = new ColorDrawable(0X00000000);
+		mPopWindow.setBackgroundDrawable(dw);
+		//软键盘不会挡着popupwindow
+		mPopWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		//设置菜单显示的位置
+		mPopWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+		
+	}
+	
 	public void onLastItemVisible() {
 		if(!isLoadingMore)
 		{
 			isLoadingMore=true;
-			pbFooterLoading.setVisibility(View.VISIBLE);
-			tvFooterText.setText(R.string.list_footer_loading);
+//			pbFooterLoading.setVisibility(View.VISIBLE);
+//			tvFooterText.setText(R.string.list_footer_loading);
+			new LoadMoreTask().execute();
 			Toast.makeText(PhotoCommentActivity.this, "End of List!", Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -203,6 +334,8 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		Photo photo=new Photo();
 		photo.setAvatarPath(bundle.getString("avatarPath"));
 		photo.setNickName(bundle.getString("nickName"));
+		photo.setUploadTime((Date)bundle.getSerializable("uploadTime"));
+		photo.setPhotoPath(bundle.getString("photoPath"));
 		photo.setPhotoDescription(bundle.getString("photoDescription"));
 		photo.setPhotoId(bundle.getInt("photoId"));
 		return photo;
