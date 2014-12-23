@@ -299,7 +299,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		if(mPopWindow==null)
 		{
 			View view=mInflater.inflate(R.layout.photo_comment_popup_edit_text, null);
-			mPopWindow=new PopupWindow(view, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+			mPopWindow=new PopupWindow(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
 		}
 		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
 		mPopWindow.setFocusable(true);

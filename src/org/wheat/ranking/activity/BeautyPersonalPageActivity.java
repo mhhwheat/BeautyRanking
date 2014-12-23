@@ -194,7 +194,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			mImageLoader.addTask(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
 			holder.tvUserNikeName.setText(photo.getNickName());
 			holder.tvPublishTime.setText(getDifferenceFromDate(photo.getUploadTime()));
-			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),-1 , -1), holder.ivPhoto);
+			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),-1 , -1,true), holder.ivPhoto);
 			if(photo.getIsPraise())
 			{
 				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);
