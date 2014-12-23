@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.entity.BeautyIntroduction;
+import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
@@ -31,6 +32,8 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /** 
@@ -49,7 +52,7 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 	private NeighborGridAdapter adapter;
 	
 	private boolean isLoadingMore=false;//防止重复开启异步加载线程
-	private GridView mActualGridView;//PulltoRefreshListView中真正的ListView
+	//private GridView mActualGridView;//PulltoRefreshListView中真正的ListView
 	
 	
 	
@@ -72,7 +75,7 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 		View view=inflater.inflate(R.layout.fragment_neighbor_layout, container, false);
 		mPullToRefreshGridView=(PullToRefreshGridView)view.findViewById(R.id.neighbor_pull_refresh_grid);
 		
-		mActualGridView=mPullToRefreshGridView.getRefreshableView();
+//		mActualGridView=mPullToRefreshGridView.getRefreshableView();
 		mPullToRefreshGridView.setAdapter(adapter);
 		initialGridViewListener();
 		
@@ -113,7 +116,7 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return 0;
+			return mGridData.size();
 		}
 
 		@Override
@@ -125,17 +128,39 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 		@Override
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
-			return 0;
+			return position;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			return null;
+			final BeautyIntroduction GridItem=mGridData.get(position);
+			ViewHolder holder=null;
+			if(convertView==null)
+			{
+				holder=new ViewHolder();
+				convertView=mInflater.inflate(R.layout.fragment_neighbor_grid_view_item, null);
+				holder.ivAvatar=(ImageView)convertView.findViewById(R.id.fragment_neighbor_grid_view_avatar);
+				holder.tvDescription=(TextView)convertView.findViewById(R.id.fragment_neighbor_grid_view_description);
+				convertView.setTag(holder);
+			}
+			else
+				holder=(ViewHolder)convertView.getTag();
+			mImageLoader.addTask(new PhotoParameters(GridItem.getAvatarPath(), -1, -1, true), holder.ivAvatar);
+			holder.tvDescription.setText(GridItem.getDescription());
+			return convertView;
+		}
+		
+		private class ViewHolder
+		{
+			ImageView ivAvatar;
+			TextView tvDescription;
 		}
 		
 	}
 	
+	/**
+	 * 初始化PullToRefreshGridView的监听器
+	 */
 	private void initialGridViewListener()
 	{
 		mPullToRefreshGridView.setOnRefreshListener(new OnRefreshListener<GridView>() {
@@ -166,6 +191,13 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 		});
 	}
 	
+	/**
+	 * 
+	 * description:刷新数据异步线程
+	 * @author wheat
+	 * date: 2014-12-23  
+	 * time: 下午10:36:04
+	 */
 	private class UpdateDataTask extends AsyncTask<Void, Void, BeautyIntroductionListJson>
 	{
 		@Override
@@ -197,6 +229,13 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 		
 	}
 	
+	/**
+	 * 
+	 * description:加载更多数据异步线程
+	 * @author wheat
+	 * date: 2014-12-23  
+	 * time: 下午10:36:26
+	 */
 	private class LoadMoreTask extends AsyncTask<Void, Void, BeautyIntroductionListJson>
 	{
 		private int firstIndex;
