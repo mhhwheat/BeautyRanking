@@ -35,6 +35,17 @@ public class HttpLoderMethods {
 //		}
 		return beautyInJson;
 	}
+	
+	public static PhotoListJson getMyCreatePageWithPhoto(int firstIndex,int count,String userPhoneNumber)throws Exception{
+		String myFollowJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyCreatePhoto?userPhoneNumber="+userPhoneNumber
+				+"&firstIndex="+firstIndex+"&count="+count,null);
+		if (myFollowJson == null)return null;
+		PhotoListJson beautyInJson=JsonTools.
+				fromJson(new String(myFollowJson.getBytes("8859_1"),"UTF-8"), PhotoListJson.class);
+		return beautyInJson;
+	}
+	
+	
 
 
 	public static BeautyIntroductionListJson getMyFollowPage(int firstIndex,int count,String userPhoneNumber)throws Exception{
@@ -46,7 +57,15 @@ public class HttpLoderMethods {
 		
 		return beautyInJson;
 	}
-	
+	public static PhotoListJson getMyFollowPageWithPhoto(int firstIndex,int count,String userPhoneNumber)throws Exception{
+		String myFollowJson =HttpConnectTools.get(ConstantValue.HttpRoot+"GetMyFollowPhoto?userPhoneNumber="+userPhoneNumber
+				+"&firstIndex="+firstIndex+"&count="+count,null);
+		if (myFollowJson == null)return null;
+		PhotoListJson beautyInJson=JsonTools.
+				fromJson(new String(myFollowJson.getBytes("8859_1"),"UTF-8"), PhotoListJson.class);
+		
+		return beautyInJson;
+	}
 	/**
 	 * 
 	* @Description: TODO

@@ -12,6 +12,6 @@ public class testmypage extends Activity{
 
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.my_page);
+		setContentView(R.layout.my_detail_page);
 	}
 }

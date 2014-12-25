@@ -30,13 +30,20 @@
             android:padding="5dp" >
  <!-- 设置内部控件之间的距离 -->
 
-            <ImageView
+			<FrameLayout
+			    android:id="@+id/avatarF"
+			   android:layout_weight="75"
+			   android:layout_width="fill_parent"
+			   android:layout_height="fill_parent">
+			    <ImageView
                 android:id="@+id/myavatar"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="75"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                
                 android:scaleType="centerCrop"
-                android:src="@drawable/fei" />
+                android:src="@drawable/liu" />
+			    
+			    </FrameLayout>
 
             <RelativeLayout
                 android:id="@+id/rl1"
@@ -45,19 +52,19 @@
                 android:layout_weight="40"
                 android:padding="5dp" >
 
-                <EditText
-                    android:id="@+id/tv1"
+                <TextView
+                    android:id="@+id/mynickname"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:hint="昵称"
                     android:maxLength="10"
                     android:background="@null" />
 
-                <EditText
-                    android:id="@+id/tv2"
+                <TextView
+                    android:id="@+id/mybeautyid"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tv1"
+                    android:layout_below="@id/mynickname"
                     android:layout_marginTop="7dp"
                     android:hint="beautyid"
                     android:background="@null"
@@ -70,21 +77,22 @@
                 android:layout_weight="85" >
 
                 <ImageView
-                    android:id="@+id/setting"
+                    android:id="@+id/mysetting"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:scaleType="fitXY"
-                    android:src="@drawable/settings" />
+                    android:src="@drawable/cog" />
 
                 <ImageView
-                    android:id="@+id/settingnull"
+                    android:id="@+id/mysettingtrue"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
+                    android:layout_height="fill_parent" /><!-- 为了让用户比较容易按到按钮所以加大设置按钮 -->
             </FrameLayout>
         </LinearLayout>
 
         <TextView
+            android:id="@+id/mypersonalsign"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/baseinfoliner"
@@ -107,8 +115,8 @@
             android:layout_width="fill_parent"
             android:layout_height="3dp"
             android:layout_below="@id/linear1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp" />
         <LinearLayout 
             android:id="@+id/inlinear"
@@ -118,7 +126,9 @@
             android:layout_below="@id/dashline1"
             >
             <RelativeLayout 
-                android:id="@+id/rel1"
+                 android:clickable="true"
+                android:background="@drawable/my_page_tab_around"
+                android:id="@+id/mycreate"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -131,6 +141,7 @@
                 android:textSize="18dp"
                 />
                 <TextView
+                    android:id="@+id/mycreatenum"
                     android:layout_marginTop="3dp"
                     android:layout_below="@id/re_tv1"
                     android:layout_width="fill_parent"
@@ -142,7 +153,9 @@
             </RelativeLayout>"
             
            <RelativeLayout 
-                android:id="@+id/rel2"
+                android:clickable="true"
+                android:background="@drawable/my_page_tab_around"
+                android:id="@+id/myfollow"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -155,6 +168,7 @@
                 android:textSize="18dp"
                 />
                 <TextView
+                    android:id="@+id/myfollownum"
                     android:layout_marginTop="3dp"
                     android:layout_below="@id/re_tv2"
                     android:layout_width="fill_parent"
@@ -166,7 +180,9 @@
             </RelativeLayout>
                 
             <RelativeLayout 
-                android:id="@+id/rel3"
+                 android:clickable="true"
+                 android:background="@drawable/my_page_tab_around"
+                android:id="@+id/mylike"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -179,6 +195,7 @@
                 android:textSize="18dp"
                 />
                 <TextView
+                    android:id="@+id/mylikenum"
                     android:layout_marginTop="3dp"
                     android:layout_below="@id/re_tv3"
                     android:layout_width="fill_parent"
@@ -190,7 +207,9 @@
             </RelativeLayout>
                 
             <RelativeLayout 
-                android:id="@+id/rel4"
+                android:clickable="true"
+                 android:background="@drawable/my_page_tab_around"
+                android:id="@+id/myfocus"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -203,6 +222,7 @@
                 android:textSize="18dp"
                 />
                 <TextView
+                    android:id="@+id/myfocusnum"
                     android:layout_marginTop="3dp"
                     android:layout_below="@id/re_tv4"
                     android:layout_width="fill_parent"

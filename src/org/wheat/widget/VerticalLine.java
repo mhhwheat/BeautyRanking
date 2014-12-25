@@ -1,14 +1,20 @@
 package org.wheat.widget;
 
 
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
-
+/**
+ * 
+* @ClassName: VerticalLine 
+* @Description: 本来是想画一条竖线，暂时没有用 
+* @author hogachen
+* @date 2014年12月24日 上午10:11:14 
+*
+ */
 public class VerticalLine extends View{
 
 	private Paint paint=null;
