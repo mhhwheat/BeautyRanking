@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/white">
+    
+<LinearLayout 
+    android:id="@+id/line1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <EditText
+        android:layout_marginTop="30dp"
+        android:hint="手机号码"
+        android:textSize="17sp"
+        android:gravity="center"
+        android:id="@+id/login_user_id"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/loginedittextbackground"
+        android:phoneNumber="true"/>
+    <EditText
+        android:hint="密码"
+        android:id="@+id/login_pwd"
+        android:password="true"
+        android:textSize="17sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/loginedittextbackground"/>
+    
+    
+    <Button
+        android:id="@+id/btLogin"
+        android:layout_marginTop="30dp"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="45dp"
+        android:text="登录"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:background="@drawable/loginbuttonbackground"/>
+   </LinearLayout>
+    
+    <LinearLayout
+        android:layout_below="@id/line1"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp">
+    <TextView 
+        android:clickable="true"
+        android:layout_marginLeft="15dp"
+        android:text="忘记密码?"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"/>
+    <TextView
+        android:id="@+id/tvRegister"
+        android:clickable="true"
+        android:text="快速注册>>"
+        android:layout_marginRight="15dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="right"
+        android:layout_weight="1"/>
+        
+    </LinearLayout>
+"
+</RelativeLayout>

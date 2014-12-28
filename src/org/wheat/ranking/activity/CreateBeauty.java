@@ -1,4 +1,4 @@
-package org.wheat.ranking.testActivity;
+package org.wheat.ranking.activity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,7 +52,7 @@ import android.widget.Toast;
 
 
 
-public class PicCutDemoActivity extends Activity implements OnClickListener, AMapLocationListener {
+public class CreateBeauty extends Activity implements OnClickListener, AMapLocationListener {
 
 
 	/**
@@ -61,14 +61,19 @@ public class PicCutDemoActivity extends Activity implements OnClickListener, AMa
 	private LocationManagerProxy mLocationManagerProxy;
 	private  MyLocation myLocation = new MyLocation();;
 	
+	private TextView tvPersonInfo;
 	
 	private ImageView iv = null;
-	private EditText edt_beauty_info_school=null;
-	private EditText edt_beauty_info_admission=null;
-	private EditText edt_beauty_info_birthday=null;//实际上改为微信号
+	String truename;
+	String birthday;
+	String school;
+	String description;
+//	private EditText edt_beauty_info_school=null;
+//	private EditText edt_beauty_info_admission=null;
+//	private EditText edt_beauty_info_birthday=null;//实际上改为微信号
 	private TextView textview_location=null;//实际上是地理信息
-	private EditText edt_beauty_info_constellation=null;
-	private EditText edt_beauty_info_description=null;
+//	private EditText edt_beauty_info_constellation=null;
+//	private EditText edt_beauty_info_description=null;
 	private Button btn_submit=null;
 	private String tp = null;
 
@@ -86,7 +91,7 @@ public class PicCutDemoActivity extends Activity implements OnClickListener, AMa
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.create_new_beauty);
+		setContentView(R.layout.create_new_beauty2);
 		// 初始化
 		init();
 		// 开启界面的时候就定位
@@ -115,19 +120,31 @@ public class PicCutDemoActivity extends Activity implements OnClickListener, AMa
 	 */
 	private void init() {
 		iv = (ImageView) findViewById(R.id.imageView1);
-		edt_beauty_info_school=(EditText)findViewById(R.id.beauty_info_school);
-		edt_beauty_info_admission=(EditText)findViewById(R.id.beauty_info_admission);
-		edt_beauty_info_birthday=(EditText)findViewById(R.id.beauty_info_birthday);
-		edt_beauty_info_constellation=(EditText)findViewById(R.id.beauty_info_constellation);
-		edt_beauty_info_description=(EditText)findViewById(R.id.beauty_info_description);
-		textview_location=(TextView)findViewById(R.id.textview_location);
+		tvPersonInfo=(TextView)findViewById(R.id.beauty_info_personinfo);
+//		edt_beauty_info_school=(EditText)findViewById(R.id.beauty_info_school);
+//		edt_beauty_info_admission=(EditText)findViewById(R.id.beauty_info_admission);
+//		edt_beauty_info_birthday=(EditText)findViewById(R.id.beauty_info_birthday);
+//		edt_beauty_info_constellation=(EditText)findViewById(R.id.beauty_info_constellation);
+//		edt_beauty_info_description=(EditText)findViewById(R.id.beauty_info_description);
+		textview_location=(TextView)findViewById(R.id.beauty_info_location);
 		btn_submit= (Button)findViewById(R.id.submit);
 		iv.setOnClickListener(this);
 //		threadToGetLocation();
+		tvPersonInfo.setOnClickListener(personinfolistener);
 		btn_submit.setOnClickListener(submitListener);
 	}
 	
-	
+	OnClickListener personinfolistener = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent personIntent = new Intent();
+			personIntent.setClass(CreateBeauty.this, PersonInfo.class);
+			startActivityForResult(personIntent,5);
+		}
+		
+	};
 	OnClickListener submitListener = new OnClickListener(){
 
 		@Override
@@ -255,6 +272,14 @@ public class PicCutDemoActivity extends Activity implements OnClickListener, AMa
 				setPicToView(data.getData());
 			}
 			break;
+		case 5:
+			if(data!=null){
+				truename = data.getStringExtra("truename");
+				birthday=data.getStringExtra("birthday");
+				school = data.getStringExtra("school");
+				description = data.getStringExtra("description");
+			}
+			break;
 		default:
 			break;
 		}
@@ -354,20 +379,24 @@ public class PicCutDemoActivity extends Activity implements OnClickListener, AMa
 	 */
 	private BeautyDetail getDataFromEditText(){
 		BeautyDetail beauty= new BeautyDetail();
-		String  school=edt_beauty_info_school.getText().toString();
-		String  birthday=edt_beauty_info_birthday.getText().toString();
-		String  constellation=edt_beauty_info_constellation.getText().toString();
-		String  description = edt_beauty_info_description.getText().toString();
+//		String  school=edt_beauty_info_school.getText().toString();
+//		String  birthday=edt_beauty_info_birthday.getText().toString();
+//		String  constellation=edt_beauty_info_constellation.getText().toString();
+//		String  description = edt_beauty_info_description.getText().toString();
 		Date createTime=new Date();
-		beauty.setBirthday(birthday);
-		beauty.setConstellation(constellation);
-		beauty.setDescription(description);
-		beauty.setSchool(school);
+//		beauty.setBirthday(birthday);
+//		beauty.setConstellation(constellation);
+//		beauty.setDescription(description);
+//		beauty.setSchool(school);
 		beauty.setCreateTime(createTime);
 		
 		UserLoginPreference localfile=UserLoginPreference.getInstance(this);
 		String userPhoneNumber = localfile .getuserPhoneNumber();
 		beauty.setUserPhoneNumber(userPhoneNumber);
+		beauty.setBirthday(birthday);
+		beauty.setDescription(description);
+		beauty.setSchool(school);
+		beauty.setTrueName(truename);
 		filename = userPhoneNumber+DateFormatTools.data2String(createTime);
 		beauty.setAvatarPath(filename+".jpg");
 		beauty.setLat(myLocation.getLat());

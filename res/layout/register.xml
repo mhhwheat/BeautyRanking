@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@color/white">
+    
+<LinearLayout 
+    android:id="@+id/line1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <EditText
+        android:layout_marginTop="30dp"
+        android:hint="手机号码"
+        android:textSize="17sp"
+        android:gravity="center"
+        android:id="@+id/evRegister_phone_number"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/loginedittextbackground"
+        android:phoneNumber="true"/>
+    <EditText
+        android:hint="密码"
+        android:password="true"
+        android:textSize="17sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:id="@+id/evRegister_password"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/loginedittextbackground"/>
+    <LinearLayout 
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:orientation="horizontal"
+        >
+       <RadioGroup 
+           android:id="@+id/sex_rg"
+           android:orientation="horizontal"
+           android:layout_width="fill_parent"
+           android:layout_height="fill_parent"
+           >
+           
+        <RadioButton  
+            
+            android:id="@+id/radioman"  
+            android:layout_width="35dp"  
+            android:layout_height="35dp"  
+            android:text="男"  
+        /> 
+         <ImageView android:src="@drawable/male"
+             android:layout_marginLeft="5dp"
+               android:layout_width="35dp"
+               android:layout_height="35dp"
+               android:scaleType="fitXY"/>
+         <RadioButton  
+             android:layout_marginLeft="20dp"
+            android:id="@+id/radiowoman"  
+            android:layout_width="35dp"  
+            android:layout_height="35dp"  
+            android:text="女"  
+        /> 
+        <ImageView 
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/female"
+               android:layout_width="35dp"
+               android:layout_height="35dp"
+               android:scaleType="fitXY"/>
+        </RadioGroup>
+    </LinearLayout>
+    
+    
+    
+    <Button
+        android:id="@+id/btRegister"
+        android:layout_marginTop="30dp"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="45dp"
+        android:text="注册"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:background="@drawable/loginbuttonbackground"/>
+   </LinearLayout>
+    
+   <TextView
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_below="@id/line1"
+       android:layout_margin="15dp"
+       android:gravity="center"
+       android:hint="点击注册即表示同意beauty用户协议"/>
+    <TextView 
+        android:id="@+id/reprofile"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:text="使用协议"
+        android:clickable="true"
+        android:gravity="center"
+        android:textColorLink="@color/blueviolet"/>
+
+</RelativeLayout>

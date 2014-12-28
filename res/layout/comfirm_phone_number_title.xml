@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="fill_parent"  
+    android:layout_gravity="fill_horizontal"  
+    android:orientation="horizontal"  
+    android:layout_height="fill_parent" >  
+    <Button  
+        android:background="@drawable/left_back"
+        android:id="@+id/left_back"  
+        android:layout_width="30dp"  
+        android:layout_height="30dp"  
+        android:layout_alignParentLeft="true"  
+        android:layout_marginLeft="5dp"  
+        android:layout_centerVertical="true"  
+        android:textColor="#000000"/>  
+      
+        <TextView android:id="@+id/login_header_text"  
+            android:layout_width="wrap_content"  
+            android:layout_height="fill_parent"  
+            android:layout_toRightOf="@id/left_back"   
+            android:text="输入验证码"  
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"  
+            android:gravity="center"  
+            android:layout_centerHorizontal="true"  
+            android:layout_centerVertical="true"  
+            android:singleLine="true"
+            android:textStyle="normal" />  
+</RelativeLayout>

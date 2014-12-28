@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-     android:background="#F0F0F0">
+     android:background="@color/white">
     
 
 <ScrollView
@@ -43,9 +43,11 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/secret1"/>
-            <TextView
-                android:id="@+id/text1"
-                android:text="邀请好友"
+            <EditText
+                android:background="@null"
+                android:id="@+id/persontruename"
+                android:textSize="15sp"
+                android:hint="真实姓名"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="wrap_content"
@@ -79,23 +81,25 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/secret2"/>
-            <TextView
-                android:id="@+id/text2"
-                android:text="检查更新"
+            <EditText
+                android:background="@null"
+                android:id="@+id/birthday"
+                android:hint="Ta的生日"
+                android:textSize="15sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
         </LinearLayout>
-    <!--     <org.wheat.widget.DashedLine
+      <org.wheat.widget.DashedLine
              android:background="@color/white"
             android:id="@+id/msdashline1"
             android:layout_width="fill_parent"
             android:layout_height="2dp"
             android:layout_below="@id/linear1"
-            android:layout_marginLeft="20dp" /> -->
-<!--         <LinearLayout
+            android:layout_marginLeft="20dp" />
+        <LinearLayout
              android:background="@color/white"
             android:layout_width="fill_parent"
             android:orientation="horizontal"
@@ -109,22 +113,26 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/secret3"/>
-            <TextView
-                android:id="@+id/text3"
-                android:text="个人ID"
+            <EditText
+                android:background="@null"
+                android:textSize="15sp"
+                android:id="@+id/persionschool"
+                android:hint="Ta的学校"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
-        </LinearLayout> -->
+        </LinearLayout>
         
-        <org.wheat.widget.DashedLine
+  <!--       <org.wheat.widget.DashedLine
              android:background="@color/white"
             android:id="@+id/msdashline2"
             android:layout_width="fill_parent"
-            android:layout_height="2dp" />
-        <LinearLayout
+            android:layout_height="2dp"
+
+            android:layout_marginLeft="20dp" /> -->
+        <!-- <LinearLayout
             android:id="@+id/invitefriend"
             android:clickable="true"
              android:background="@color/white"
@@ -140,15 +148,17 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/secret4"/>
-            <TextView
+            <EditText
+                android:background="@null"
                 android:id="@+id/text4"
-                android:text="邀请好友"
+                android:textSize="15sp"
+                android:hint="Ta的爱好(特长)"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
-        </LinearLayout>
+        </LinearLayout> -->
         
         <LinearLayout
             android:layout_width="fill_parent"
@@ -175,7 +185,7 @@
                 android:src="@drawable/secret5"/>
             <TextView
                 android:id="@+id/text5"
-                android:text="退出登录"
+                android:text="对Ta的印象 *"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="wrap_content"
@@ -183,7 +193,25 @@
                 />
             
         </LinearLayout>
-
+        <EditText
+            android:id="@+id/persondescription"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:textSize="13sp"
+            android:singleLine="false"
+            android:scrollHorizontally="false"
+            android:background="@drawable/textview_around"
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:hint="个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..."
+            />
+        <Button
+            android:text="确定"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sure"/>
 	</LinearLayout>
 
 </ScrollView>

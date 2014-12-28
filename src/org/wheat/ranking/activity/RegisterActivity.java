@@ -15,6 +15,8 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 public class RegisterActivity extends Activity
@@ -31,37 +33,41 @@ public class RegisterActivity extends Activity
 	private String mUserPhoneNumber;
 	private String mPassword;
 	private String mNikeName;
-	private String mSex;
+	private String mSex="";
 	private String mSchool;
 	private String mAdmissionYear;
-	
+	private RadioGroup sexGroup;  
+    private Button selectButton; 
     private RegisterHandler registerHandler;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.register_layout);
+		setContentView(R.layout.register);
 		
 		etUserPhoneNumber=(EditText)findViewById(R.id.evRegister_phone_number);
 		etPassword=(EditText)findViewById(R.id.evRegister_password);
-		etNikeName=(EditText)findViewById(R.id.evRegister_nikeName);
-		etSex=(EditText)findViewById(R.id.evRegister_sex);
-		etSchool=(EditText)findViewById(R.id.evRegister_school);
-		etAdmissionYear=(EditText)findViewById(R.id.evRegister_admissionYear);
+//		etNikeName=(EditText)findViewById(R.id.evRegister_nikeName);
+//		etSex=(EditText)findViewById(R.id.evRegister_sex);
+//		etSchool=(EditText)findViewById(R.id.evRegister_school);
+//		etAdmissionYear=(EditText)findViewById(R.id.evRegister_admissionYear);
 		btRegister=(Button)findViewById(R.id.btRegister);
 		
 		registerHandler=new RegisterHandler(this);
 		
+		sexGroup = (RadioGroup) findViewById(R.id.sex_rg);  
+      
 		
 		btRegister.setOnClickListener(new View.OnClickListener() 
 		{	
 			@Override
 			public void onClick(View v) 
 			{
-				if(!checkUserInfo())
+				String checkstr=checkUserInfo();
+				if(!checkstr.equals("yes"))
 				{
-					Toast toast=Toast.makeText(getApplicationContext(), "用户信息不完整", Toast.LENGTH_LONG);
+					Toast toast=Toast.makeText(getApplicationContext(), checkstr, Toast.LENGTH_LONG);
 					toast.show();
 				}
 				else
@@ -73,7 +79,7 @@ public class RegisterActivity extends Activity
 						{
 							UserRegisterJson json=null;
 							try {
-								json=LoginAndRegister.synRegister(mUserPhoneNumber, Coder_Md5.md5(mPassword), mNikeName, mSex, mSchool, Integer.parseInt(mAdmissionYear));
+								json=LoginAndRegister.synRegister(mUserPhoneNumber, Coder_Md5.md5(mPassword), mNikeName, mSex, mSchool, 0);
 							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							} catch (Throwable e) {
@@ -90,6 +96,7 @@ public class RegisterActivity extends Activity
 							if(msg.what==1)
 							{
 								Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
+//								Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
 								startActivity(intent);
 							}
 						}
@@ -126,31 +133,51 @@ public class RegisterActivity extends Activity
 		}
 		
 	}
-	private boolean checkUserInfo()
+	private String checkUserInfo()
 	{
 		mUserPhoneNumber=etUserPhoneNumber.getText().toString().trim();
 		if(mUserPhoneNumber.equals(""))
-			return false;
+			return "您还没有填写电话号码呢";
 		
 		mPassword=etPassword.getText().toString().trim();
 		if(mPassword.equals(""))
-			return false;
+			return "您还没有填写密码呢";
 		
-		mNikeName=etNikeName.getText().toString().trim();
-		if(mNikeName.equals(""))
-			return false;
+//		mNikeName=etNikeName.getText().toString().trim();
+//		if(mNikeName.equals(""))
+//			return false;
 		
-		mSex=etSex.getText().toString().trim();
-		if(mSex.equals(""))
-			mSex="男";
+		mSex=radioButtonResult();
+		if(mSex==""){
+			return "您还没有选择性别呢";
+		}
 		
-		mSchool=etSchool.getText().toString().trim();
-		if(mSchool.equals(""))
-			return false;
 		
-		mAdmissionYear=etAdmissionYear.getText().toString().trim();
-		if(mAdmissionYear.equals(""))
-			return false;
-		return true;
+//		mSchool=etSchool.getText().toString().trim();
+//		if(mSchool.equals(""))
+//			return false;
+//		
+//		mAdmissionYear=etAdmissionYear.getText().toString().trim();
+//		if(mAdmissionYear.equals(""))
+//			return false;
+		return "yes";
+	}
+	private String radioButtonResult(){
+		int len = sexGroup.getChildCount();  
+		String text ="";
+        for (int i = 0; i < len; i+=2) { 
+        	System.out.println("the radiobutton is "+len);
+            RadioButton radioButton = (RadioButton) sexGroup.getChildAt(i);  
+            if(radioButton.isChecked()) {  
+                if(i==0){
+                	text= "男";
+                	break;
+                }else if(i==2){
+                	text= "女";
+                	break;
+                }
+            }  
+        }
+        return text;
 	}
 }
