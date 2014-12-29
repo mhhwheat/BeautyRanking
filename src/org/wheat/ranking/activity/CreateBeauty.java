@@ -61,7 +61,7 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	private LocationManagerProxy mLocationManagerProxy;
 	private  MyLocation myLocation = new MyLocation();;
 	
-	private TextView tvPersonInfo;
+	private LinearLayout tvPersonInfo;
 	
 	private ImageView iv = null;
 	String truename;
@@ -106,9 +106,21 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 				if (msg.what == ConstantValue.operateSuccess) {
 					Toast.makeText(getApplicationContext(), "发布成功",
 							Toast.LENGTH_SHORT).show();
-				} else {
+				} else if(msg.what==-3){
 					Toast.makeText(getApplicationContext(),
-							"发布失败,错误代码为:" + msg.what, Toast.LENGTH_SHORT)
+							"您还没填写个人信息呢！", Toast.LENGTH_SHORT)
+							.show();
+				}else if(msg.what==-2){
+					Toast.makeText(getApplicationContext(),
+							"您还没有为Ta选择靓照呢", Toast.LENGTH_SHORT)
+							.show();
+				}else if(msg.what==-5){
+					Toast.makeText(getApplicationContext(),
+							"服务器不可链接", Toast.LENGTH_SHORT)
+							.show();
+				}else{
+					Toast.makeText(getApplicationContext(),
+							"发布失败，错误代码为："+msg.what, Toast.LENGTH_SHORT)
 							.show();
 				}
 			}
@@ -120,7 +132,7 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	 */
 	private void init() {
 		iv = (ImageView) findViewById(R.id.imageView1);
-		tvPersonInfo=(TextView)findViewById(R.id.beauty_info_personinfo);
+		tvPersonInfo=(LinearLayout)findViewById(R.id.llPersonInfo);
 //		edt_beauty_info_school=(EditText)findViewById(R.id.beauty_info_school);
 //		edt_beauty_info_admission=(EditText)findViewById(R.id.beauty_info_admission);
 //		edt_beauty_info_birthday=(EditText)findViewById(R.id.beauty_info_birthday);
@@ -153,6 +165,7 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 				public void run(){
 					BeautyDetail beauty=getDataFromEditText();
 					uploadBeautyInfo(beauty);
+//					finish();
 				}
 			};
 			// TODO Auto-generated method stub
@@ -345,13 +358,13 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	* @param bitmap
 	 */
 	private void setPictureAdjustToView(Bitmap bitmap) {
-		int width = getScreenWidth();
-		int picWidth = bitmap.getWidth();
-		int picHeight = bitmap.getHeight();
-		int height = (int) (width * 1.0 / picWidth * picHeight);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,
-				height);
-		iv.setLayoutParams(params);
+//		int width = getScreenWidth();
+//		int picWidth = bitmap.getWidth();
+//		int picHeight = bitmap.getHeight();
+//		int height = (int) (width * 1.0 / picWidth * picHeight);
+//		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,
+//				height);
+//		iv.setLayoutParams(params);
 		iv.setImageBitmap(bitmap);
 	}
 
@@ -396,7 +409,12 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 		beauty.setBirthday(birthday);
 		beauty.setDescription(description);
 		beauty.setSchool(school);
-		beauty.setTrueName(truename);
+		if(description!=null&&!description.equals("")){
+			beauty.setTrueName(truename);
+		}else{
+			return null;
+		}
+		
 		filename = userPhoneNumber+DateFormatTools.data2String(createTime);
 		beauty.setAvatarPath(filename+".jpg");
 		beauty.setLat(myLocation.getLat());
@@ -414,8 +432,24 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	 */
 	private void uploadBeautyInfo(BeautyDetail beautyInfo){
 		Message msg = new Message();
+		/**
+		 * 这里需要先发一个包跟服务器打交道，如果服务器没反应，马上timeout ，不要等30秒
+		 */
+		
+		
+		if(beautyInfo==null){
+			msg.what=-3;//表示没有选择图片
+			submitHandler.sendMessage(msg);
+			return;
+		}
 		if(tempfile == null ){
 			msg.what=-2;//表示没有选择图片
+			submitHandler.sendMessage(msg);
+			return;
+		}
+		int testCode = HttpUploadMethods.TestIfUploadSuccess();
+		if(testCode!=ConstantValue.operateSuccess){
+			msg.what=-5;//表示没有选择图片
 			submitHandler.sendMessage(msg);
 			return;
 		}

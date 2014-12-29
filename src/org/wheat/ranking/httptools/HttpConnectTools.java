@@ -489,4 +489,77 @@ public class HttpConnectTools
         
         return params;
 	}
+	
+	
+	
+	
+	
+	/**
+	 * 
+	* @Description: 用于设置短链接
+	* @author hogachen   
+	* @date 2014年12月29日 下午1:11:25 
+	* @version V1.0  
+	* @param url
+	* @param data
+	* @param headers
+	* @return
+	* @throws IOException
+	 */
+	public static int  getReturnCodeShortTime(String url,HashMap<String,String> data,HashMap<String,String>headers,double requestTime) throws IOException
+	{
+		if (url == null) {
+            return -1;
+        }
+		String newUrl=url;
+		if(data!=null){
+			try {
+				newUrl=addDatatoUrl(url,data,"utf-8");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		HttpClient httpClient=new DefaultHttpClient(createHttpParams());
+		
+		HttpGet httpGet=new HttpGet(newUrl);
+		
+		//开始请求
+		HttpResponse rsp=httpClient.execute(httpGet);	
+		return rsp.getStatusLine().getStatusCode();
+		
+	}
+	/**
+	 * 
+	* @Description: 
+	* @author hogachen   
+	* @date 2014年12月29日 下午1:13:09 
+	* @version V1.0  
+	* @param requestTime  等待服务器应答时间
+	* @return
+	 */
+	public static HttpParams createHttpParamsForTestServer(int requestTime)
+	{
+		HttpParams params = new BasicHttpParams();
+		
+
+        // 设置http超时(30秒)
+        HttpConnectionParams.setConnectionTimeout(params, 2*1000);
+
+        // 设置socket超时(15秒)->(30秒)-2013-05-14 等待数据时间
+        HttpConnectionParams.setSoTimeout(params, requestTime*1000);
+
+        ConnManagerParams.setTimeout(params, 1000); //从连接池中获取连接的超时时间  
+        
+        
+//        Long CONN_MANAGER_TIMEOUT = 500L; //该值就是连接不够用的时候等待超时时间，一定要设置，而且不能太大 ()
+
+        //在提交请求之前 测试连接是否可用
+//        params.setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, true);
+        // 设置处理自动处理重定向
+        HttpClientParams.setRedirecting(params, true);
+        
+        
+        return params;
+	}
 }

@@ -35,6 +35,8 @@
             android:orientation="horizontal"
             android:layout_height="50dp">
             <ImageView
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:id="@+id/msimg1"
                 android:scaleType="fitXY"
                 android:layout_marginLeft="10dp"

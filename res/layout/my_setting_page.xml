@@ -28,7 +28,7 @@
         </LinearLayout>
         
         <LinearLayout
-            android:id="@+id/changeavatar"
+            android:id="@+id/share"
             android:clickable="true"
             android:background="@color/white"
             android:layout_width="fill_parent"
@@ -63,7 +63,17 @@
                 android:layout_height="fill_parent"/>
         </LinearLayout>
         
-        <LinearLayout
+         
+         
+         
+         
+         
+         
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+    <!--     <LinearLayout
             android:id="@+id/changenickname"
             android:clickable="true"
              android:background="@color/white"
@@ -88,45 +98,17 @@
                 android:layout_height="wrap_content"
                 />
         </LinearLayout>
-    <!--     <org.wheat.widget.DashedLine
-             android:background="@color/white"
-            android:id="@+id/msdashline1"
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:layout_below="@id/linear1"
-            android:layout_marginLeft="20dp" /> -->
-<!--         <LinearLayout
-             android:background="@color/white"
-            android:layout_width="fill_parent"
-            android:orientation="horizontal"
-            android:layout_height="50dp">
-            <ImageView
-                android:id="@+id/msimg3"
-                android:scaleType="fitXY"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:background="#FFFFFF"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/secret3"/>
-            <TextView
-                android:id="@+id/text3"
-                android:text="个人ID"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-        </LinearLayout> -->
+
         
         <org.wheat.widget.DashedLine
+            android:layout_marginLeft="10dp"
              android:background="@color/white"
             android:id="@+id/msdashline2"
             android:layout_width="fill_parent"
-            android:layout_height="2dp" />
+            android:layout_height="1dp" /> -->
         <LinearLayout
-            android:id="@+id/invitefriend"
             android:clickable="true"
+            android:id="@+id/feedback"
              android:background="@color/white"
             android:layout_width="fill_parent"
             android:orientation="horizontal"
@@ -142,14 +124,80 @@
                 android:src="@drawable/secret4"/>
             <TextView
                 android:id="@+id/text4"
-                android:text="邀请好友"
+                android:text="意见反馈"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 />
         </LinearLayout>
+               <org.wheat.widget.DashedLine
+                   android:layout_marginLeft="10dp"
+             android:background="@color/white"
+            android:id="@+id/msdashline3"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp" />
+         <LinearLayout
+             android:id="@+id/aboutus"
+             android:clickable="true"
+             android:background="@color/white"
+            android:layout_width="fill_parent"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/msimg3"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:background="#FFFFFF"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/secret3"/>
+            <TextView
+                android:id="@+id/text3"
+                android:text="关于我们"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout> 
         
+         
+         
+            <org.wheat.widget.DashedLine
+                android:layout_marginLeft="10dp"
+             android:background="@color/white"
+            android:id="@+id/msdashline4"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp" />
+         <LinearLayout
+             android:clickable="true"
+             android:id="@+id/checkupdate"
+             android:background="@color/white"
+            android:layout_width="fill_parent"
+            android:orientation="horizontal"
+            android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/msimg7"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:background="#FFFFFF"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/secret3"/>
+            <TextView
+                android:id="@+id/text7"
+                android:text="检查更新"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout> 
+  </LinearLayout>
+         
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="20dp">
@@ -160,6 +208,8 @@
         </LinearLayout>
         
         <LinearLayout
+            android:id="@+id/quitlogin"
+            android:clickable="true"
              android:background="@color/white"
             android:layout_width="fill_parent"
             android:orientation="horizontal"
