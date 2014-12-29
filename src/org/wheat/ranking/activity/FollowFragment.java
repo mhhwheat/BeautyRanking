@@ -205,6 +205,8 @@ public class FollowFragment extends Fragment implements OnScrollListener
 				}
 			}
 		});
+		
+		mPullToRefreshListView.setOnScrollListener(this);
 	}
 	
 	/**

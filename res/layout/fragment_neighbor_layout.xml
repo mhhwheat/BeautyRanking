@@ -10,5 +10,7 @@
         android:layout_width="fill_parent"
         android:numColumns="2"
         android:verticalSpacing="1dp"
-        android:horizontalSpacing="1dp"/>
+        android:horizontalSpacing="1dp"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow"/>
 </LinearLayout>

@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,6 +65,9 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	private TextView tvFooterText;
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
+	
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub
+		Log.w("BeautyPersonalPageActivity", "onScrollStateChanged");
 		switch(scrollState)
 		{
 		case OnScrollListener.SCROLL_STATE_FLING:
@@ -138,7 +143,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-		// TODO Auto-generated method stub
+		
 	}
 	
 	private class BeautyPersonalPageListAdapter extends BaseAdapter
@@ -252,6 +257,10 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				}
 			}
 		});
+		
+		
+		
+		mPullToRefreshListView.setOnScrollListener(this);
 	}
 	
 	/**

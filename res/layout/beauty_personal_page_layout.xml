@@ -17,6 +17,13 @@
         android:headerDividersEnabled="true"
         android:smoothScrollbar="true"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrDrawable="@drawable/arrow_up"
+        ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow"
         />
+    <TextView 
+        android:id="@+id/beauty_personal_floating_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF0000"
+        android:textSize="20sp"
+        android:text="拍照"/>
 </LinearLayout>

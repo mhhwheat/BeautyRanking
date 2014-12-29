@@ -189,6 +189,8 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 				}
 			}
 		});
+		
+		mPullToRefreshGridView.setOnScrollListener(this);
 	}
 	
 	/**

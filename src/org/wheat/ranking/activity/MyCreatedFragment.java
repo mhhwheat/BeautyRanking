@@ -199,6 +199,8 @@ public class MyCreatedFragment extends Fragment implements OnScrollListener
 				
 			}
 		});
+		
+		mPullToRefreshListView.setOnScrollListener(this);
 	}
 	
 	/**

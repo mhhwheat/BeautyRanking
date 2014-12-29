@@ -94,6 +94,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		mListView.addHeaderView(mHeaderView);
 //		mListView.addFooterView(mFooterView);
 		mListView.setAdapter(adapter);
+		mListView.setOnScrollListener(this);
 		btComment.setOnClickListener(new CommentOnClickListener());
 		
 		new UpdateCommentsTask().execute();

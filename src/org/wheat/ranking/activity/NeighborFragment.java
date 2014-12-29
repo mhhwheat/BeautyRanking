@@ -199,6 +199,8 @@ public class NeighborFragment extends Fragment implements OnScrollListener
 				}
 			}
 		});
+		
+		mPullToRefreshListView.setOnScrollListener(this);
 	}
 	
 	/**

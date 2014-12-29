@@ -128,10 +128,10 @@ public class FirstPageFragment extends Fragment
 		mViewPager=(ViewPager)mView.findViewById(R.id.first_page_pager);
 		fragmentList=new ArrayList<Fragment>();
 		Fragment mFollowFragment=new FollowFragment();
-		Fragment mNeighborFragment=new NeighborFragment();
+		Fragment mNeighborGridFragment=new NeighborGridFragment();
 		Fragment mMyCreatedFragment=new MyCreatedFragment();
 		fragmentList.add(mFollowFragment);
-		fragmentList.add(mNeighborFragment);
+		fragmentList.add(mNeighborGridFragment);
 		fragmentList.add(mMyCreatedFragment);
 		
 		

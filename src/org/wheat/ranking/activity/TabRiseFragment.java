@@ -198,6 +198,8 @@ mInflater=inflater;
 				}
 			}
 		});
+		
+		mPullToRefreshListView.setOnScrollListener(this);
 	}
 	
 	/**

@@ -199,6 +199,8 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 				}
 			}
 		});
+		
+		mPullToRefreshListView.setOnScrollListener(this);
 	}
 	
 	/**
