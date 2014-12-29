@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity
@@ -25,7 +26,7 @@ public class LoginActivity extends Activity
 	private EditText etUserId=null;
 	private EditText etPassword=null;
 	private Button btLogin=null;
-	private Button btRegister=null;
+	private TextView btRegister=null;
 	
     private LoginHandler loginHandler;
 	
@@ -33,11 +34,11 @@ public class LoginActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login_layout);
-		etUserId=(EditText)findViewById(R.id.user_id);
-		etPassword=(EditText)findViewById(R.id.pwd);
+		setContentView(R.layout.login);
+		etUserId=(EditText)findViewById(R.id.login_user_id);
+		etPassword=(EditText)findViewById(R.id.login_pwd);
 		btLogin=(Button)findViewById(R.id.btLogin);
-		btRegister=(Button)findViewById(R.id.btRegister);
+		btRegister=(TextView)findViewById(R.id.tvRegister);
 		loginHandler=new LoginHandler(this);
 		btLogin.setOnClickListener(new View.OnClickListener() 
 		{

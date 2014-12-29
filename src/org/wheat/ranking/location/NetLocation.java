@@ -1,8 +1,8 @@
 package org.wheat.ranking.location;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.activity.CreateBeauty;
 import org.wheat.ranking.entity.MyLocation;
-import org.wheat.ranking.testActivity.PicCutDemoActivity;
 
 import android.app.Activity;
 import android.content.Intent;

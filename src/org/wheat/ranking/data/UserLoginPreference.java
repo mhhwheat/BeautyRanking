@@ -19,7 +19,11 @@ public class UserLoginPreference
     private static final String USER_PHONE_NUMBER = "userPhoneNumber"; //µÇÂ¼Ãû  
     private static final String PASSWORD = "password";  //ÃÜÂë  
     private static final String IS_SAVE_PWD = "isSavePwd"; //ÊÇ·ñ±£ÁôÃÜÂë  
-      
+    private static final String USER_INFO_CREATE_NUM="userInfoCreateNum";
+    private static final String USER_INFO_FOCUS_NUM="userInfoFocusNum";
+    private static final String USER_INFO_NICKNAME="userInfoNickName";
+    private static final String USER_INFO_LIKE="userInfoLike";
+    private static final String USER_INFO_PERSION_SIGN="userInfoPersonSign";
     public static synchronized UserLoginPreference getInstance(Context context){  
         if(preference == null)  
             preference = new UserLoginPreference(context);  
@@ -33,8 +37,69 @@ public class UserLoginPreference
                 packageName, Context.MODE_PRIVATE);  
     }  
       
-      
-    public String getuserPhoneNumber(){  
+    public void setUserInfoPersionSign(String userInfoPersionSign){
+    	Editor editor = sharedPreference.edit();  
+        editor.putString(USER_INFO_PERSION_SIGN, userInfoPersionSign);  
+        editor.commit();
+    }
+    public  String getUserInfoPersionSign() {
+    	String userPhoneNumber = sharedPreference.getString(USER_INFO_PERSION_SIGN, "ÄáÂê");  
+        return userPhoneNumber;
+	}
+
+
+	public  int getUserInfoCreateNum() {
+    	int userPhoneNumber = sharedPreference.getInt(USER_INFO_CREATE_NUM,0);  
+        return userPhoneNumber;
+	}
+
+
+	public  int getUserInfoFocusNum() {
+		int userPhoneNumber = sharedPreference.getInt(USER_INFO_FOCUS_NUM, 0);  
+        return userPhoneNumber;
+	}
+
+	public  String getUserInfoNickname() {
+		String userPhoneNumber = sharedPreference.getString(USER_INFO_NICKNAME, "ºê¼Ñ");  
+        return userPhoneNumber;
+	}
+	
+	
+	public  int getUserInfoLike() {
+		int userPhoneNumber = sharedPreference.getInt(USER_INFO_LIKE, 0);  
+        return userPhoneNumber;
+	}
+	public void setUserInfoLike(int likenum){
+		Editor editor = sharedPreference.edit();  
+        editor.putInt(USER_INFO_LIKE, likenum);  
+        editor.commit(); 
+	}
+
+	public  void setUserInfoNickname(String userinfonickname) {
+		Editor editor = sharedPreference.edit();  
+        editor.putString(USER_PHONE_NUMBER, userinfonickname);  
+        editor.commit(); 
+	}
+
+
+	public  void setUserInfoCreateNum(int userInfoCreateNum) {
+		Editor editor = sharedPreference.edit();  
+        editor.putInt(USER_PHONE_NUMBER, userInfoCreateNum);  
+        editor.commit(); 
+	}
+
+
+	public  void setUserInfoFocusNum(int userInfoFocusNum) {
+		Editor editor = sharedPreference.edit();  
+        editor.putInt(USER_PHONE_NUMBER, userInfoFocusNum);  
+        editor.commit(); 
+	}
+
+
+	
+
+	
+	public String getuserPhoneNumber(){  
         String userPhoneNumber = sharedPreference.getString(USER_PHONE_NUMBER, "");  
         return userPhoneNumber;  
     }  
