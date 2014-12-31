@@ -2,10 +2,13 @@ package org.wheat.ranking.activity;
 
 import org.wheat.beautyranking.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -19,7 +22,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 public class MainInterfaceActivity extends FragmentActivity
 {
 	private RadioGroup mRadioGroup;
-	
+	private int radioLen=-1;
 	
 	private Fragment mFirstPageFragment;
 	private Fragment mFindPageFragment;
@@ -28,19 +31,32 @@ public class MainInterfaceActivity extends FragmentActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);//请求设置标题栏
 		setContentView(R.layout.main_user_interface);
-		
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mycustomtitle);
 		mRadioGroup=(RadioGroup)findViewById(R.id.main_radio);
+		radioLen=mRadioGroup.getChildCount();
+//		mRadioGroup.setOnClickListener(new RadioOnClickListener());
 		mRadioGroup.setOnCheckedChangeListener(new CheckedChangeListener());
 		
 		//把首页设置为初始化页面
 		mRadioGroup.check(R.id.rb_first_page);
 	}
-	
+//	public class RadioOnClickListener implements OnClickListener{
+//
+//		@Override
+//		public void onClick(View v) {
+//			// TODO Auto-generated method stub
+//			for(int i=0;i<radioLen;i++){
+//				
+//			}
+//		}
+//		
+//	}
 	public class CheckedChangeListener implements OnCheckedChangeListener
 	{
-
+		
 		@Override
 		public void onCheckedChanged(RadioGroup group, int checkedId) 
 		{
@@ -61,8 +77,13 @@ public class MainInterfaceActivity extends FragmentActivity
 				break;
 			case R.id.rb_mine_page:
 				if(mMinePageFragment==null)
-					mMinePageFragment=new NeighborFragment();
+					mMinePageFragment=new MyDetailPage();
 				replaceFragment(mMinePageFragment, R.id.replacing_fragment);
+				break;
+			case R.id.rb_create_beauty:
+				Intent createIntent= new Intent();
+				createIntent.setClass(MainInterfaceActivity.this, CreateBeauty.class);
+				startActivity(createIntent);
 				break;
 			}
 		}

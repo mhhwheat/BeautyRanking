@@ -96,6 +96,7 @@ public class LoginActivity extends Activity
 								preference.SetuserPhoneNumber(userPhoneNumber);
 								preference.SetPassword(pwd);
 								Intent intent=new Intent(LoginActivity.this,MainInterfaceActivity.class);
+								
 								startActivity(intent);
 								finish();
 							}

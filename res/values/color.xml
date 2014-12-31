@@ -150,4 +150,8 @@
 <color name="black">#000000</color><!--黑色 -->
 <color name="transparent_background">#50000000</color> <!-- 透明色 -->
 <color name="my_page_background">#d3d3d3</color><!-- 我的页面背景颜色 -->
+
+<drawable name="red">#f00</drawable>  
+<drawable name="green">#0f0</drawable>  
+<drawable name="gray">#ccc</drawable> 
 </resources>

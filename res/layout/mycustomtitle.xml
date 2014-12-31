@@ -2,14 +2,15 @@
     android:layout_width="fill_parent"  
     android:layout_gravity="fill_horizontal"  
     android:orientation="horizontal"  
-    android:layout_height="fill_parent" >  
+    android:layout_height="fill_parent"
+    android:background="@drawable/title_background" >  
     <Button  
-        android:background="@drawable/cog"
+        android:background="@drawable/logo"
         android:id="@+id/header_left_btn"  
         android:layout_width="30dp"  
         android:layout_height="30dp"  
         android:layout_alignParentLeft="true"  
-        android:layout_marginLeft="5dp"  
+        android:layout_marginLeft="10dp"  
         android:layout_centerVertical="true"  
         android:textColor="#000000"/>  
       
@@ -21,14 +22,14 @@
             android:text="Beauty"  
             android:textSize="20sp"  
             android:textStyle="bold"  
-            android:textColor="#FFFFFF"  
+            android:textColor="#6a4cfc"  
             android:gravity="center"  
             android:layout_centerHorizontal="true"  
             android:layout_centerVertical="true"  
             android:singleLine="true" />  
              
         <Button  android:id="@+id/header_right_btn"  
-            android:background="@drawable/ic_next"
+            android:background="@null"
             android:layout_width="30dp"  
              android:layout_height="30dp"  
             android:layout_alignParentRight="true"  
