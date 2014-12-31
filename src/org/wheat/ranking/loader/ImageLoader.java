@@ -100,7 +100,19 @@ public class ImageLoader
 		if(bitmap!=null)
 		{
 			Log.w("ImageLoader", "setImageBitmap in addTask-------->");
+			if(parameters.isFixWidth())
+			{
+				//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
+				int width=parameters.getMinSideLength();
+				Log.w("ImageLoader", "parameters.getMinSideLength()="+width);
+				int picWidth=bitmap.getWidth();
+				int picHeight=bitmap.getHeight();
+				int height = (int) (width * 1.0 / picWidth * picHeight);
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,height);
+				img.setLayoutParams(params);
+			}
 			img.setImageBitmap(bitmap);
+			
 			Log.w("ImageLoader","从memoryCache获取图片--------"+parameters.getUrl());
 			synchronized (taskMap) {
 				taskMap.remove(img.hashCode());
@@ -276,7 +288,8 @@ public class ImageLoader
 					if(parameters.isFixWidth())
 					{
 						//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
-						int width=img.getWidth();
+						int width=parameters.getMinSideLength();
+						Log.w("ImageLoader", "parameters.getMinSideLength()="+width);
 						int picWidth=bitmap.getWidth();
 						int picHeight=bitmap.getHeight();
 						int height = (int) (width * 1.0 / picWidth * picHeight);

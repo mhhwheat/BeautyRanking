@@ -3,14 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <com.handmark.pulltorefresh.library.PullToRefreshGridView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <me.maxwin.view.XListView
+        xmlns:pla="http://schemas.android.com/apk/res-auto"
         android:id="@+id/neighbor_pull_refresh_grid"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:numColumns="2"
-        android:verticalSpacing="1dp"
-        android:horizontalSpacing="1dp"
-        ptr:ptrAnimationStyle="flip"
-        ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        pla:plaColumnNumber="2"
+        pla:plaLandscapeColumnNumber="3"/>
 </LinearLayout>
