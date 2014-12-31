@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+     android:background="@color/white">
+    
+
+<EditText
+    android:layout_marginTop="20dp"
+            android:id="@+id/etopinionfeedback"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:textSize="13sp"
+            android:singleLine="false"
+            android:scrollHorizontally="false"
+            android:background="@drawable/textview_around"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:hint="输入您的意见"
+            />
+
+        <Button
+        android:id="@+id/tvopinionfeedback"
+        android:layout_marginTop="30dp"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="45dp"
+        android:text="发送"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:background="@drawable/loginbuttonbackground"/>
+</LinearLayout>

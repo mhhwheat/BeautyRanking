@@ -89,11 +89,15 @@ public class LoginActivity extends Activity
 							}
 							if(jsonCode==1)
 							{
+								toastText="登录成功";
+								msg.obj=toastText;
+								loginHandler.sendMessage(msg);
 								UserLoginPreference preference=UserLoginPreference.getInstance(getApplicationContext());
 								preference.SetuserPhoneNumber(userPhoneNumber);
 								preference.SetPassword(pwd);
 								Intent intent=new Intent(LoginActivity.this,MainInterfaceActivity.class);
 								startActivity(intent);
+								finish();
 							}
 						} catch (ConnectTimeoutException e) {
 							toastText="网络连接超时";
@@ -118,6 +122,7 @@ public class LoginActivity extends Activity
 			{
 				Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
 				startActivity(intent);
+				finish();
 			}
 		});
 	}

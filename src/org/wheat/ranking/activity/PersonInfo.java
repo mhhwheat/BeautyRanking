@@ -26,12 +26,12 @@ public class PersonInfo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.create_new_beauty2);
+		setContentView(R.layout.createbeautyinfo);
 		init();
-		btnSure.setOnClickListener(commitInfolistener);
+		btnSure.setOnClickListener(new commitInfolistener());
 		
 	}
-	OnClickListener commitInfolistener = new OnClickListener() {
+	class commitInfolistener implements OnClickListener{
 
 		@Override
 		public void onClick(View v) {
@@ -44,8 +44,7 @@ public class PersonInfo extends Activity {
 				returnIntent.putExtra("birthday", birthday);
 				returnIntent.putExtra("school",school);
 				returnIntent.putExtra("description", description);
-				returnIntent.setClass(PersonInfo.this, CreateBeauty.class);
-				startActivity(returnIntent);
+				setResult(1, returnIntent);
 				finish();
 				
 			}

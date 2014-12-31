@@ -254,18 +254,18 @@ public class HttpUploadMethods {
 	
 	/**
 	 * 
-	* @Description: TODO  测试在发生socketTimeOut之后，查询数据库是否插入数据成功
+	* @Description: TODO  测试是否数据库可链接
 	* @author hogachen   
 	* @date 2014年12月14日 下午8:43:21 
 	* @version V1.0  
 	* @param data
 	* @return
 	 */
-	public static int TestIfUploadSuccess(HashMap<String ,String>data){
+	public static int TestIfUploadSuccess(){
 		int code =-1;
-		String url = "";
+		String url = ConstantValue.HttpRoot+"IfServerOk";
 		try {
-			code = HttpConnectTools.getReturnCode(url, data, null);
+			code = HttpConnectTools.getReturnCodeShortTime(url, null, null, 1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -273,5 +273,19 @@ public class HttpUploadMethods {
 		}
 		return code;
 		
+	}
+	
+	
+	public static int sendFeedbackMsg(String feedbackMsg,String userPhoneNumber){
+		String url = ConstantValue.HttpRoot+""
+				+ "sendFeedbackMsg?FeedbackMsg="+feedbackMsg+"&userPhoneNumber="+userPhoneNumber;
+		int code=-1;
+		try {
+			code  = HttpConnectTools.getReturnCode(url, null, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return code;
 	}
 }

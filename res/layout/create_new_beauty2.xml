@@ -30,7 +30,9 @@
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:id="@+id/linear1"
+            android:background="@drawable/person_info_background"
+            android:id="@+id/llPersonInfo"
+            android:clickable="true"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:padding="5dp" >
@@ -44,7 +46,6 @@
                 android:src="@drawable/user_add" />
 
             <TextView
-                android:clickable="true"
                 android:id="@+id/beauty_info_personinfo"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -72,7 +73,7 @@
             android:id="@+id/dashline1"
             android:layout_width="fill_parent"
             android:layout_height="3dp"
-            android:layout_below="@id/linear1"
+            android:layout_below="@id/llPersonInfo"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp" />
@@ -85,7 +86,7 @@
             android:id="@+id/linear2"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:layout_below="@id/linear1"
+            android:layout_below="@id/llPersonInfo"
             android:layout_marginTop="10dp"
             android:padding="5dp" >
 
@@ -101,6 +102,7 @@
             <TextView
                 android:id="@+id/beauty_info_location"
                 android:layout_width="0dp"
+                android:ellipsize="middle"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -124,6 +126,7 @@
         
 
         <Button
+            android:clickable="true"
             android:id="@+id/submit"
             android:textStyle="bold"
             android:layout_marginLeft="10dp"
@@ -132,7 +135,7 @@
             android:layout_height="50dp"
             android:layout_below="@id/dashline3"
             android:layout_marginTop="100dp"
-            android:background="@drawable/submit_backgroud"
+            android:background="@drawable/fabu_button_background"
             android:text="发布" >
         </Button>
     </RelativeLayout>
