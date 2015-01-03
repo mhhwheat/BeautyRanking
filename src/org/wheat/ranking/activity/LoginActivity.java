@@ -123,7 +123,6 @@ public class LoginActivity extends Activity
 			{
 				Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
 				startActivity(intent);
-				finish();
 			}
 		});
 	}

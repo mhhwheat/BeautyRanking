@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.activity.LoginActivity;
 import org.wheat.ranking.adapter.PagerAdapter;
 import org.wheat.widget.ViewPager;
 import org.wheat.widget.ViewPager.OnPageChangeListener;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
@@ -24,6 +27,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -34,6 +38,7 @@ import android.widget.RelativeLayout;
 public class WelcomePage extends FragmentActivity implements
 		OnPageChangeListener {
 
+	Button startButton;
 	private ViewPager mPager;
 	private VerticalFragementPagerAdapter mAdapter;
 
@@ -135,6 +140,8 @@ public class WelcomePage extends FragmentActivity implements
 				R.layout.layout_tutorial_4, null);
 		t4_icon1 = (ImageView) view4.findViewById(R.id.t4_icon1);
 		t4_fixed = (ImageView) view4.findViewById(R.id.t4_fixed);
+		startButton=(Button)view4.findViewById(R.id.t4_start);
+		startButton.setOnClickListener(new StartListener());
 		pagers.add(view4);
 
 		mAdapter = new VerticalFragementPagerAdapter();
@@ -144,6 +151,18 @@ public class WelcomePage extends FragmentActivity implements
 		animal(0);
 	}
 
+	class StartListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent startIntent = new Intent();
+			startIntent.setClass(WelcomePage.this, LoginActivity.class);
+			startActivity(startIntent);
+			finish();
+		}
+		
+	}
 	private class VerticalFragementPagerAdapter extends PagerAdapter {
 
 		@Override
@@ -308,9 +327,13 @@ public class WelcomePage extends FragmentActivity implements
 			t3_next.startAnimation(animationBottom);
 			break;
 		case 3:
+			if(t3_icon2.getAnimation()!=null)
 			t3_icon2.getAnimation().cancel();
+			if(t3_icon3.getAnimation()!=null)
 			t3_icon3.getAnimation().cancel();
+			if(t3_icon4.getAnimation()!=null)
 			t3_icon4.getAnimation().cancel();
+			if(t3_icon5.getAnimation()!=null)
 			t3_icon5.getAnimation().cancel();
 			t3_icon2.setVisibility(View.INVISIBLE);
 			t3_icon3.setVisibility(View.INVISIBLE);

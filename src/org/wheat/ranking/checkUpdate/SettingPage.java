@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.activity.FirstPage;
 import org.wheat.ranking.activity.LoginActivity;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.ConstantValue;
@@ -30,7 +31,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-public class VersionActivity extends Activity {
+public class SettingPage extends Activity {
 	private final String TAG = this.getClass().getName();
 	private final int UPDATA_NONEED = 0;
 	private final int UPDATA_CLIENT = 1;
@@ -216,7 +217,7 @@ public class VersionActivity extends Activity {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			Intent feedbackIntent =  new Intent();
-			feedbackIntent.setClass(VersionActivity.this, OpinionBack.class);
+			feedbackIntent.setClass(SettingPage.this, OpinionBack.class);
 			startActivity(feedbackIntent);
 		}
 		
@@ -242,7 +243,7 @@ public class VersionActivity extends Activity {
         @Override  
         public void onClick(View v) {  
         	Intent feedbackIntent =  new Intent();
-			feedbackIntent.setClass(VersionActivity.this, AboutUs.class);
+			feedbackIntent.setClass(SettingPage.this, AboutUs.class);
 			startActivity(feedbackIntent); 
               
         }  
@@ -283,7 +284,7 @@ public class VersionActivity extends Activity {
     	UserLoginPreference preference = UserLoginPreference.getInstance(getApplicationContext());
     	preference.SetuserPhoneNumber("");
     	Intent intent = new Intent();
-    	intent.setClass(this, LoginActivity.class);
+    	intent.setClass(this, FirstPage.class);
     	startActivity(intent);
     	finish();
     }

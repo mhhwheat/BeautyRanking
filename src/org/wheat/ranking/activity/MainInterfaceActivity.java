@@ -23,6 +23,7 @@ public class MainInterfaceActivity extends FragmentActivity
 {
 	private RadioGroup mRadioGroup;
 	private int radioLen=-1;
+	private int lastCheckId=R.id.rb_first_page;//设置发布页面跳转回来时回到哪一个Rudiobutton
 	
 	private Fragment mFirstPageFragment;
 	private Fragment mFindPageFragment;
@@ -69,21 +70,26 @@ public class MainInterfaceActivity extends FragmentActivity
 					mFirstPageFragment=new FirstPageFragment();
 				}
 				replaceFragment(mFirstPageFragment, R.id.replacing_fragment);
+				lastCheckId=R.id.rb_first_page;
 				break;
 			case R.id.rb_find_page:
 				if(mFindPageFragment==null)
 					mFindPageFragment=new RankingListFragment();
+				getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.create_page_title);
 				replaceFragment(mFindPageFragment, R.id.replacing_fragment);
+				lastCheckId=R.id.rb_find_page;
 				break;
 			case R.id.rb_mine_page:
 				if(mMinePageFragment==null)
 					mMinePageFragment=new MyDetailPage();
 				replaceFragment(mMinePageFragment, R.id.replacing_fragment);
+				lastCheckId=R.id.rb_mine_page;
 				break;
 			case R.id.rb_create_beauty:
 				Intent createIntent= new Intent();
 				createIntent.setClass(MainInterfaceActivity.this, CreateBeauty.class);
 				startActivity(createIntent);
+				mRadioGroup.check(lastCheckId);
 				break;
 			}
 		}

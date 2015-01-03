@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.checkUpdate.SettingPage;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
@@ -95,6 +96,14 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		private RelativeLayout rlLike;
 		private RelativeLayout rlFollow;
 		private RelativeLayout rlFocus;
+
+		Activity parentActivity;
+	@Override
+		public void onAttach(Activity activity) {
+			// TODO Auto-generated method stub
+			super.onAttach(activity);
+			parentActivity=activity;
+		}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -470,6 +479,18 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		tvPersonSign=(TextView)mHeaderView.findViewById(R.id.mypersonalsign);
 		//从本地获取头像，昵称，个性签名，还有创建的数据等，更新数据的时候也需要将数据存入local文件
 		getDataFromLocal();
+		ivSetting.setOnClickListener(new SettingListener());
+	}
+	class SettingListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent settingIntent = new Intent();
+			settingIntent.setClass(parentActivity,SettingPage.class);
+			startActivity(settingIntent);
+		}
+		
 	}
 	/**
 	 * 
