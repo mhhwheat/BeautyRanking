@@ -31,6 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -204,11 +206,11 @@ public class FollowFragment extends Fragment implements OnScrollListener
 				holder=(ViewHolder)convertView.getTag();
 			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50, false),holder.ivUserAvatar);
 			holder.tvUserNickName.setText(listItem.getNickName());
-			holder.ivPhoto.setTag(1, listItem);
+			holder.ivPhoto.setTag(R.id.tag_first, listItem);
 			mImageLoader.addTask(new PhotoParameters(listItem.getPhotoPath(), -1, -1, true), holder.ivPhoto);
 			holder.tvPhotoDescription.setText(listItem.getPhotoDescription());
-			holder.tvPraiseTimes.setText(listItem.getPraiseCount());
-			holder.tvCommentTimes.setText(listItem.getCommentCount());
+			holder.tvPraiseTimes.setText(String.valueOf(listItem.getPraiseCount()));
+			holder.tvCommentTimes.setText(String.valueOf(listItem.getCommentCount()));
 			if(listItem.getIsPraise())
 			{
 				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);
@@ -283,7 +285,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		protected PhotoListJson doInBackground(Void... params) {
 			PhotoListJson json=null;
 			try {
-				json=HttpLoderMethods.getBeautyAllPhotos(0, PAGE_LENGTH, 1,"18825162410");
+				json=HttpLoderMethods.getBeautyAllPhotos(0, PAGE_LENGTH, 8,"18825162410");
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -341,7 +343,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		protected PhotoListJson doInBackground(Void... params) {
 			PhotoListJson json=null;
 			try {
-				json=HttpLoderMethods.getBeautyAllPhotos(firstIndex, count, 1,"18825162410");
+				json=HttpLoderMethods.getBeautyAllPhotos(firstIndex, count, 8,"18825162410");
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -455,7 +457,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 
 		@Override
 		public void onClick(View v) {
-			Photo photo=(Photo)v.getTag(1);
+			Photo photo=(Photo)v.getTag(R.id.tag_first);
 			Intent intent=new Intent();
 			intent.putExtra("mBeautyID", photo.getBeautyId());
 			intent.setClass(getActivity(), BeautyPersonalPageActivity.class);

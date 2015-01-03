@@ -70,4 +70,7 @@
     <string name="beauty_personal_contenDescription">头像</string>
     <string name="title_activity_person_info">PersonInfo</string>
 
+    
+    <!-- Tag key -->
+    <item type="id" name="tag_first"></item>
 </resources>
