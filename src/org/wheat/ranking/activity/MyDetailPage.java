@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ import android.widget.Toast;
  * date: 2014-12-15  
  * time: 下午7:32:05
  */
-public class MyDetailPage extends Activity implements OnScrollListener
+public class MyDetailPage extends Fragment implements OnScrollListener
 {
 	int whichButton=1;//设置当前是那一个按钮，默认第一位为我的创建页面
 	
@@ -91,21 +92,26 @@ public class MyDetailPage extends Activity implements OnScrollListener
 		private RelativeLayout rlFocus;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);//请求设置标题栏
-		setContentView(R.layout.my_detail_page);
 		//设置标题栏的布局，颜色大小需要在styles中设置，再天骄到AndroidManifest.xml文件中
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mycustomtitle);
 		mBeautyId=getBeautyIdFromIntent();
 		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
-		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
 		mListData=new ArrayList<Photo>();
 		mMyFocusListData=new ArrayList<Photo>();
-		mImageLoader=ImageLoader.getInstance(this);
+		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new BeautyPersonalPageListAdapter();
 		
-		mPullToRefreshListView=(PullToRefreshListView)findViewById(R.id.my_detail_page_refresh_listview);
+		
+		new UpdateDataTask().execute();
+	}
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		mInflater=inflater;
+		View view=inflater.inflate(R.layout.my_detail_page, container, false);
+		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.my_detail_page_refresh_listview);
 		mActualListView=mPullToRefreshListView.getRefreshableView();
 		
 		mFooterView=mInflater.inflate(R.layout.refresh_list_footer, null);
@@ -123,31 +129,9 @@ public class MyDetailPage extends Activity implements OnScrollListener
 		rlCreate.setOnClickListener(new rlCreateOnClickListener());
 		mActualListView.addHeaderView(mHeaderView);
 		initialListViewListener();
-		new UpdateDataTask().execute();
+		return view;
 	}
 	
-	
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-		int position=-1;
-		int count=-1;
-		if(data!=null)
-		{
-			if(requestCode==1)
-			{
-				position=data.getIntExtra("position", -1);
-				count=data.getIntExtra("count", -1);
-			}
-		}
-		if(position!=1&&mListData.size()>=position&&count>0)
-		{
-			mListData.get(position).setCommentCount(mListData.get(position).getCommentCount()+count);
-			adapter.notifyDataSetChanged();
-		}
-	}
 
 
 
@@ -245,7 +229,7 @@ public class MyDetailPage extends Activity implements OnScrollListener
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
+				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
 						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
 				
 				// Update the LastUpdatedLabel
@@ -267,7 +251,6 @@ public class MyDetailPage extends Activity implements OnScrollListener
 						new LoadMoreTask(mListData.size(), PAGE_LENGTH).execute();
 					else
 						new LoadMoreTask(mMyFocusListData.size(), PAGE_LENGTH).execute();
-					Toast.makeText(MyDetailPage.this, "End of List!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -497,7 +480,7 @@ public class MyDetailPage extends Activity implements OnScrollListener
 			System.err.println("hogahcen the avatar is null");
 			ivHeaderAvatar.setImageBitmap(bm);
 		}	 
-		UserLoginPreference preference=UserLoginPreference.getInstance(getApplicationContext());
+		UserLoginPreference preference=UserLoginPreference.getInstance(getActivity().getApplicationContext());
 
 		tvCreate.setText(String.valueOf(preference.getUserInfoCreateNum()));
 		tvLike.setText(String.valueOf(preference.getUserInfoLike()));

@@ -18,18 +18,52 @@
     </style>
     
 	<style name="main_page_tab">  
-    	<item name="android:layout_height">fill_parent</item>  
-    	<item name="android:layout_width">match_parent</item>  
-    	<item name="android:layout_weight">1</item>  
-    	<item name="android:gravity">center</item>  
+    	
+    	    	
     	<item name="android:textSize">14sp</item>  
-    	<item name="android:paddingTop">8dip</item>  
-    	<item name="android:paddingBottom">4dip</item>  
-    	<item name="android:button">@null</item>  
     	<item name="android:background">@drawable/main_tab_selector</item>
     	<item name="android:textColor">@color/tab_text_color_selector</item>
 	</style> 
 	
+	
+	<style name="tab_text_style">
+	    <item name="android:textSize">12sp</item>
+	    <item name="android:layout_width">wrap_content</item>
+	    <item name="android:layout_height">20dp</item>
+	    <item name="android:textColor">@drawable/tab_text_background</item>
+	</style>
+	
+	<style name="tab_img_style">
+	    <item name="android:layout_marginTop">10dp</item>
+	     <item name="android:layout_width">25dp</item>
+	     <item name="android:layout_height">25dp</item>
+	     <item name="android:scaleType">fitCenter</item>
+	     <item name="android:adjustViewBounds">true</item>
+	</style>
+	
+	<style name="tab_layout_style">
+	    <item name="android:layout_width">fill_parent</item>
+	    <item name="android:layout_height">fill_parent</item>
+	    <item name="android:layout_weight">1</item>
+	    <item name="android:gravity">center</item>
+	    <item name="android:orientation">vertical</item>
+	    <item name="android:clickable">true</item>
+	 <item name="android:button">@null</item>
+	    <item name="android:background">@drawable/findbackground</item>
+	      <item name="android:layout_marginLeft">22dp</item>
+	     <item name="android:layout_marginRight">22dp</item>
+	      <item name="android:layout_marginTop">10dp</item>
+	       <item name="android:layout_marginBottom">10dp</item>
+	</style>
+
+<!-- 	
+	<item name="android:button">@null</item>  
+	<item name="android:layout_height">fill_parent</item>  
+    	<item name="android:layout_width">match_parent</item>  
+	<item name="android:gravity">center</item>  
+	    	<item name="android:paddingTop">8dip</item>  
+    	<item name="android:paddingBottom">4dip</item> 
+    	<item name="android:layout_weight">1</item>  --> 
 	
 	<style name="Transparent">
 	    <item name = "android:windowBackground">@color/transparent_background</item>
@@ -42,7 +76,7 @@
 	
 	<!-- 定义标题栏style -->
 	<style name="WindowTitleBackGround">
-	    <item name ="android:background">#2f4f4f</item>
+	    <item name ="android:background">#f9f9f9</item>
 	</style>
 	<style name="myTheme" parent="android:Theme">
 	    <item name="android:windowTitleSize">50dp</item>

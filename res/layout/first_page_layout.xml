@@ -6,9 +6,10 @@
     
     <LinearLayout 
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:background="#FFFFFFFF">
+        android:background="#f4f4f4">
 
         <TextView
             android:id="@+id/tab_follow"
