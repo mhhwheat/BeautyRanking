@@ -20,9 +20,12 @@ import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
 
 import com.huewu.pla.lib.MultiColumnListView.OnColumnWidthIsMeasureListener;
+import com.huewu.pla.lib.internal.PLA_AdapterView;
+import com.huewu.pla.lib.internal.PLA_AdapterView.OnItemClickListener;
 
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -187,6 +191,19 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 			}
 		});
 		
+		
+		mPullToRefreshGridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(PLA_AdapterView<?> parent, View view,
+					int position, long id) {
+				BeautyIntroduction introduction=mGridData.get(position);
+				Intent intent=new Intent();
+				intent.putExtra("mBeautyID", introduction.getBeautyId());
+				intent.setClass(getActivity(), BeautyPersonalPageActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 	
 	/**

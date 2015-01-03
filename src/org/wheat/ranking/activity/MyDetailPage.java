@@ -1,8 +1,6 @@
 package org.wheat.ranking.activity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
@@ -10,11 +8,9 @@ import org.wheat.ranking.checkUpdate.SettingPage;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
-import org.wheat.ranking.entity.Praise;
 import org.wheat.ranking.entity.UserInfo;
 import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
-import org.wheat.ranking.loader.HttpUploadMethods;
 import org.wheat.ranking.loader.ImageLoader;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -27,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

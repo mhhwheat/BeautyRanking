@@ -217,7 +217,7 @@ public class BeautyDetail
 	
 	public void setLng(double mLngs)
 	{
-		this.mLng=mLng;
+		this.mLng=mLngs;
 	}
 	
 	public double getLng()

@@ -15,6 +15,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -201,6 +204,19 @@ public class NeighborFragment extends Fragment implements OnScrollListener
 		});
 		
 		mPullToRefreshListView.setOnScrollListener(this);
+		
+		mPullToRefreshListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				BeautyIntroduction introduction=mListData.get(position);
+				Intent intent=new Intent();
+				intent.putExtra("mBeautyID", introduction.getBeautyId());
+				intent.setClass(getActivity(), BeautyPersonalPageActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 	
 	/**
