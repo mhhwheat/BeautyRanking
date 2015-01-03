@@ -17,6 +17,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -200,6 +203,18 @@ mInflater=inflater;
 		});
 		
 		mPullToRefreshListView.setOnScrollListener(this);
+		
+		mPullToRefreshListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				BeautyIntroduction introduction=mListData.get(position);
+				Intent intent=new Intent();
+				intent.putExtra("mBeautyID", introduction.getBeautyId());
+				intent.setClass(getActivity(), BeautyPersonalPageActivity.class);
+			}
+		});
 	}
 	
 	/**

@@ -17,7 +17,7 @@
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow"
+        ptr:ptrDrawable="@drawable/clone_xlistview_arrow"
         />
 
 </LinearLayout>

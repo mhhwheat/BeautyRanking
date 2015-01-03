@@ -11,12 +11,6 @@ public class User
 	private String mUserPhoneNumber;
 	
 	/*
-	 * Í«≥∆
-	 */
-	@SerializedName("nikeName")
-	private String mNikeName;
-	
-	/*
 	 * —ß–£
 	 */
 	@SerializedName("school")
@@ -42,16 +36,6 @@ public class User
 	public String getUserPhoneNumber()
 	{
 		return this.mUserPhoneNumber;
-	}
-	
-	public void setNikename(String nikeName)
-	{
-		this.mNikeName=nikeName;
-	}
-	
-	public String getNikename()
-	{
-		return this.mNikeName;
 	}
 	
 	public void setSchool(String school)

@@ -287,6 +287,8 @@ public class ImageLoader
 					Log.w("ImageLoader", "setImageBitmap in handler-------->");
 					if(parameters.isFixWidth())
 					{
+						img.measure(0, 0);
+						Log.w("ImageLoader", "img.getMeasureWidth="+img.getMeasuredWidth());
 						//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
 						int width=parameters.getMinSideLength();
 						Log.w("ImageLoader", "parameters.getMinSideLength()="+width);

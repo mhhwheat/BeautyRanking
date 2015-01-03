@@ -1,13 +1,18 @@
 package org.wheat.ranking.activity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
-import org.wheat.ranking.entity.BeautyIntroduction;
+import org.wheat.ranking.data.UserLoginPreference;
+import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
-import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
+import org.wheat.ranking.entity.Praise;
+import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
+import org.wheat.ranking.loader.HttpUploadMethods;
 import org.wheat.ranking.loader.ImageLoader;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -15,6 +20,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +29,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -42,7 +50,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private PullToRefreshListView mPullToRefreshListView;
-	private List<BeautyIntroduction> mListData;//保存listview数据项的数组
+	private List<Photo> mListData;//保存listview数据项的数组
 	private LayoutInflater mInflater;
 	private ImageLoader mImageLoader;//加载图片的对象
 	private FollowRefreshListAdapter adapter;
@@ -53,14 +61,18 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
+	private String mLoginUserPhoneNumber;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		mListData=new ArrayList<BeautyIntroduction>();
+		mListData=new ArrayList<Photo>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new FollowRefreshListAdapter();
+		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
+		
 		new UpdateDataTask().execute();
 	}
 	
@@ -84,6 +96,30 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		initialListViewListener();
 		
 		return view;
+	}
+
+	
+
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		int position=-1;
+		int count=-1;
+		if(data!=null)
+		{
+			if(requestCode==1)
+			{
+				position=data.getIntExtra("position", -1);
+				count=data.getIntExtra("count", -1);
+			}
+		}
+		if(position!=1&&mListData.size()>=position&&count>0)
+		{
+			mListData.get(position).setCommentCount(mListData.get(position).getCommentCount()+count);
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 
@@ -141,37 +177,62 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			final BeautyIntroduction listItem=mListData.get(position);
+			final Photo listItem=mListData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
 			{
 				holder=new ViewHolder();
-				convertView=mInflater.inflate(R.layout.refresh_list_item, null);
-				holder.photo=(ImageView)convertView.findViewById(R.id.avatar);
-				holder.name=(TextView)convertView.findViewById(R.id.trueName);
-				holder.school=(TextView)convertView.findViewById(R.id.school);
-				holder.description=(TextView)convertView.findViewById(R.id.impression);
+				convertView=mInflater.inflate(R.layout.fragment_follow_list_item, null);
+				holder.ivUserAvatar=(ImageView)convertView.findViewById(R.id.fragment_follow_user_avatar);
+				holder.tvUserNickName=(TextView)convertView.findViewById(R.id.fragment_follow_publisher_nikename);
+				holder.ivPhoto=(ImageView)convertView.findViewById(R.id.fragment_follow_photo);
+				holder.tvPhotoDescription=(TextView)convertView.findViewById(R.id.fragment_follow_photo_description);
+				holder.ivPraiseButton=(ImageView)convertView.findViewById(R.id.fragment_follow_praise_button);
+				holder.tvPraiseTimes=(TextView)convertView.findViewById(R.id.fragment_follow_praise_times);
+				holder.ivCommentButton=(ImageView)convertView.findViewById(R.id.fragment_follow_comment_button);
+				holder.tvCommentTimes=(TextView)convertView.findViewById(R.id.fragment_follow_comment_times);
+				holder.tvPublishTime=(TextView)convertView.findViewById(R.id.fragment_follow_publish_time);
 				convertView.setTag(holder);
+				
+				View PraiseView=convertView.findViewById(R.id.fragment_follow_praise_area);
+				View CommentView=convertView.findViewById(R.id.fragment_follow_comment_area);
+				PraiseView.setOnClickListener(new PraiseAreaOnClickListener());
+				CommentView.setOnClickListener(new CommentAreaOnClickListener());
+				holder.ivPhoto.setOnClickListener(new PhotoOnClickListener());
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
-			
-			holder.name.setText(listItem.getBeautyName());
-			holder.school.setText(listItem.getSchool());
-			holder.description.setText(listItem.getDescription());
-			//new AddTaskThread(listItem.getAvatarPath(), holder.photo).start();
-			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 100, 10000), holder.photo);
-			
+			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50, false),holder.ivUserAvatar);
+			holder.tvUserNickName.setText(listItem.getNickName());
+			holder.ivPhoto.setTag(1, listItem);
+			mImageLoader.addTask(new PhotoParameters(listItem.getPhotoPath(), -1, -1, true), holder.ivPhoto);
+			holder.tvPhotoDescription.setText(listItem.getPhotoDescription());
+			holder.tvPraiseTimes.setText(listItem.getPraiseCount());
+			holder.tvCommentTimes.setText(listItem.getCommentCount());
+			if(listItem.getIsPraise())
+			{
+				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);
+			}
+			else
+				holder.ivPraiseButton.setImageResource(R.drawable.praise);
+			holder.ivPraiseButton.setTag(listItem);
+			holder.tvCommentTimes.setTag(listItem);
+			holder.tvPublishTime.setText(getDifferenceFromDate(listItem.getUploadTime()));
 			
 			return convertView;
 		}
 		
 		private final class ViewHolder
 		{
-			public ImageView photo;
-			public TextView name;
-			public TextView school;
-			public TextView description;
+			public ImageView ivUserAvatar;
+			public TextView tvUserNickName;
+			public TextView  tvPhotoDescription;
+			public ImageView ivPhoto;
+			public ImageView ivPraiseButton;
+			public TextView  tvPraiseTimes;
+			public ImageView ivCommentButton;
+			public TextView  tvCommentTimes;
+			public TextView  tvPublishTime;
 		}
 		
 	}
@@ -216,13 +277,13 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	 * date: 2014-12-15  
 	 * time: 上午10:37:59
 	 */
-	private class UpdateDataTask extends AsyncTask<Void, Void, BeautyIntroductionListJson>
+	private class UpdateDataTask extends AsyncTask<Void, Void, PhotoListJson>
 	{
 		@Override
-		protected BeautyIntroductionListJson doInBackground(Void... params) {
-			BeautyIntroductionListJson json=null;
+		protected PhotoListJson doInBackground(Void... params) {
+			PhotoListJson json=null;
 			try {
-				json=HttpLoderMethods.getSumPage(0, PAGE_LENGTH);
+				json=HttpLoderMethods.getBeautyAllPhotos(0, PAGE_LENGTH, 1,"18825162410");
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -236,12 +297,12 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		}
 
 		@Override
-		protected void onPostExecute(BeautyIntroductionListJson result) {
+		protected void onPostExecute(PhotoListJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
 				synchronized (mListData) {
 					mListData.clear();
-					mListData=result.getData().getIntroductionList();
+					mListData=result.getData().getPhotoList();
 					adapter.notifyDataSetChanged();
 				}
 			}
@@ -264,7 +325,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	 * date: 2014-12-15  
 	 * time: 下午5:10:57
 	 */
-	private class LoadMoreTask extends AsyncTask<Void, Void, BeautyIntroductionListJson>
+	private class LoadMoreTask extends AsyncTask<Void, Void, PhotoListJson>
 	{
 		private int firstIndex;
 		private int count;
@@ -277,10 +338,10 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		}
 
 		@Override
-		protected BeautyIntroductionListJson doInBackground(Void... params) {
-			BeautyIntroductionListJson json=null;
+		protected PhotoListJson doInBackground(Void... params) {
+			PhotoListJson json=null;
 			try {
-				json=HttpLoderMethods.getSumPage(firstIndex, count);
+				json=HttpLoderMethods.getBeautyAllPhotos(firstIndex, count, 1,"18825162410");
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -294,11 +355,11 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		}
 
 		@Override
-		protected void onPostExecute(BeautyIntroductionListJson result) {
+		protected void onPostExecute(PhotoListJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
 				synchronized (mListData) {
-					mListData.addAll(result.getData().getIntroductionList());
+					mListData.addAll(result.getData().getPhotoList());
 					adapter.notifyDataSetChanged();
 				}
 				onLoadComplete(false);
@@ -321,6 +382,122 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		{
 			pbFooterLoading.setVisibility(View.GONE);
 			tvFooterText.setText(R.string.list_footer_no_more);
+		}
+	}
+	
+	
+	private class PraiseAreaOnClickListener implements OnClickListener
+	{
+		private Photo photoDetails;
+		private ImageView ivPraiseButton;
+		@Override
+		public void onClick(View v) {
+			ivPraiseButton=(ImageView)v.findViewById(R.id.fragment_follow_praise_button);
+			photoDetails=(Photo)ivPraiseButton.getTag();
+			if(!photoDetails.getIsPraise())
+			{
+				photoDetails.setIspraise(true);
+				photoDetails.setPraiseCount(photoDetails.getPraiseCount()+1);
+//				tvPraiseTimes.setText(String.valueOf(photoDetails.getPraiseCount()));
+//				ivPraiseButton.setImageResource(R.drawable.praise_select);
+				adapter.notifyDataSetChanged();
+				//add  praise_record
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Praise mPraise=new Praise();
+						mPraise.setBeautyId(photoDetails.getBeautyId());
+						mPraise.setPhotoId(photoDetails.getPhotoId());
+						mPraise.setPraiseTime(new Date());
+						mPraise.setUserPhoneNumber(mLoginUserPhoneNumber);
+						try {
+							HttpUploadMethods.UploadPraisePost(mPraise);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}).start();
+			}
+			else
+			{
+				
+			}
+		}
+		
+	}
+	
+	private class CommentAreaOnClickListener implements OnClickListener
+	{
+		private Photo mPhotoDetails;
+		private TextView tvCommentTimes;
+		@Override
+		public void onClick(View v) {
+			tvCommentTimes=(TextView)v.findViewById(R.id.fragment_follow_comment_times);
+			mPhotoDetails=(Photo)tvCommentTimes.getTag();
+			Intent intent=new Intent(getActivity(),PhotoCommentActivity.class);
+			Bundle bundle=new Bundle();
+			bundle.putString("avatarPath", mPhotoDetails.getAvatarPath());
+			bundle.putString("nickName", mPhotoDetails.getNickName());
+			bundle.putSerializable("uploadTime", mPhotoDetails.getUploadTime());
+			bundle.putString("photoPath", mPhotoDetails.getPhotoPath());
+			bundle.putString("photoDescription", mPhotoDetails.getPhotoDescription());
+			bundle.putInt("photoId", mPhotoDetails.getPhotoId());
+			intent.putExtras(bundle);
+			startActivityForResult(intent, 1);
+		}
+		
+	}
+	
+	private class PhotoOnClickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v) {
+			Photo photo=(Photo)v.getTag(1);
+			Intent intent=new Intent();
+			intent.putExtra("mBeautyID", photo.getBeautyId());
+			intent.setClass(getActivity(), BeautyPersonalPageActivity.class);
+			startActivity(intent);
+		}
+		
+	}
+	
+	//从SharePreference中获取用户的手机号码
+	private String getLoginUserPhoneNumber()
+	{
+		UserLoginPreference preference=UserLoginPreference.getInstance(getActivity().getApplicationContext());
+		return preference.getuserPhoneNumber();
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	private String getDifferenceFromDate(Date date)
+	{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date now=new Date();
+		long between=(now.getTime()-date.getTime())/1000;//把时差转为秒
+		
+		long day=between/(24*3600);
+		long hour=between%(24*3600)/3600;
+		long minute=between%3600/60;
+		long second=between%60/60;
+		
+		if(day>0)
+		{
+			return format.format(date);
+		}
+		else if(hour>0)
+		{
+			return hour+new String("小时前");
+		}
+		else if(minute>0)
+		{
+			return minute+new String("分钟前");
+		}
+		else
+		{
+			return second+new String("秒前");
 		}
 	}
 

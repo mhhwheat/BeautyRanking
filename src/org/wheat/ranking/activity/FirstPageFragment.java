@@ -31,11 +31,11 @@ import android.widget.TextView;
  */
 public class FirstPageFragment extends Fragment
 {
-	private final int pageCount=3;
+	private final int pageCount=2;
 	private ViewPager mViewPager;
 	private ArrayList<Fragment> fragmentList;
 	private ImageView imageCusor;
-	private TextView tabSum,tabNew,tabRise;
+	private TextView tabSum,tabNew;
 	private int currIndex;//µ±«∞“≥±‡∫≈
 	private int offset;
 	
@@ -78,11 +78,9 @@ public class FirstPageFragment extends Fragment
 	{
 		tabSum=(TextView)mView.findViewById(R.id.tab_follow);
 		tabNew=(TextView)mView.findViewById(R.id.tab_neighbor);
-		tabRise=(TextView)mView.findViewById(R.id.tab_my_created);
 		
 		tabSum.setOnClickListener(new txListener(0));
 		tabNew.setOnClickListener(new txListener(1));
-		tabRise.setOnClickListener(new txListener(2));
 	}
 	
 	public class txListener implements View.OnClickListener
@@ -129,10 +127,8 @@ public class FirstPageFragment extends Fragment
 		fragmentList=new ArrayList<Fragment>();
 		Fragment mFollowFragment=new FollowFragment();
 		Fragment mNeighborGridFragment=new NeighborGridFragment();
-		Fragment mMyCreatedFragment=new MyCreatedFragment();
 		fragmentList.add(mFollowFragment);
 		fragmentList.add(mNeighborGridFragment);
-		fragmentList.add(mMyCreatedFragment);
 		
 		
 		//∏¯ViewPager…Ë÷√  ≈‰∆˜
