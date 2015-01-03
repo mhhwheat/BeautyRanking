@@ -39,6 +39,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -91,7 +92,9 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);//请求设置标题栏
 		setContentView(R.layout.create_new_beauty2);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.create_page_title);
 		// 初始化
 		init();
 		// 开启界面的时候就定位

@@ -98,6 +98,7 @@ public class RegisterActivity extends Activity
 								Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
 //								Intent intent=new Intent(getApplicationContext(), LoginActivity.class);
 								startActivity(intent);
+								System.out.println("组册成功 并返回登录界面");
 								finish();
 							}
 						}

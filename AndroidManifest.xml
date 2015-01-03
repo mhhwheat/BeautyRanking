@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wheat.beautyranking"
     android:versionCode="1"
@@ -6,83 +7,119 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 高德地图api所需开通的权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="7522b10fc4a1e5dc07c6b07f38b7aa63" />
+
+        
+        <activity
+            android:name="org.wheat.ranking.checkUpdate.OpinionBack"
+            android:label="@string/app_name" >
+        </activity>
+        
+        
         <activity 
+            android:name="org.wheat.ranking.checkUpdate.SettingPage"
+            android:label="@string/app_name">
+        </activity>
+        
+        
+        
+        <activity
+            android:name="org.wheat.ranking.activity.CreateBeauty"
+            android:label="@string/app_name"
+            android:theme="@style/myTheme" >
+        </activity>
+        
+        <activity
             android:name="org.wheat.ranking.activity.LoginActivity"
-            android:label="@string/app_name">
-            
+            android:label="@string/app_name" 
+            android:launchMode="singleInstance">
         </activity>
-        <activity 
-            android:name="org.wheat.ranking.activity.RegisterActivity"
-            android:label="@string/app_name">
+        
+        <activity  
+            android:name="org.wheat.ranking.checkUpdate.AboutUs"
+            android:label="@string/app_name" >
             
-        </activity>
+            </activity>
         <activity
-
-            android:name="org.wheat.ranking.activity.RankingListActivity"
-
-            android:label="@string/app_name"
-            android:theme="@style/titleStyle">
-        </activity>
-        <activity
-
-            android:name="org.wheat.ranking.activity.ImageActivityTest"
-
-            android:label="@string/app_name"
-            android:theme="@style/titleStyle">
-        </activity>
-        <activity 
-            android:name="org.wheat.ranking.activity.PhotoCommentActivity"
-            android:label="@string/app_name"
-            android:theme="@style/titleStyle">
-            
-        </activity>
-        <!-- 
-        <activity 
-            android:name="org.wheat.ranking.activity.ImageActivityTest"
-            android:label="@string/app_name">
-            
-        </activity>
-        -->
-        <activity 
             android:name="org.wheat.ranking.activity.MainInterfaceActivity"
             android:label="@string/app_name"
-            android:theme="@style/titleStyle">
-            <intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+            android:theme="@style/myTheme" >
         </activity>
+        
         
         <activity
-            android:name="org.wheat.ranking.activity.FloatViewTestActivity"
-            android:label="@string/app_name">
+            android:name="org.wheat.ranking.location.NetLocation"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="org.wheat.ranking.activity.RegisterActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="org.wheat.ranking.activity.RankingListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/titleStyle" >
+        </activity>
+        <activity
+            android:name="org.wheat.ranking.activity.ImageActivityTest"
+            android:label="@string/app_name"
+            android:theme="@style/titleStyle" >
+        </activity>
+        <activity android:name="org.wheat.ranking.activity.PhotoCommentActivity" >
+        </activity>
+        <activity
+            android:name="org.wheat.ranking.activity.Login"
+            android:theme="@style/myTheme" >
+        </activity>
+      
+        <activity
+            android:name="org.wheat.ranking.activity.Register"
+            android:theme="@style/myTheme">
             
         </activity>
-        <activity 
-            android:name="org.wheat.ranking.activity.ImageViewTestActivity"
-            android:label="@string/app_name">
-            
-        </activity>
-        <activity 
-            android:name="org.wheat.ranking.activity.BeautyPersonalPageActivity"
-            android:label="@string/app_name">
-            
-        </activity>
+
         
         <activity 
-            android:name="org.wheat.ranking.activity.QuickReturnTestActivity"
+            android:name="org.wheat.ranking.startpage.WelcomePage"
             android:label="@string/app_name">
             
+        </activity>
+        <activity
+            android:name="org.wheat.ranking.activity.FirstPage"
+            android:label="@string/app_name"
+            android:theme="@style/myTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.wheat.ranking.activity.PersonInfo"
+            android:label="@string/app_name" >
         </activity>
     </application>
 
