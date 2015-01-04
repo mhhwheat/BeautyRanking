@@ -10,32 +10,40 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
          />
+    
+    
+    
+    
 
-    <RadioGroup
+    <LinearLayout
         android:id="@+id/main_radio"
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:background="@drawable/tab_ground"
         android:orientation="horizontal" >
-
+ <!--
         <RadioButton android:id="@+id/rb_first_page"
-            style="@style/tab_layout_style"/>
+            style="@style/tab_layout_style"
+            android:drawableTop="@drawable/fabu48"
+            android:text="发布"
+            />
         <RadioButton android:id="@+id/rb_find_page"
             style="@style/tab_layout_style"/>
         <RadioButton android:id="@+id/rb_mine_page"
             style="@style/tab_layout_style"/>
         <RadioButton  android:id="@+id/rb_create_beauty"
             style="@style/tab_layout_style"/> "
+            -->
         
- <!--
+ 
         <LinearLayout
             android:id="@+id/rb_first_page"
             style="@style/tab_layout_style" >
 
             <ImageView
                 style="@style/tab_img_style"
-                android:background="@drawable/findbackground" />
+                android:background="@drawable/shouye_background" />
 
             <TextView
                 style="@style/tab_text_style"
@@ -68,7 +76,7 @@
 
             <ImageView
                 style="@style/tab_img_style"
-                android:src="@drawable/user_add" />
+                 android:background="@drawable/me_background"/>
 
             <TextView
                 style="@style/tab_text_style"
@@ -83,12 +91,14 @@
 
             <ImageView
                 style="@style/tab_img_style"
-                android:src="@drawable/user_add" />
+                 android:background="@drawable/fabu_background" />
 
             <TextView
                 style="@style/tab_text_style"
                 android:text="发布" />
-        </LinearLayout>  -->
-    </RadioGroup>
+        </LinearLayout> 
+        
+        
+    </LinearLayout> 
 
 </LinearLayout>

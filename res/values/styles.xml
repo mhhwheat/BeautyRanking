@@ -27,20 +27,20 @@
 	
 	
 	<style name="tab_text_style">
-	    <item name="android:textSize">12sp</item>
+	    <item name="android:textSize">10sp</item>
 	    <item name="android:layout_width">wrap_content</item>
-	    <item name="android:layout_height">20dp</item>
+	    <item name="android:layout_height">wrap_content</item>
 	    <item name="android:textColor">@drawable/tab_text_background</item>
 	</style>
 	
 	<style name="tab_img_style">
 	    <item name="android:layout_marginTop">10dp</item>
-	     <item name="android:layout_width">25dp</item>
-	     <item name="android:layout_height">25dp</item>
+	     <item name="android:layout_width">32dp</item>
+	     <item name="android:layout_height">22dp</item>
 	     <item name="android:scaleType">fitCenter</item>
 	     <item name="android:adjustViewBounds">true</item>
 	</style>
-	
+	<!-- 关注 -->
 	<style name="tab_layout_style">
 	    <item name="android:layout_width">fill_parent</item>
 	    <item name="android:layout_height">fill_parent</item>
@@ -48,13 +48,13 @@
 	    <item name="android:gravity">center</item>
 	    <item name="android:orientation">vertical</item>
 	    <item name="android:clickable">true</item>
-	 <item name="android:button">@null</item>
-	    <item name="android:background">@drawable/findbackground</item>
-	      <item name="android:layout_marginLeft">22dp</item>
+	   <!--    <item name="android:layout_marginLeft">22dp</item>
 	     <item name="android:layout_marginRight">22dp</item>
 	      <item name="android:layout_marginTop">10dp</item>
-	       <item name="android:layout_marginBottom">10dp</item>
+	       <item name="android:layout_marginBottom">10dp</item> -->
 	</style>
+	
+	
 
 <!-- 	
 	<item name="android:button">@null</item>  
