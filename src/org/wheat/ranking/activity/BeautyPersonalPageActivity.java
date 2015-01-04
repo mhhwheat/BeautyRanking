@@ -66,6 +66,8 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
+	private int mPhotoWidth=0;
+	
 	
 	
 
@@ -196,10 +198,16 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			else
 				holder=(ViewHolder)convertView.getTag();
 			
+			if(mPhotoWidth<=0)
+			{
+				holder.ivPhoto.measure(0, 0);
+				mPhotoWidth=holder.ivPhoto.getMeasuredWidth();
+			}
+			
 			mImageLoader.addTask(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
 			holder.tvUserNikeName.setText(photo.getNickName());
 			holder.tvPublishTime.setText(getDifferenceFromDate(photo.getUploadTime()));
-			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),-1 , -1,true), holder.ivPhoto);
+			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),mPhotoWidth,2*mPhotoWidth*mPhotoWidth,true), holder.ivPhoto);
 			if(photo.getIsPraise())
 			{
 				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);

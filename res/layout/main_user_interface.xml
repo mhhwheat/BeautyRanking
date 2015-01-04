@@ -10,85 +10,69 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
          />
-
-    <RadioGroup
+    <LinearLayout
         android:id="@+id/main_radio"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
-        android:gravity="center"
         android:background="@drawable/tab_ground"
+        android:gravity="center"
         android:orientation="horizontal" >
 
-        <RadioButton android:id="@+id/rb_first_page"
-            style="@style/tab_layout_style"/>
-        <RadioButton android:id="@+id/rb_find_page"
-            style="@style/tab_layout_style"/>
-        <RadioButton android:id="@+id/rb_mine_page"
-            style="@style/tab_layout_style"/>
-        <RadioButton  android:id="@+id/rb_create_beauty"
-            style="@style/tab_layout_style"/> "
-        
- <!--
         <LinearLayout
-            android:id="@+id/rb_first_page"
+            android:id="@+id/tab_first_page"
             style="@style/tab_layout_style" >
 
             <ImageView
-                style="@style/tab_img_style"
-                android:background="@drawable/findbackground" />
+                android:id="@+id/tab_first_page_img"
+                style="@style/tab_img_style" />
 
             <TextView
+                android:id="@+id/tab_first_page_text"
                 style="@style/tab_text_style"
                 android:text="首页" />
         </LinearLayout>
 
-        
-        
-        
-   
         <LinearLayout
-            android:id="@+id/rb_find_page"
+            android:id="@+id/tab_find_page"
             style="@style/tab_layout_style" >
 
             <ImageView
-                style="@style/tab_img_style"
-                android:background="@drawable/findbackground" />
+                android:id="@+id/tab_find_page_img"
+                style="@style/tab_img_style"/>
 
             <TextView
+                android:id="@+id/tab_find_page_text"
                 style="@style/tab_text_style"
                 android:text="发现" />
         </LinearLayout>
 
-        
-        
-
         <LinearLayout
-            android:id="@+id/rb_mine_page"
+            android:id="@+id/tab_mine_page"
             style="@style/tab_layout_style" >
 
             <ImageView
-                style="@style/tab_img_style"
-                android:src="@drawable/user_add" />
+                android:id="@+id/tab_mine_page_img"
+                style="@style/tab_img_style"/>
 
             <TextView
+                android:id="@+id/tab_mine_page_text"
                 style="@style/tab_text_style"
                 android:text="我的" />
         </LinearLayout>
 
-        
-    
         <LinearLayout
-            android:id="@+id/rb_create_beauty"
+            android:id="@+id/tab_create_beauty"
             style="@style/tab_layout_style" >
 
             <ImageView
-                style="@style/tab_img_style"
-                android:src="@drawable/user_add" />
+                android:id="@+id/tab_create_beauty_img"
+                style="@style/tab_img_style"/>
 
             <TextView
+                android:id="@+id/tab_create_beauty_text"
                 style="@style/tab_text_style"
                 android:text="发布" />
-        </LinearLayout>  -->
-    </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

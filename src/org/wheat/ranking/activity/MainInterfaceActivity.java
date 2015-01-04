@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * description:主界面，包含RankingListFragment,MainPageFragment,MinePageFragment
@@ -21,13 +21,17 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
  */
 public class MainInterfaceActivity extends FragmentActivity
 {
-	private RadioGroup mRadioGroup;
-	private int radioLen=-1;
-	private int lastCheckId=R.id.rb_first_page;//设置发布页面跳转回来时回到哪一个Rudiobutton
 	
 	private Fragment mFirstPageFragment;
 	private Fragment mFindPageFragment;
 	private Fragment mMinePageFragment;
+	
+	private View mFirstPageLayout;
+	private View mFindPageLayout;
+	private View mMinePageLayout;
+	private View mCreateBeautyLayout;
+	
+	private int mCurrentCheckID=R.id.tab_first_page;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,64 +40,140 @@ public class MainInterfaceActivity extends FragmentActivity
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);//请求设置标题栏
 		setContentView(R.layout.main_user_interface);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mycustomtitle);
-		mRadioGroup=(RadioGroup)findViewById(R.id.main_radio);
-		radioLen=mRadioGroup.getChildCount();
-//		mRadioGroup.setOnClickListener(new RadioOnClickListener());
-		mRadioGroup.setOnCheckedChangeListener(new CheckedChangeListener());
 		
-		//把首页设置为初始化页面
-		mRadioGroup.check(R.id.rb_first_page);
 	}
-//	public class RadioOnClickListener implements OnClickListener{
-//
-//		@Override
-//		public void onClick(View v) {
-//			// TODO Auto-generated method stub
-//			for(int i=0;i<radioLen;i++){
-//				
-//			}
-//		}
-//		
-//	}
-	public class CheckedChangeListener implements OnCheckedChangeListener
+	
+	public void initialTab()
 	{
-		
+		mFirstPageLayout=findViewById(R.id.tab_first_page);
+		mFindPageLayout=findViewById(R.id.tab_find_page);
+		mMinePageLayout=findViewById(R.id.tab_mine_page);
+		mCreateBeautyLayout=findViewById(R.id.tab_create_beauty);
+
+		mFirstPageLayout.setOnClickListener(new TabOnClickListener());
+
+		mFindPageLayout.setOnClickListener(new TabOnClickListener());
+
+		mMinePageLayout.setOnClickListener(new TabOnClickListener());
+
+		mCreateBeautyLayout.setOnClickListener(new TabOnClickListener());
+
+	}
+	
+	public class TabOnClickListener implements OnClickListener
+	{
+
 		@Override
-		public void onCheckedChanged(RadioGroup group, int checkedId) 
-		{
-			switch(checkedId)
+		public void onClick(View v) {
+			if(v.getId()!=mCurrentCheckID)
 			{
-			case R.id.rb_first_page:
-				if(mFirstPageFragment==null)
-				{
-					Log.w("MainInterfaceActivity", "mFirstPageFragment is null!");
-					mFirstPageFragment=new FirstPageFragment();
-				}
-				replaceFragment(mFirstPageFragment, R.id.replacing_fragment);
-				lastCheckId=R.id.rb_first_page;
-				break;
-			case R.id.rb_find_page:
-				if(mFindPageFragment==null)
-					mFindPageFragment=new RankingListFragment();
-				getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.create_page_title);
-				replaceFragment(mFindPageFragment, R.id.replacing_fragment);
-				lastCheckId=R.id.rb_find_page;
-				break;
-			case R.id.rb_mine_page:
-				if(mMinePageFragment==null)
-					mMinePageFragment=new MyDetailPage();
-				replaceFragment(mMinePageFragment, R.id.replacing_fragment);
-				lastCheckId=R.id.rb_mine_page;
-				break;
-			case R.id.rb_create_beauty:
-				Intent createIntent= new Intent();
-				createIntent.setClass(MainInterfaceActivity.this, CreateBeauty.class);
-				startActivity(createIntent);
-				mRadioGroup.check(lastCheckId);
-				break;
+				unCheckTab(mCurrentCheckID);
+				mCurrentCheckID=v.getId();
+				checkTab(mCurrentCheckID);
 			}
 		}
 		
+	}
+	
+	/**
+	 * 
+	 * @param tabID
+	 */
+	public void checkTab(int tabID)
+	{
+		View v=findViewById(tabID);
+		switch(tabID)
+		{
+		case R.id.tab_first_page:
+			ImageView mFirstPageImg=(ImageView)v.findViewById(R.id.tab_first_page_img);
+			TextView mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
+
+			mFirstPageImg.setImageResource(R.drawable.add);
+			mFirstPageText.setTextColor(0x123456);
+			
+			if(mFirstPageFragment==null)
+			{
+				Log.w("MainInterfaceActivity", "mFirstPageFragment is null!");
+				mFirstPageFragment=new FirstPageFragment();
+			}
+			replaceFragment(mFirstPageFragment, R.id.replacing_fragment);
+			break;
+		case R.id.tab_find_page:
+			ImageView mFindPageImg=(ImageView)v.findViewById(R.id.tab_find_page_img);
+			TextView mFindPageText=(TextView)v.findViewById(R.id.tab_find_page_text);
+
+			mFindPageImg.setImageResource(R.drawable.add);
+			mFindPageText.setTextColor(0x123456);
+			
+			if(mFindPageFragment==null)
+				mFindPageFragment=new RankingListFragment();
+			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.create_page_title);
+			replaceFragment(mFindPageFragment, R.id.replacing_fragment);
+			break;
+		case R.id.tab_mine_page:
+			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
+			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
+
+			mMinePageImg.setImageResource(R.drawable.add);
+			mMinePageText.setTextColor(0x123456);
+			
+			if(mMinePageFragment==null)
+				mMinePageFragment=new MyDetailPage();
+			replaceFragment(mMinePageFragment, R.id.replacing_fragment);
+			break;
+		case R.id.tab_create_beauty:
+			ImageView mCreateBeautyImg=(ImageView)v.findViewById(R.id.tab_create_beauty_img);
+			TextView mCreateBeautyText=(TextView)v.findViewById(R.id.tab_create_beauty_text);
+
+			mCreateBeautyImg.setImageResource(R.drawable.add);
+			mCreateBeautyText.setTextColor(0x123456);
+			
+			Intent createIntent= new Intent();
+			createIntent.setClass(MainInterfaceActivity.this, CreateBeauty.class);
+			startActivity(createIntent);
+			break;
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param tabID
+	 */
+	public void unCheckTab(int tabID)
+	{
+		View v=findViewById(tabID);
+		switch(tabID)
+		{
+		case R.id.tab_first_page:
+			ImageView mFirstPageImg=(ImageView)v.findViewById(R.id.tab_first_page_img);
+			TextView mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
+
+			mFirstPageImg.setImageResource(R.drawable.add);
+			mFirstPageText.setTextColor(0x123456);
+			break;
+		case R.id.tab_find_page:
+			ImageView mFindPageImg=(ImageView)v.findViewById(R.id.tab_find_page_img);
+			TextView mFindPageText=(TextView)v.findViewById(R.id.tab_find_page_text);
+
+			mFindPageImg.setImageResource(R.drawable.add);
+			mFindPageText.setTextColor(0x123456);
+			break;
+		case R.id.tab_mine_page:
+			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
+			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
+
+			mMinePageImg.setImageResource(R.drawable.add);
+			mMinePageText.setTextColor(0x123456);
+			break;
+		case R.id.tab_create_beauty:
+			ImageView mCreateBeautyImg=(ImageView)v.findViewById(R.id.tab_create_beauty_img);
+			TextView mCreateBeautyText=(TextView)v.findViewById(R.id.tab_create_beauty_text);
+
+			mCreateBeautyImg.setImageResource(R.drawable.add);
+			mCreateBeautyText.setTextColor(0x123456);
+			break;
+		}
 	}
 	
 	/**
