@@ -32,9 +32,6 @@ public class MainInterfaceActivity extends FragmentActivity
 	private View mMinePageLayout;
 	private View mCreateBeautyLayout;
 	
-	
-	TextView mFirstPageText;
-	
 	private int mCurrentCheckID=R.id.tab_first_page;
 	
 	@Override
@@ -52,7 +49,6 @@ public class MainInterfaceActivity extends FragmentActivity
 	public void initialTab()
 	{
 		mFirstPageLayout=(LinearLayout)findViewById(R.id.tab_first_page);
-		mFirstPageText=(TextView)findViewById(R.id.tab_first_page_text);
 		mFindPageLayout=findViewById(R.id.tab_find_page);
 		mMinePageLayout=findViewById(R.id.tab_mine_page);
 		mCreateBeautyLayout=findViewById(R.id.tab_create_beauty);
@@ -93,7 +89,7 @@ public class MainInterfaceActivity extends FragmentActivity
 		{
 		case R.id.tab_first_page:
 			ImageView mFirstPageImg=(ImageView)v.findViewById(R.id.tab_first_page_img);
-//			mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
+			TextView mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
 
 			mFirstPageImg.setImageResource(R.drawable.shouyefull);
 			mFirstPageText.setText("Ê×Ò³");
@@ -155,7 +151,7 @@ public class MainInterfaceActivity extends FragmentActivity
 		{
 		case R.id.tab_first_page:
 			ImageView mFirstPageImg=(ImageView)v.findViewById(R.id.tab_first_page_img);
-//			mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
+			TextView mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
 
 			mFirstPageImg.setImageResource(R.drawable.shouye);
 			mFirstPageText.setText("Ê×Ò³");
