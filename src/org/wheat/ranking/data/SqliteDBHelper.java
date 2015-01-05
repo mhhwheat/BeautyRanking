@@ -34,8 +34,11 @@ public class SqliteDBHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
+		db.execSQL("CREATE TABLE IF NOT EXISTS follow_photo "+
+	"(_id INTEGER PRIMARY KEY AUTOINCREMENT, avatarPath VARCHAR, nickname VARCHAR, isPraise BOOLEAN, photoDescription VARCHAR, beautyId INTEGER, "+
+				" photoId INTEGER, commentCount INTEGER, praiseCount INTEGER, photoPath VARCHAR, userPhoneNumber VARCHAR, uploadTime VARCHAR)");
 		
+		db.execSQL("");
 	}
 
 	@Override

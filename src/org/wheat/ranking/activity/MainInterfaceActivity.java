@@ -32,8 +32,7 @@ public class MainInterfaceActivity extends FragmentActivity
 	private View mMinePageLayout;
 	private View mCreateBeautyLayout;
 	
-	
-	
+
 	private int mCurrentCheckID=R.id.tab_first_page;
 	
 	@Override
