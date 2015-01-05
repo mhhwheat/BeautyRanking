@@ -213,7 +213,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			holder.tvCommentTimes.setText(String.valueOf(listItem.getCommentCount()));
 			if(listItem.getIsPraise())
 			{
-				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);
+				holder.ivPraiseButton.setImageResource(R.drawable.praisefull);
 			}
 			else
 				holder.ivPraiseButton.setImageResource(R.drawable.praise);
@@ -258,7 +258,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 
 			@Override
 			public void onLastItemVisible() {
-				Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getActivity(), "End of List!", Toast.LENGTH_SHORT).show();
 				if(!isLoadingMore)
 				{
 					isLoadingMore=true;

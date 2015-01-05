@@ -10,7 +10,7 @@
         android:layout_height="35dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@color/viewpage_color">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/tab_sum"

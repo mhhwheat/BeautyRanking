@@ -207,7 +207,7 @@
             android:layout_height="100dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
-            android:hint="个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..个性解释..."
+            android:hint="个性描述"
             />
         <Button
             android:text="确定"

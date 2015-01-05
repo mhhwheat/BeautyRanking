@@ -160,12 +160,14 @@
 
 <color name="title_color">#24292c</color><!-- 我的页面背景颜色 -->
 <color name="viewpage_color">#f4f4f4</color><!-- viewpage 的背景颜色 -->
-<color name="listview_background_color">#DDDDDD</color><!-- listview的背景颜色 -->
+<color name="listview_background_color">#DDDDDD</color><!-- listview的背景颜色 --><!-- 同时也是赞的默认颜色 -->
 <color name="theme_green">#008000</color><!-- 主题绿色 -->
 
 <color name="tab_check_color">#45c01a</color><!-- tab 键按下时的颜色 -->
 <color name="tab_check_color_more">#00bc0c</color><!-- tab 键按下时jiaoshen的颜色 -->
 <color name="tab_uncheck_color">#999999</color><!-- tab 键wei按下时的颜色 -->
 <color name="title_text_color">#df5745</color><!-- app主要文字 -->
+
+<color name="praise_colot">#ff3c3c</color><!-- 赞的颜色 -->
 
 </resources>
