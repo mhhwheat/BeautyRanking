@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -26,10 +27,13 @@ public class MainInterfaceActivity extends FragmentActivity
 	private Fragment mFindPageFragment;
 	private Fragment mMinePageFragment;
 	
-	private View mFirstPageLayout;
+	private LinearLayout mFirstPageLayout;
 	private View mFindPageLayout;
 	private View mMinePageLayout;
 	private View mCreateBeautyLayout;
+	
+	
+	TextView mFirstPageText;
 	
 	private int mCurrentCheckID=R.id.tab_first_page;
 	
@@ -40,12 +44,15 @@ public class MainInterfaceActivity extends FragmentActivity
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);//请求设置标题栏
 		setContentView(R.layout.main_user_interface);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mycustomtitle);
+		initialTab();
+		checkTab(mCurrentCheckID);
 		
 	}
 	
 	public void initialTab()
 	{
-		mFirstPageLayout=findViewById(R.id.tab_first_page);
+		mFirstPageLayout=(LinearLayout)findViewById(R.id.tab_first_page);
+		mFirstPageText=(TextView)findViewById(R.id.tab_first_page_text);
 		mFindPageLayout=findViewById(R.id.tab_find_page);
 		mMinePageLayout=findViewById(R.id.tab_mine_page);
 		mCreateBeautyLayout=findViewById(R.id.tab_create_beauty);
@@ -86,10 +93,11 @@ public class MainInterfaceActivity extends FragmentActivity
 		{
 		case R.id.tab_first_page:
 			ImageView mFirstPageImg=(ImageView)v.findViewById(R.id.tab_first_page_img);
-			TextView mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
+//			mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
 
-			mFirstPageImg.setImageResource(R.drawable.add);
-			mFirstPageText.setTextColor(0x123456);
+			mFirstPageImg.setImageResource(R.drawable.shouyefull);
+			mFirstPageText.setText("首页");
+			mFirstPageText.setTextColor(0xFF00FF);
 			
 			if(mFirstPageFragment==null)
 			{
@@ -102,20 +110,20 @@ public class MainInterfaceActivity extends FragmentActivity
 			ImageView mFindPageImg=(ImageView)v.findViewById(R.id.tab_find_page_img);
 			TextView mFindPageText=(TextView)v.findViewById(R.id.tab_find_page_text);
 
-			mFindPageImg.setImageResource(R.drawable.add);
-			mFindPageText.setTextColor(0x123456);
+			mFindPageImg.setImageResource(R.drawable.faxianfull);
+			mFindPageText.setTextColor(0xFF00FF);
 			
 			if(mFindPageFragment==null)
 				mFindPageFragment=new RankingListFragment();
-			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.create_page_title);
+//			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.create_page_title);
 			replaceFragment(mFindPageFragment, R.id.replacing_fragment);
 			break;
 		case R.id.tab_mine_page:
 			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
 			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
 
-			mMinePageImg.setImageResource(R.drawable.add);
-			mMinePageText.setTextColor(0x123456);
+			mMinePageImg.setImageResource(R.drawable.mefull);
+			mMinePageText.setTextColor(0xFF00FF);
 			
 			if(mMinePageFragment==null)
 				mMinePageFragment=new MyDetailPage();
@@ -125,15 +133,15 @@ public class MainInterfaceActivity extends FragmentActivity
 			ImageView mCreateBeautyImg=(ImageView)v.findViewById(R.id.tab_create_beauty_img);
 			TextView mCreateBeautyText=(TextView)v.findViewById(R.id.tab_create_beauty_text);
 
-			mCreateBeautyImg.setImageResource(R.drawable.add);
-			mCreateBeautyText.setTextColor(0x123456);
+			mCreateBeautyImg.setImageResource(R.drawable.fabufull);
+			mCreateBeautyText.setTextColor(0xFF00FF);
 			
 			Intent createIntent= new Intent();
 			createIntent.setClass(MainInterfaceActivity.this, CreateBeauty.class);
 			startActivity(createIntent);
 			break;
 		}
-	}
+	}                                                              
 	
 	
 	/**
@@ -147,31 +155,32 @@ public class MainInterfaceActivity extends FragmentActivity
 		{
 		case R.id.tab_first_page:
 			ImageView mFirstPageImg=(ImageView)v.findViewById(R.id.tab_first_page_img);
-			TextView mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
+//			mFirstPageText=(TextView)v.findViewById(R.id.tab_first_page_text);
 
-			mFirstPageImg.setImageResource(R.drawable.add);
-			mFirstPageText.setTextColor(0x123456);
+			mFirstPageImg.setImageResource(R.drawable.shouye);
+			mFirstPageText.setText("首页");
+			mFirstPageText.setTextColor(0xF5F5F5);
 			break;
 		case R.id.tab_find_page:
 			ImageView mFindPageImg=(ImageView)v.findViewById(R.id.tab_find_page_img);
 			TextView mFindPageText=(TextView)v.findViewById(R.id.tab_find_page_text);
 
-			mFindPageImg.setImageResource(R.drawable.add);
-			mFindPageText.setTextColor(0x123456);
+			mFindPageImg.setImageResource(R.drawable.faxian);
+			mFindPageText.setTextColor(0xF5F5F5);
 			break;
 		case R.id.tab_mine_page:
 			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
 			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
 
-			mMinePageImg.setImageResource(R.drawable.add);
-			mMinePageText.setTextColor(0x123456);
+			mMinePageImg.setImageResource(R.drawable.me);
+			mMinePageText.setTextColor(0xF5F5F5);
 			break;
 		case R.id.tab_create_beauty:
 			ImageView mCreateBeautyImg=(ImageView)v.findViewById(R.id.tab_create_beauty_img);
 			TextView mCreateBeautyText=(TextView)v.findViewById(R.id.tab_create_beauty_text);
 
-			mCreateBeautyImg.setImageResource(R.drawable.add);
-			mCreateBeautyText.setTextColor(0x123456);
+			mCreateBeautyImg.setImageResource(R.drawable.fabu);
+			mCreateBeautyText.setTextColor(0xF5F5F5);
 			break;
 		}
 	}

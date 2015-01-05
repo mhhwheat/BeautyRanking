@@ -154,4 +154,13 @@
 <drawable name="red">#f00</drawable>  
 <drawable name="green">#0f0</drawable>  
 <drawable name="gray">#ccc</drawable> 
+
+
+
+
+<color name="title_color">#24292c</color><!-- 我的页面背景颜色 -->
+
+
+
+
 </resources>

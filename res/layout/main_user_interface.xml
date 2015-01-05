@@ -45,7 +45,7 @@
             style="@style/tab_layout_style" >
 
             <ImageView
-                android:background="@drawable/shouye_background"
+                android:src="@drawable/shouye"
                 android:id="@+id/tab_first_page_img"
                 style="@style/tab_img_style" />
 
@@ -61,6 +61,7 @@
             style="@style/tab_layout_style" >
 
             <ImageView
+                android:src="@drawable/faxian"
                 android:id="@+id/tab_find_page_img"
                 style="@style/tab_img_style"/>
 
@@ -75,7 +76,7 @@
             style="@style/tab_layout_style" >
 
             <ImageView
-                 android:background="@drawable/me_background"
+                 android:src="@drawable/me"
                 android:id="@+id/tab_mine_page_img"
                 style="@style/tab_img_style"/>
 
@@ -90,7 +91,7 @@
             style="@style/tab_layout_style" >
 
             <ImageView
-                 android:background="@drawable/fabu_background" 
+                 android:src="@drawable/fabu" 
                 android:id="@+id/tab_create_beauty_img"
                 style="@style/tab_img_style"/>
 

@@ -27,25 +27,26 @@
 	
 	
 	<style name="tab_text_style">
-	    <item name="android:textSize">10sp</item>
+	    <item name="android:textSize">12sp</item>
 	    <item name="android:layout_width">wrap_content</item>
 	    <item name="android:layout_height">wrap_content</item>
-	    <item name="android:textColor">@drawable/tab_text_background</item>
+	    <item name="android:gravity">center</item>
+	    <!-- <item name="android:textColor">@drawable/tab_text_background</item> -->
 	</style>
 	
 	<style name="tab_img_style">
 	    <item name="android:layout_marginTop">10dp</item>
-	     <item name="android:layout_width">32dp</item>
-	     <item name="android:layout_height">22dp</item>
-	     <item name="android:scaleType">fitCenter</item>
+	     <item name="android:layout_width">45dp</item>
+	     <item name="android:layout_height">31dp</item>
+	     <item name="android:scaleType">fitXY</item>
 	     <item name="android:adjustViewBounds">true</item>
 	</style>
 	<!-- 关注 -->
 	<style name="tab_layout_style">
+	    <item name="android:gravity">center_horizontal</item>
 	    <item name="android:layout_width">fill_parent</item>
 	    <item name="android:layout_height">fill_parent</item>
 	    <item name="android:layout_weight">1</item>
-	    <item name="android:gravity">center</item>
 	    <item name="android:orientation">vertical</item>
 	    <item name="android:clickable">true</item>
 
@@ -81,7 +82,7 @@
 	
 	<!-- 定义标题栏style -->
 	<style name="WindowTitleBackGround">
-	    <item name ="android:background">#f9f9f9</item>
+	    <item name ="android:background">#24292c</item>
 	</style>
 	<style name="myTheme" parent="android:Theme">
 	    <item name="android:windowTitleSize">50dp</item>
