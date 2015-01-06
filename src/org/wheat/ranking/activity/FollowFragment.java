@@ -26,13 +26,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -64,6 +64,8 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
 	private String mLoginUserPhoneNumber;
+	
+	private int mPhotoWidth=0;
 	
 	
 	@Override
@@ -204,10 +206,16 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
+			
+			if(mPhotoWidth<=0)
+			{
+				holder.ivPhoto.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(holder.ivPhoto));
+			}
+			
 			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50, false),holder.ivUserAvatar);
 			holder.tvUserNickName.setText(listItem.getNickName());
 			holder.ivPhoto.setTag(R.id.tag_first, listItem);
-			mImageLoader.addTask(new PhotoParameters(listItem.getPhotoPath(), -1, -1, true), holder.ivPhoto);
+			mImageLoader.addTask(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true), holder.ivPhoto);
 			holder.tvPhotoDescription.setText(listItem.getPhotoDescription());
 			holder.tvPraiseTimes.setText(String.valueOf(listItem.getPraiseCount()));
 			holder.tvCommentTimes.setText(String.valueOf(listItem.getCommentCount()));
@@ -503,4 +511,20 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		}
 	}
 
+	public class GlobalLayoutLinstener implements OnGlobalLayoutListener
+	{
+		private View view;
+		public GlobalLayoutLinstener(View view)
+		{
+			this.view=view;
+		}
+
+		@Override
+		public void onGlobalLayout() {
+			mPhotoWidth=view.getHeight();
+			view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+			Log.w("FollowFragment", "mPhotoWidth="+mPhotoWidth);
+		}
+		
+	}
 }

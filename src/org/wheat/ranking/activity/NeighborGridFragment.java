@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
@@ -196,11 +197,14 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 			@Override
 			public void onItemClick(PLA_AdapterView<?> parent, View view,
 					int position, long id) {
-				BeautyIntroduction introduction=mGridData.get(position);
-				Intent intent=new Intent();
-				intent.putExtra("mBeautyID", introduction.getBeautyId());
-				intent.setClass(getActivity(), BeautyPersonalPageActivity.class);
-				startActivity(intent);
+				if(position<mGridData.size())
+				{
+					BeautyIntroduction introduction=mGridData.get(position);
+					Intent intent=new Intent();
+					intent.putExtra("mBeautyID", introduction.getBeautyId());
+					intent.setClass(getActivity(), BeautyPersonalPageActivity.class);
+					startActivity(intent);
+				}
 			}
 		});
 	}
@@ -287,4 +291,6 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 		}
 		
 	}
+	
+	
 }

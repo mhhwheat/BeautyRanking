@@ -8,7 +8,6 @@ package org.wheat.ranking.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /** 
@@ -34,11 +33,27 @@ public class SqliteDBHelper extends SQLiteOpenHelper
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE IF NOT EXISTS follow_photo "+
+		db.execSQL("CREATE TABLE IF NOT EXISTS follow_page "+
 	"(_id INTEGER PRIMARY KEY AUTOINCREMENT, avatarPath VARCHAR, nickname VARCHAR, isPraise BOOLEAN, photoDescription VARCHAR, beautyId INTEGER, "+
 				" photoId INTEGER, commentCount INTEGER, praiseCount INTEGER, photoPath VARCHAR, userPhoneNumber VARCHAR, uploadTime VARCHAR)");
 		
-		db.execSQL("");
+		db.execSQL("CREATE TABLE IF NOT EXISTS neighbor_page "+
+	"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+		
+		db.execSQL("CREATE TABLE IF NOT EXISTS sum_page "+
+				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+		
+		db.execSQL("CREATE TABLE IF NOT EXISTS new_page "+
+				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+		
+		db.execSQL("CREATE TABLE IF NOT EXISTS rise_page "+
+				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+		
+		db.execSQL("CREATE TABLE IF NOT EXISTS my_detail_page "+
+	"(_id INTEGER PRIMARY KEY AUTOINCREMENT, avatarPath VARCHAR, nickname VARCHAR, isPraise BOOLEAN, photoDescription VARCHAR, beautyId INTEGER, "+
+				" photoId INTEGER, commentCount INTEGER, praiseCount INTEGER, photoPath VARCHAR, userPhoneNumber VARCHAR, uploadTime VARCHAR)");
+		
+		
 	}
 
 	@Override
