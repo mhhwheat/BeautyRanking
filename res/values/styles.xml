@@ -82,7 +82,7 @@
 	
 	<!-- 定义标题栏style -->
 	<style name="WindowTitleBackGround">
-	    <item name ="android:background">#24292c</item>
+	    <item name ="android:background">@color/title_color</item>
 	</style>
 	<style name="myTheme" parent="android:Theme">
 	    <item name="android:windowTitleSize">50dp</item>
