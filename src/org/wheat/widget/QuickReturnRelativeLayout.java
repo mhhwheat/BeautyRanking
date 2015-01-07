@@ -108,7 +108,7 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 	
 
 	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
+	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if(ev.getAction()==MotionEvent.ACTION_DOWN)
 		{
 			mCurrentEventPositionX=ev.getX();
@@ -123,10 +123,9 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 			mCurrentEventPositionY=ev.getY();
 			onScrollGesture(mCurrentEventPositionX-mLastEventPositionX, mCurrentEventPositionY-mLastEventPositionY);
 		}
-		
-		return super.onInterceptTouchEvent(ev);
+		return super.dispatchTouchEvent(ev);
 	}
-	
+
 	/**
 	 * 添加QuickReturnView,并把QuickReturnView置于QuickReturnRelativeLayout的底部
 	 * @param view
@@ -158,6 +157,7 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 			{
 				mWantedPositionY=mQuickReturnRelativeLayoutHeight-mQuickReturnViewHeight;
 			}
+			mQuickReturnRelativeLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 		}
 		
 	}
@@ -169,6 +169,7 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 	public void notifyQuickReturnViewTranslationYChange()
 	{
 		float mTranslationY=mWantedPositionY-mQuickReturnView.getTop();
+		
 		/** this can be used if the build is below honeycomb **/
 		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB) {
 			TranslateAnimation anim = new TranslateAnimation(0, 0, mTranslationY,
@@ -189,7 +190,13 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 			if(distanceY>0)
 			{
 				mWantedPositionY=mQuickReturnRelativeLayoutHeight-distanceY;
-				mState=STATE_RETURNING;
+				if(mWantedPositionY<(mQuickReturnRelativeLayoutHeight-mQuickReturnViewHeight))
+				{
+					mWantedPositionY=mQuickReturnRelativeLayoutHeight-mQuickReturnViewHeight;
+					mState=STATE_ONSCREEN;
+				}
+				else
+					mState=STATE_RETURNING;
 			}
 			else
 				mWantedPositionY=mQuickReturnRelativeLayoutHeight;
@@ -201,7 +208,7 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 				if(mWantedPositionY<(mQuickReturnRelativeLayoutHeight-mQuickReturnViewHeight))
 				{
 					mWantedPositionY=mQuickReturnRelativeLayoutHeight-mQuickReturnViewHeight;
-						mState=STATE_ONSCREEN;
+					mState=STATE_ONSCREEN;
 				}
 			}
 			else
@@ -212,8 +219,6 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 					mWantedPositionY=mQuickReturnRelativeLayoutHeight;
 					mState=STATE_OFFSCREEN;
 				}
-				else
-					mState=STATE_ONSCREEN;
 			}
 			break;
 		case STATE_ONSCREEN:
@@ -224,6 +229,10 @@ public class QuickReturnRelativeLayout extends RelativeLayout
 				{
 					mWantedPositionY=mQuickReturnRelativeLayoutHeight;
 					mState=STATE_OFFSCREEN;
+				}
+				else
+				{
+					mState=STATE_RETURNING;
 				}
 			}
 			break;

@@ -2,8 +2,11 @@ package org.wheat.ranking.activity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.data.UserLoginPreference;
@@ -38,7 +41,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 
 /** 
@@ -66,6 +68,9 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	private String mLoginUserPhoneNumber;
 	
 	private int mPhotoWidth=0;
+	//已经获取到正确的ImageWidth
+	private boolean allowFix=false;
+	private Map<String,ImageView> taskPool;
 	
 	
 	@Override
@@ -86,6 +91,8 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater=inflater;
+		
+		taskPool=new HashMap<String, ImageView>();
 		
 		View view=inflater.inflate(R.layout.fragment_follow, container, false);
 		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.follow_refresh_list_view);
@@ -207,15 +214,18 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			else
 				holder=(ViewHolder)convertView.getTag();
 			
+			
+			//为了获取ImageView的宽度,给ImageView设置监听器
 			if(mPhotoWidth<=0)
 			{
 				holder.ivPhoto.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(holder.ivPhoto));
 			}
 			
-			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50, false),holder.ivUserAvatar);
+			
+			addTaskToPool(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50, false),holder.ivUserAvatar);
 			holder.tvUserNickName.setText(listItem.getNickName());
 			holder.ivPhoto.setTag(R.id.tag_first, listItem);
-			mImageLoader.addTask(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true), holder.ivPhoto);
+			addTaskToPool(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true), holder.ivPhoto);
 			holder.tvPhotoDescription.setText(listItem.getPhotoDescription());
 			holder.tvPraiseTimes.setText(String.valueOf(listItem.getPraiseCount()));
 			holder.tvCommentTimes.setText(String.valueOf(listItem.getCommentCount()));
@@ -521,10 +531,74 @@ public class FollowFragment extends Fragment implements OnScrollListener
 
 		@Override
 		public void onGlobalLayout() {
-			mPhotoWidth=view.getHeight();
-			view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+			mPhotoWidth=view.getWidth();
+			if(mPhotoWidth>0)
+			{
+				unLockTaskPool();
+				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			}
 			Log.w("FollowFragment", "mPhotoWidth="+mPhotoWidth);
 		}
 		
+	}
+	
+	/**
+	 * 锁住时，不能加载自适配图片，只能加载固定图片
+	 */
+	public void lockTaskPool()
+	{
+		this.allowFix=false;
+	}
+	
+	/**
+	 * 解除锁定后，可以加载自适配图片
+	 */
+	public void unLockTaskPool()
+	{
+		if(!allowFix)
+		{
+			this.allowFix=true;
+			doTaskInPool();
+		}
+	}
+	
+	public void addTaskToPool(PhotoParameters parameters,ImageView img)
+	{
+		if(!parameters.isFixWidth())
+		{
+			mImageLoader.addTask(parameters, img);
+		}
+		else
+		{
+			synchronized (taskPool) {
+				img.setTag(parameters);
+				taskPool.put(Integer.toString(img.hashCode()), img);
+			}
+			if(allowFix)
+			{
+				doTaskInPool();
+			}	
+		}
+	}
+	
+	public void doTaskInPool()
+	{
+		synchronized (taskPool) {
+			Collection<ImageView> con=taskPool.values();
+			for(ImageView img:con)
+			{
+				if(img!=null)
+				{
+					if(img.getTag()!=null)
+					{
+						PhotoParameters pp=(PhotoParameters)img.getTag();
+						pp.setMinSideLength(mPhotoWidth);
+						pp.setMaxNumOfPixles(2*mPhotoWidth*mPhotoWidth);
+						mImageLoader.addTask(pp, img);
+					}
+				}
+			}
+			taskPool.clear();
+		}
 	}
 }

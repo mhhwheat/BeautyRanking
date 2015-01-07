@@ -2,8 +2,11 @@ package org.wheat.ranking.activity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.data.UserLoginPreference;
@@ -14,6 +17,7 @@ import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.HttpUploadMethods;
 import org.wheat.ranking.loader.ImageLoader;
+import org.wheat.widget.QuickReturnRelativeLayout;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -30,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -68,6 +73,14 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	
 	private int mPhotoWidth=0;
 	
+	private QuickReturnRelativeLayout mQuickReturnRelativeLayout;
+	private View mQuickReturnView;
+	
+	
+	//已经获取到正确的ImageWidth
+	private boolean allowFix=false;
+	private Map<String,ImageView> taskPool;
+	
 	
 	
 
@@ -75,10 +88,13 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.beauty_personal_page_layout);
+		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+		//初始化图片加载任务池
+		taskPool=new HashMap<String, ImageView>();
 		
 		mBeautyId=getBeautyIdFromIntent();
 		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
-		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mListData=new ArrayList<Photo>();
 		mImageLoader=ImageLoader.getInstance(this);
 		adapter=new BeautyPersonalPageListAdapter();
@@ -86,12 +102,17 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		mPullToRefreshListView=(PullToRefreshListView)findViewById(R.id.beauty_personal_page_refresh_list_view);
 		mActualListView=mPullToRefreshListView.getRefreshableView();
 		
+		//获得footerview
 		mFooterView=mInflater.inflate(R.layout.refresh_list_footer, null);
 		pbFooterLoading=(ProgressBar)mFooterView.findViewById(R.id.refresh_list_footer_progressbar);
 		tvFooterText=(TextView)mFooterView.findViewById(R.id.refresh_list_footer_text);
 		
 		mPullToRefreshListView.setAdapter(adapter);
 		mActualListView.addFooterView(mFooterView);
+		
+		mQuickReturnRelativeLayout=(QuickReturnRelativeLayout)findViewById(R.id.beauty_personal_page_quick_return_linearlayout);
+		mQuickReturnView=mInflater.inflate(R.layout.beauty_personal_page_quick_return_view, null);
+		mQuickReturnRelativeLayout.addQuickReturnView(mQuickReturnView);
 		
 		initialListViewListener();
 		new UpdateDataTask().execute();
@@ -186,6 +207,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				holder.tvPraiseTimes=(TextView)convertView.findViewById(R.id.beauty_personal_praise_times);
 				holder.ivCommentButton=(ImageView)convertView.findViewById(R.id.beauty_personal_comment_button);
 				holder.tvCommentTimes=(TextView)convertView.findViewById(R.id.beauty_personal_comment_times);
+				holder.tvPhotoDescription=(TextView)convertView.findViewById(R.id.beauty_personal_photo_description);
 				
 				View PraiseView=convertView.findViewById(R.id.beauty_personal_praise_area);
 				View CommentView=convertView.findViewById(R.id.beauty_personal_comment_area);
@@ -200,14 +222,13 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			
 			if(mPhotoWidth<=0)
 			{
-				holder.ivPhoto.measure(0, 0);
-				mPhotoWidth=holder.ivPhoto.getMeasuredWidth();
+				holder.ivPhoto.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(holder.ivPhoto));
 			}
 			
-			mImageLoader.addTask(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
+			addTaskToPool(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
 			holder.tvUserNikeName.setText(photo.getNickName());
 			holder.tvPublishTime.setText(getDifferenceFromDate(photo.getUploadTime()));
-			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),mPhotoWidth,2*mPhotoWidth*mPhotoWidth,true), holder.ivPhoto);
+			addTaskToPool(new PhotoParameters(photo.getPhotoPath(),mPhotoWidth,2*mPhotoWidth*mPhotoWidth,true), holder.ivPhoto);
 			if(photo.getIsPraise())
 			{
 				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);
@@ -218,6 +239,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			holder.tvPraiseTimes.setText(String.valueOf(photo.getPraiseCount()));
 			holder.tvCommentTimes.setTag(photo);
 			holder.tvCommentTimes.setText(String.valueOf(photo.getCommentCount()));
+			holder.tvPhotoDescription.setText(photo.getPhotoDescription());
 			return convertView;
 		}
 		
@@ -231,6 +253,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			public TextView  tvPraiseTimes;
 			public ImageView ivCommentButton;
 			public TextView  tvCommentTimes;
+			public TextView  tvPhotoDescription;
 		}
 		
 	}
@@ -301,6 +324,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 
 		@Override
 		protected void onPostExecute(PhotoListJson result) {
+					
 			if(result!=null&&result.getCode()==1000)
 			{
 				synchronized (mListData) {
@@ -359,6 +383,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 
 		@Override
 		protected void onPostExecute(PhotoListJson result) {
+			
 			if(result!=null&&result.getCode()==1000)
 			{
 				synchronized (mListData) {
@@ -510,5 +535,89 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		return dm.widthPixels;
 	}
 	*/
+	
+	public class GlobalLayoutLinstener implements OnGlobalLayoutListener
+	{
+		private View view;
+		public GlobalLayoutLinstener(View view)
+		{
+			this.view=view;
+		}
+
+		@Override
+		public void onGlobalLayout() {
+			mPhotoWidth=view.getWidth();
+			if(mPhotoWidth>0)
+			{
+				unLockTaskPool();
+				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			}
+			Log.w("BeautyPersonalPageActivity", "mPhotoWidth="+mPhotoWidth);
+		}
+		
+	}
+	
+	
+	/**
+	 * 锁住时，不能加载自适配图片，只能加载固定图片
+	 */
+	public void lockTaskPool()
+	{
+		this.allowFix=false;
+	}
+	
+	/**
+	 * 解除锁定后，可以加载自适配图片
+	 */
+	public void unLockTaskPool()
+	{
+		if(!allowFix)
+		{
+			this.allowFix=true;
+			doTaskInPool();
+		}
+	}
+	
+	public void addTaskToPool(PhotoParameters parameters,ImageView img)
+	{
+		if(!parameters.isFixWidth())
+		{
+			mImageLoader.addTask(parameters, img);
+		}
+		else
+		{
+			synchronized (taskPool) {
+				img.setTag(parameters);
+				taskPool.put(Integer.toString(img.hashCode()), img);
+			}
+			if(allowFix)
+			{
+				doTaskInPool();
+			}
+				
+				
+		}
+	}
+	
+	public void doTaskInPool()
+	{
+		synchronized (taskPool) {
+			Collection<ImageView> con=taskPool.values();
+			for(ImageView img:con)
+			{
+				if(img!=null)
+				{
+					if(img.getTag()!=null)
+					{
+						PhotoParameters pp=(PhotoParameters)img.getTag();
+						pp.setMinSideLength(mPhotoWidth);
+						pp.setMaxNumOfPixles(2*mPhotoWidth*mPhotoWidth);
+						mImageLoader.addTask(pp, img);
+					}
+				}
+			}
+			taskPool.clear();
+		}
+	}
 	
 }
