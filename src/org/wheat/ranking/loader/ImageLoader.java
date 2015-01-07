@@ -82,6 +82,9 @@ public class ImageLoader
 		doTask();
 	}
 	
+	
+	
+	
 	public void addTask(PhotoParameters parameters,ImageView img)
 	{
 		Bitmap bitmap=null;

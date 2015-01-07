@@ -20,6 +20,7 @@ import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
 
 import com.huewu.pla.lib.MultiColumnListView.OnColumnWidthIsMeasureListener;
+import com.huewu.pla.lib.internal.PLA_AbsListView;
 import com.huewu.pla.lib.internal.PLA_AdapterView;
 import com.huewu.pla.lib.internal.PLA_AdapterView.OnItemClickListener;
 
@@ -29,13 +30,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,7 +44,7 @@ import android.widget.TextView;
  * date: 2014-12-23  
  * time: 下午8:22:33
  */
-public class NeighborGridFragment extends Fragment implements OnScrollListener
+public class NeighborGridFragment extends Fragment implements XListView.XListViewOnScrollListener
 {
 	private final int PAGE_LENGTH=10;
 	private XListView mPullToRefreshGridView;
@@ -56,10 +54,6 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 	private NeighborGridAdapter adapter;
 	
 	private int mImageWidth=-1;
-	
-	private boolean isLoadingMore=false;//防止重复开启异步加载线程
-	//private GridView mActualGridView;//PulltoRefreshListView中真正的ListView
-	
 	
 	
 	@Override
@@ -79,15 +73,15 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 		mInflater=inflater;
 		View view=inflater.inflate(R.layout.fragment_neighbor_layout, container, false);
 		mPullToRefreshGridView=(XListView)view.findViewById(R.id.neighbor_pull_refresh_grid);
-//		mActualGridView=mPullToRefreshGridView.getRefreshableView();
 		mPullToRefreshGridView.setAdapter(adapter);
+		mPullToRefreshGridView.setPullLoadEnable(true);
 		initialGridViewListener();
 		
 		return view;
 	}
 	
 	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
+	public void onScrollStateChanged(PLA_AbsListView view, int scrollState) {
 		switch(scrollState)
 		{
 		case OnScrollListener.SCROLL_STATE_FLING:
@@ -106,7 +100,7 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 	}
 
 	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
+	public void onScroll(PLA_AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 		// TODO Auto-generated method stub
 		
@@ -149,7 +143,6 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
-			Log.w("NeighborGridFragment", "is getView");
 			mImageLoader.addTask(new PhotoParameters(GridItem.getAvatarPath(), mImageWidth, 2*mImageWidth*mImageWidth, true), holder.ivAvatar);
 			holder.tvDescription.setText(GridItem.getDescription());
 			return convertView;
@@ -178,8 +171,7 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 
 			@Override
 			public void onLoadMore() {
-				// TODO Auto-generated method stub
-				
+				new LoadMoreTask(mGridData.size(), PAGE_LENGTH).execute();
 			}
 		});
 		
@@ -197,9 +189,9 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 			@Override
 			public void onItemClick(PLA_AdapterView<?> parent, View view,
 					int position, long id) {
-				if(position<mGridData.size())
+				if(position<=mGridData.size())
 				{
-					BeautyIntroduction introduction=mGridData.get(position);
+					BeautyIntroduction introduction=mGridData.get(position-1);
 					Intent intent=new Intent();
 					intent.putExtra("mBeautyID", introduction.getBeautyId());
 					intent.setClass(getActivity(), BeautyPersonalPageActivity.class);
@@ -207,6 +199,8 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 				}
 			}
 		});
+		
+		mPullToRefreshGridView.setXListViewOnScrollListener(this);
 	}
 	
 	/**
@@ -240,8 +234,6 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 				}
 			}
 			mPullToRefreshGridView.stopRefresh();
-			isLoadingMore=false;
-			
 			super.onPostExecute(result);
 		}
 		
@@ -286,11 +278,13 @@ public class NeighborGridFragment extends Fragment implements OnScrollListener
 					adapter.notifyDataSetChanged();
 				}
 			}
-			isLoadingMore=false;
+			mPullToRefreshGridView.stopLoadMore();
 			super.onPostExecute(result);
 		}
 		
 	}
+
+	
 	
 	
 }
