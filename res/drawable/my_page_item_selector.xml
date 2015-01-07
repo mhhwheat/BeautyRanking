@@ -3,3 +3,11 @@
     <item android:drawable="@drawable/my_page_card_pressed" android:state_pressed="true"/>
     <item android:drawable="@drawable/my_page_card_background"/>
 </selector>
+
+<!-- 原来的有双层背景的 -->
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<selector  xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@drawable/my_page_card_pressed" android:state_pressed="true"/>
+    <item android:drawable="@drawable/my_page_card_background"/>
+</selector>
+ -->

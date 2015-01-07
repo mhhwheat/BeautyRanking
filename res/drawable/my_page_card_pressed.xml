@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    <solid  android:color="@color/mypage_tab_click"/>
+</shape>
+
+
+
+
+
+
+
+
+<!-- <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item>
@@ -20,4 +32,6 @@
         </shape>
     </item>
 
-</layer-list>
+</layer-list> -->
+
+

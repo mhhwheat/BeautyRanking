@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@color/my_page_background"
     >
 
     <LinearLayout
+        android:layout_margin="10dp"
         android:background="@color/white"
-        android:layout_margin="5dp"
         android:layout_width="fill_parent"
         android:layout_height="170dp" 
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="120dp" 
@@ -43,13 +43,15 @@
 			    </FrameLayout>
 
             <RelativeLayout
+                 android:layout_marginLeft="5dp"
                 android:id="@+id/rl1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="40"
                 android:padding="5dp" >
 
-                <LinearLayout
+                <RelativeLayout
+                    android:layout_alignParentLeft="true"
                     android:layout_marginRight="5dp" 
                     android:id="@+id/nickname_line"
                     android:orientation="horizontal"
@@ -64,13 +66,16 @@
                     android:maxLength="10"
                     android:textColor="@color/black"
                     android:background="@null" 
-                    android:layout_marginRight="5dp"/>
+                    android:layout_marginRight="5dp"
+                    />
                      <ImageView 
                          android:id="@+id/mysettingtrue"
-                         android:layout_width="25dp"
-                         android:layout_height="25dp"
-                         android:background="@drawable/edit"/>
-                </LinearLayout>
+                         android:layout_width="20dp"
+                         android:layout_height="20dp"
+                         android:background="@drawable/edit"
+                         android:scaleType="center"
+                         android:layout_alignRight="@id/mynickname"/>
+                </RelativeLayout>
                
 
                 <TextView
@@ -78,7 +83,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/nickname_line"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="10dp"
                     android:hint="beautyid"
                     android:background="@null"
                     android:maxLength="12" />
@@ -118,7 +123,7 @@
             >
             <TextView 
                 android:layout_width="fill_parent"
-                android:layout_height="25dp"
+                android:layout_height="28dp"
                 android:gravity="center"
                  android:textSize="15sp"
                 android:text="相片"
@@ -127,46 +132,18 @@
             <TextView 
                 android:id="@+id/mycreatenum"
                 android:layout_width="fill_parent"
-                android:layout_height="15dp"
-                android:gravity="center"
-                android:text="12"
-                />
-        </LinearLayout>
-        
-        
-        <LinearLayout 
-            android:layout_marginTop="0.2dp"
-            android:id="@+id/myfollow"
-            android:layout_marginLeft="0.1dp"
-            android:clickable="true"
-            android:background="@drawable/mypage_tab_background_selector"
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            >
-            <TextView 
-                android:layout_width="fill_parent"
-                android:layout_height="29dp"
-                 android:textSize="15sp"
-                android:gravity="center"
-                android:text="关注"
-                android:textColor="@color/black"
-                />
-            <TextView 
-                android:id="@+id/myfollownum"
-                android:layout_width="fill_parent"
-                android:layout_height="18dp"
+                android:layout_height="17dp"
                 android:gravity="center"
                 android:text="12"
                 />
             <TextView
+                android:id="@+id/tab_green_line1"
                 android:background="@color/tab_check_color"
                 android:layout_width="fill_parent"
-                android:layout_height="3dp"/>
+                android:layout_height="5dp"
+                android:visibility="gone"
+                />
         </LinearLayout>
-        
-        
         
         
         <LinearLayout 
@@ -182,7 +159,45 @@
             >
             <TextView 
                 android:layout_width="fill_parent"
-                android:layout_height="25dp"
+                android:layout_height="28dp"
+                 android:textSize="15sp"
+                android:gravity="center"
+                android:text="关注"
+                android:textColor="@color/black"
+                />
+            <TextView 
+                android:id="@+id/myfollownum"
+                android:layout_width="fill_parent"
+                android:layout_height="17dp"
+                android:gravity="center"
+                android:text="12"
+                />
+            <TextView
+                android:id="@+id/tab_green_line2"
+                android:background="@color/tab_check_color"
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+        
+        
+        
+        
+        <LinearLayout 
+            android:layout_marginTop="0.2dp"
+            android:id="@+id/mycomment"
+            android:layout_marginLeft="0.1dp"
+            android:clickable="true"
+            android:background="@drawable/mypage_tab_background_selector"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            >
+            <TextView 
+                android:layout_width="fill_parent"
+                android:layout_height="28dp"
                 android:gravity="center"
                  android:textSize="15sp"
                 android:text="评论"
@@ -191,9 +206,16 @@
             <TextView 
                 android:id="@+id/myfocusnum"
                 android:layout_width="fill_parent"
-                android:layout_height="15dp"
+                android:layout_height="17dp"
                 android:gravity="center"
                 android:text="12"
+                />
+            <TextView
+                android:id="@+id/tab_green_line3"
+                android:background="@color/tab_check_color"
+                android:layout_width="fill_parent"
+                android:layout_height="5dp"
+                android:visibility="gone"
                 />
         </LinearLayout>
     </LinearLayout>
