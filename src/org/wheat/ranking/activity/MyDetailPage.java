@@ -36,6 +36,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -87,10 +88,10 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		private TextView tvFollow;//粉丝
 		private TextView tvFocus;//关注
 		private TextView tvPersonSign;//个性签名
-		private RelativeLayout rlCreate;
-		private RelativeLayout rlLike;
-		private RelativeLayout rlFollow;
-		private RelativeLayout rlFocus;
+		private LinearLayout rlCreate;
+		private LinearLayout rlLike;
+		private LinearLayout rlFollow;
+		private LinearLayout rlFocus;
 
 		Activity parentActivity;
 	@Override
@@ -464,13 +465,13 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		tvHeaderBeautyId=(TextView)mHeaderView.findViewById(R.id.mybeautyid);
 		ivSetting=(ImageView)mHeaderView.findViewById(R.id.mysettingtrue);
 		tvCreate=(TextView)mHeaderView.findViewById(R.id.mycreatenum);
-		rlCreate=(RelativeLayout)mHeaderView.findViewById(R.id.mycreate);
-		tvLike=(TextView)mHeaderView.findViewById(R.id.mylikenum);
-		rlLike=(RelativeLayout)mHeaderView.findViewById(R.id.mylike);
+		rlCreate=(LinearLayout)mHeaderView.findViewById(R.id.mycreate);
+//		tvLike=(TextView)mHeaderView.findViewById(R.id.mylikenum);
+//		rlLike=(RelativeLayout)mHeaderView.findViewById(R.id.mylike);
 		tvFollow=(TextView)mHeaderView.findViewById(R.id.myfollownum);
-		rlFollow=(RelativeLayout)mHeaderView.findViewById(R.id.myfollow);
+		rlFollow=(LinearLayout)mHeaderView.findViewById(R.id.myfollow);
 		tvFocus=(TextView)mHeaderView.findViewById(R.id.myfocusnum);
-		rlFocus=(RelativeLayout)mHeaderView.findViewById(R.id.myfocus);
+		rlFocus=(LinearLayout)mHeaderView.findViewById(R.id.myfocus);
 		tvPersonSign=(TextView)mHeaderView.findViewById(R.id.mypersonalsign);
 		//从本地获取头像，昵称，个性签名，还有创建的数据等，更新数据的时候也需要将数据存入local文件
 		getDataFromLocal();
@@ -504,7 +505,7 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		UserLoginPreference preference=UserLoginPreference.getInstance(getActivity().getApplicationContext());
 
 		tvCreate.setText(String.valueOf(preference.getUserInfoCreateNum()));
-		tvLike.setText(String.valueOf(preference.getUserInfoLike()));
+//		tvLike.setText(String.valueOf(preference.getUserInfoLike()));
 		tvFocus.setText(String.valueOf(preference.getUserInfoFocusNum()));
 		tvFollow.setText("0");//暂时设置为0，估计以后去掉该功能
 		tvPersonSign.setText(preference.getUserInfoPersionSign());

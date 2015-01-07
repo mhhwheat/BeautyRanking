@@ -169,5 +169,10 @@
 <color name="title_text_color">#df5745</color><!-- app主要文字 -->
 
 <color name="praise_colot">#ff3c3c</color><!-- 赞的颜色 -->
+<color name="comment_full">#4169e1</color>
+<color name="small_text_color">#808080</color><!-- 小文字的颜色 -->
+
+<color name="mypage_tab_click">#e1e1e1</color><!-- 我的页面按下颜色 -->
+<color name="mypage_tab_unclick">#F3F3F3</color>
 
 </resources>

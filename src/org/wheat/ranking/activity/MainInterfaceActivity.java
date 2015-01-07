@@ -114,6 +114,7 @@ public class MainInterfaceActivity extends FragmentActivity
 			replaceFragment(mFindPageFragment, R.id.replacing_fragment);
 			break;
 		case R.id.tab_mine_page:
+			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mypage_title);
 			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
 			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
 
@@ -163,6 +164,7 @@ public class MainInterfaceActivity extends FragmentActivity
 			mFindPageText.setTextColor(this.getResources().getColor(R.color.tab_uncheck_color));
 			break;
 		case R.id.tab_mine_page:
+			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mycustomtitle);
 			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
 			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
 

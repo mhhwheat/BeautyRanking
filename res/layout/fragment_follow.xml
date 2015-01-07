@@ -17,8 +17,6 @@
         android:smoothScrollbar="true"
         ptr:ptrAnimationStyle="flip"
         ptr:ptrDrawable="@drawable/clone_xlistview_arrow"
-        
-        
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:divider="@null"

@@ -1,61 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="100dp"
-    android:orientation="horizontal" >
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        />
-    <RelativeLayout 
-        android:layout_width="match_parent"
-        android:layout_height="100dp">
-        <TextView 
-            android:id="@+id/name_lable"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name_label"
-            android:textSize="16sp"
-            />
+    android:layout_height="140dp"
+    android:orientation="vertical" >
+
+    <!-- 设置第一个listitem与整个listview的上方距离 -->
+    <!-- 设置整个list item的背景颜色 -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="110dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="5dp" 
+            android:layout_marginLeft="5dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginRight="5dp" >
+
+            
+
+            <LinearLayout
+                android:id="@+id/firstline"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/trueName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="麦华华"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+                <!-- 点赞的设置 -->
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp" >
+
+                    <LinearLayout
+                        android:id="@+id/fragment_follow_comment_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/fragment_follow_comment_button"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginRight="5dp"
+                            android:contentDescription="@string/beauty_personal_contenDescription"
+                            android:src="@drawable/praisefull" />
+
+                        <TextView
+                            android:id="@+id/fragment_follow_comment_times"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:text="123"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/fragment_follow_praise_area"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/fragment_follow_comment_area"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/fragment_follow_praise_button"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginRight="5dp"
+                            android:contentDescription="@string/beauty_personal_contenDescription"
+                            android:src="@drawable/commentfull" />
+
+                        <TextView
+                            android:id="@+id/fragment_follow_praise_times"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:text="456"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+         
+
+            <TextView
+                android:id="@+id/school"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/firstline"
+                android:layout_below="@id/firstline"
+                android:layout_marginTop="8dp"
+                android:text="广东外语外贸大学"
+                android:textColor="@color/small_text_color"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/impression"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/school"
+                android:layout_below="@id/school"
+                android:ellipsize="end"
+                android:lines="2"
+                android:text="当地时间6月4日，英国伦敦绘公司将亚洲狮的脸描摹在人体模特身上，为伦敦动物学学会分支机构揭幕，呼吁保护濒危生物。"
+                android:textColor="@color/small_text_color"
+                android:textSize="13sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="horizontal" 
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_marginTop="3dp"
+            android:id="@+id/sumpage_item_location_img"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="5dp"
+            android:contentDescription="@string/beauty_personal_contenDescription"
+            android:src="@drawable/locationfull" />
+
         <TextView
-            android:id="@+id/trueName"
-            android:layout_toRightOf="@id/name_lable"
-            android:layout_alignTop="@id/name_lable"
+            android:layout_marginTop="3dp"
+            android:id="@+id/sumpage_item_location_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="麦华华"
-            android:textSize="16sp"
-            />
-        <TextView
-            android:id="@+id/school_lable"
-            android:layout_below="@id/name_lable"
-            android:layout_alignLeft="@id/name_lable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/school_lable" 
-            android:textSize="16sp"
-            />
-        <TextView
-            android:id="@+id/school"
-            android:layout_toRightOf="@id/school_lable"
-            android:layout_below="@id/trueName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="广东外语外贸大学" 
-            android:textSize="16sp"
-            />
-        <TextView
-            android:id="@+id/impression"
-            android:layout_below="@id/school_lable"
-            android:lines="3"
-            android:textSize="16sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:text="当地时间6月4日，英国伦敦绘公司将亚洲狮的脸描摹在人体模特身上，为伦敦动物学学会分支机构揭幕，呼吁保护濒危生物。"
-            />
-    </RelativeLayout>
+            android:layout_marginRight="5dp"
+            android:ellipsize="start"
+            android:singleLine="true"
+            android:text="广东外语外贸大学广东外语外贸大学广东外语外贸大学广东外语外贸大学"
+            android:textSize="12sp" />
+    </LinearLayout>
+
 </LinearLayout>

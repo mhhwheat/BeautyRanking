@@ -7,24 +7,22 @@
     >
 
     <LinearLayout
+        android:background="@color/white"
         android:layout_margin="5dp"
-        android:background="@drawable/my_page_card_background"
         android:layout_width="fill_parent"
-        android:layout_height="180dp" 
+        android:layout_height="170dp" 
         android:orientation="vertical">
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="120dp" 
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/baseinfoliner"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:padding="5dp" >
@@ -32,9 +30,8 @@
 
 			<FrameLayout
 			    android:id="@+id/avatarF"
-			   android:layout_weight="75"
-			   android:layout_width="fill_parent"
-			   android:layout_height="fill_parent">
+			   android:layout_width="65dp"
+			   android:layout_height="65dp">
 			    <ImageView
                 android:id="@+id/myavatar"
                 android:layout_width="65dp"
@@ -52,43 +49,42 @@
                 android:layout_weight="40"
                 android:padding="5dp" >
 
-                <TextView
+                <LinearLayout
+                    android:layout_marginRight="5dp" 
+                    android:id="@+id/nickname_line"
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="25dp">
+                     <TextView
+                    android:textSize="20sp"
                     android:id="@+id/mynickname"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:hint="昵称"
                     android:maxLength="10"
-                    android:background="@null" />
+                    android:textColor="@color/black"
+                    android:background="@null" 
+                    android:layout_marginRight="5dp"/>
+                     <ImageView 
+                         android:id="@+id/mysettingtrue"
+                         android:layout_width="25dp"
+                         android:layout_height="25dp"
+                         android:background="@drawable/edit"/>
+                </LinearLayout>
+               
 
                 <TextView
                     android:id="@+id/mybeautyid"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/mynickname"
+                    android:layout_below="@id/nickname_line"
                     android:layout_marginTop="7dp"
                     android:hint="beautyid"
                     android:background="@null"
                     android:maxLength="12" />
             </RelativeLayout>
 
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="85" >
-
-                <ImageView
-                    android:id="@+id/mysetting"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/cog" />
-
-                <ImageView
-                    android:id="@+id/mysettingtrue"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" /><!-- 为了让用户比较容易按到按钮所以加大设置按钮 -->
-            </FrameLayout>
+           
         </LinearLayout>
 
         <TextView
@@ -98,151 +94,115 @@
             android:layout_below="@id/baseinfoliner"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="10dp"
+            android:textColor="@color/small_text_color"
             android:hint="个性签名" />
 
     </LinearLayout>
     
-    <RelativeLayout 
+    
+    <LinearLayout 
+        android:background="@color/listview_background_color"
         android:orientation="horizontal"
-        android:id="@+id/detailLinear"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        >
-        <org.wheat.widget.DashedLine
-            android:id="@+id/dashline1"
-            android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@id/linear1"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp" />
+        android:layout_height="50dp">
+        
         <LinearLayout 
-            android:id="@+id/inlinear"
+            android:layout_marginTop="0.2dp"
+            android:id="@+id/mycreate"
+            android:clickable="true"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="horizontal"
-            android:layout_below="@id/dashline1"
+            android:layout_weight="1"
+            android:background="@drawable/mypage_tab_background_selector"
             >
-            <RelativeLayout 
-                 android:clickable="true"
-                android:background="@drawable/my_page_tab_around"
-                android:id="@+id/mycreate"
+            <TextView 
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <TextView 
-                android:id="@+id/re_tv1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:gravity="center"
+                 android:textSize="15sp"
                 android:text="相片"
-                android:textSize="18dp"
+                android:textColor="@color/black"
                 />
-                <TextView
-                    android:id="@+id/mycreatenum"
-                    android:layout_marginTop="3dp"
-                    android:layout_below="@id/re_tv1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    />   
-            </RelativeLayout>"
-            
-           <RelativeLayout 
-                android:clickable="true"
-                android:background="@drawable/my_page_tab_around"
-                android:id="@+id/myfollow"
+            <TextView 
+                android:id="@+id/mycreatenum"
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <TextView 
-                android:id="@+id/re_tv2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="15dp"
                 android:gravity="center"
-                android:text="粉丝"
-                android:textSize="18dp"
+                android:text="12"
                 />
-                <TextView
-                    android:id="@+id/myfollownum"
-                    android:layout_marginTop="3dp"
-                    android:layout_below="@id/re_tv2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    />   
-            </RelativeLayout>
-                
-            <RelativeLayout 
-                 android:clickable="true"
-                 android:background="@drawable/my_page_tab_around"
-                android:id="@+id/mylike"
+        </LinearLayout>
+        
+        
+        <LinearLayout 
+            android:layout_marginTop="0.2dp"
+            android:id="@+id/myfollow"
+            android:layout_marginLeft="0.1dp"
+            android:clickable="true"
+            android:background="@drawable/mypage_tab_background_selector"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            >
+            <TextView 
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <TextView 
-                android:id="@+id/re_tv3"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="喜欢"
-                android:textSize="18dp"
-                />
-                <TextView
-                    android:id="@+id/mylikenum"
-                    android:layout_marginTop="3dp"
-                    android:layout_below="@id/re_tv3"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    />   
-            </RelativeLayout>
-                
-            <RelativeLayout 
-                android:clickable="true"
-                 android:background="@drawable/my_page_tab_around"
-                android:id="@+id/myfocus"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <TextView 
-                android:id="@+id/re_tv4"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="29dp"
+                 android:textSize="15sp"
                 android:gravity="center"
                 android:text="关注"
-                android:textSize="18dp"
+                android:textColor="@color/black"
                 />
-                <TextView
-                    android:id="@+id/myfocusnum"
-                    android:layout_marginTop="3dp"
-                    android:layout_below="@id/re_tv4"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textSize="12dp"
-                    android:gravity="center"
-                    />   
-            </RelativeLayout>          
-
+            <TextView 
+                android:id="@+id/myfollownum"
+                android:layout_width="fill_parent"
+                android:layout_height="18dp"
+                android:gravity="center"
+                android:text="12"
+                />
+            <TextView
+                android:background="@color/tab_check_color"
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"/>
         </LinearLayout>
-        <org.wheat.widget.DashedLine
-            android:id="@+id/dashline2"
+        
+        
+        
+        
+        <LinearLayout 
+            android:layout_marginTop="0.2dp"
+            android:id="@+id/myfocus"
+            android:layout_marginLeft="0.1dp"
+            android:clickable="true"
+            android:background="@drawable/mypage_tab_background_selector"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="3dp"
-            android:layout_below="@id/inlinear"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp" />
-    </RelativeLayout>
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            >
+            <TextView 
+                android:layout_width="fill_parent"
+                android:layout_height="25dp"
+                android:gravity="center"
+                 android:textSize="15sp"
+                android:text="评论"
+                android:textColor="@color/black"
+                />
+            <TextView 
+                android:id="@+id/myfocusnum"
+                android:layout_width="fill_parent"
+                android:layout_height="15dp"
+                android:gravity="center"
+                android:text="12"
+                />
+        </LinearLayout>
+    </LinearLayout>
+  
+    
+    
+    
+    
+    
     
     </LinearLayout>
 </LinearLayout>
