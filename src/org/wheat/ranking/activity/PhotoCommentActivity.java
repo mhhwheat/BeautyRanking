@@ -234,14 +234,17 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 			super.onPostExecute(result);
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					List<Comment> list=result.getData().getCommentList();
-					mListData.clear();
-					for(Comment comment:list)
-					{
-						mListData.add(comment);
+				if(result.getData().getCommentList().size()>0)
+				{
+					synchronized (mListData) {
+						List<Comment> list=result.getData().getCommentList();
+						mListData.clear();
+						for(Comment comment:list)
+						{
+							mListData.add(comment);
+						}
+						adapter.notifyDataSetChanged();
 					}
-					adapter.notifyDataSetChanged();
 				}
 			}
 		}

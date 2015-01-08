@@ -1,6 +1,8 @@
 package org.wheat.ranking.entity;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
@@ -80,6 +82,14 @@ public class Photo
 		this.isPraise=praise;
 	}
 	
+	public void setIspraise(int praise) 
+	{
+		if(praise>0)
+			this.isPraise=true;
+		else
+			this.isPraise=false;
+	}
+	
 	public boolean getIsPraise(){
 		return this.isPraise;
 	}
@@ -137,6 +147,19 @@ public class Photo
 		this.uploadTime=uploadTime;
 	}
 	
+	public void setUploadTime(String date) throws ParseException 
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		this.uploadTime=sdf.parse(date);
+		
+	}
+	
+	public String getUpLoadTimeToString()
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(this.uploadTime);
+	}
+	
 	public Date getUploadTime()
 	{
 		return this.uploadTime;
@@ -151,4 +174,6 @@ public class Photo
 	{
 		return this.photoId;
 	}
+
+	
 }

@@ -227,10 +227,13 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 		protected void onPostExecute(BeautyIntroductionListJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mGridData) {
-					mGridData.clear();
-					mGridData=result.getData().getIntroductionList();
-					adapter.notifyDataSetChanged();
+				if(result.getData().getIntroductionList().size()>0)
+				{
+					synchronized (mGridData) {
+						mGridData.clear();
+						mGridData=result.getData().getIntroductionList();
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 			mPullToRefreshGridView.stopRefresh();

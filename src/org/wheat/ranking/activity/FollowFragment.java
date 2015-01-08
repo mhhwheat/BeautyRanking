@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
@@ -72,6 +73,9 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	private boolean allowFix=false;
 	private Map<String,ImageView> taskPool;
 	
+	//存储页面缓存的数据库管理工具
+	private SqliteDBManager dbManager;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,15 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		mListData=new ArrayList<Photo>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new FollowRefreshListAdapter();
+		dbManager=new SqliteDBManager(getActivity());
+		
 		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
+		
+		List<Photo> list=dbManager.getFromFollowPage();
+		if(list.size()>0)
+		{
+			mListData.addAll(list);
+		}
 		
 		new UpdateDataTask().execute();
 	}
@@ -110,6 +122,14 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	}
 
 	
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		dbManager.clearFollowPage();
+		dbManager.addToFollowPage(mListData);
+	}
+
 
 
 	@Override
@@ -307,12 +327,6 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-//			if(json==null)
-//			{
-//				Log.w("TabSumFragment","json is null------------->");
-//				return null;
-//			}
-//			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
 			return json;
 		}
 
@@ -320,10 +334,13 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		protected void onPostExecute(PhotoListJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					mListData.clear();
-					mListData=result.getData().getPhotoList();
-					adapter.notifyDataSetChanged();
+				if(result.getData().getPhotoList().size()>0)
+				{
+					synchronized (mListData) {
+						mListData.clear();
+						mListData=result.getData().getPhotoList();
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 			mPullToRefreshListView.onRefreshComplete();

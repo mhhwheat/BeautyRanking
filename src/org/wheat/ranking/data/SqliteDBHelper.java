@@ -38,16 +38,16 @@ public class SqliteDBHelper extends SQLiteOpenHelper
 				" photoId INTEGER, commentCount INTEGER, praiseCount INTEGER, photoPath VARCHAR, userPhoneNumber VARCHAR, uploadTime VARCHAR)");
 		
 		db.execSQL("CREATE TABLE IF NOT EXISTS neighbor_page "+
-	"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+	"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR)");
 		
 		db.execSQL("CREATE TABLE IF NOT EXISTS sum_page "+
-				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR)");
 		
 		db.execSQL("CREATE TABLE IF NOT EXISTS new_page "+
-				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR)");
 		
 		db.execSQL("CREATE TABLE IF NOT EXISTS rise_page "+
-				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR");
+				"(_id INTEGER PRIMARY KEY AUTOINCREMENT, beautyId INTEGER, beautyName VARCHAR, school VARCHAR, avatarPath VARCHAR, photoDescription VARCHAR)");
 		
 		db.execSQL("CREATE TABLE IF NOT EXISTS my_detail_page "+
 	"(_id INTEGER PRIMARY KEY AUTOINCREMENT, avatarPath VARCHAR, nickname VARCHAR, isPraise BOOLEAN, photoDescription VARCHAR, beautyId INTEGER, "+

@@ -327,10 +327,13 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 					
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					mListData.clear();
-					mListData=result.getData().getPhotoList();
-					adapter.notifyDataSetChanged();
+				if(result.getData().getPhotoList().size()>0)
+				{
+					synchronized (mListData) {
+						mListData.clear();
+						mListData=result.getData().getPhotoList();
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 			mPullToRefreshListView.onRefreshComplete();
