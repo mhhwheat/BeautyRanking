@@ -24,9 +24,7 @@
             android:layout_toRightOf="@id/header_left_btn"
             android:singleLine="true"
             android:text="创建beauty"
-            android:textColor="#6a4cfc"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="15sp" />
      
 
 

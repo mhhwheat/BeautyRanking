@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class PersonInfo extends Activity {
+public class ModifyNickName extends Activity {
 
 	EditText tvTrueName; String truename;
 	EditText tvBirthday; String birthday;
@@ -26,7 +26,7 @@ public class PersonInfo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.beauty_detail_info);
+		setContentView(R.layout.modify_my_info);
 		init();
 		btnSure.setOnClickListener(new commitInfolistener());
 		
@@ -40,10 +40,10 @@ public class PersonInfo extends Activity {
 				return;
 			}else{
 				Intent returnIntent = new Intent();
-				returnIntent.putExtra("truename", truename);
+				returnIntent.putExtra("nickname", truename);
 				returnIntent.putExtra("birthday", birthday);
 				returnIntent.putExtra("school",school);
-				returnIntent.putExtra("description", description);
+				returnIntent.putExtra("personSign", description);
 				setResult(1, returnIntent);
 				finish();
 				
@@ -62,10 +62,10 @@ public class PersonInfo extends Activity {
 		birthday= tvBirthday.getText().toString().trim();
 		school= tvSchool.getText().toString().trim();
 		description = etDescription.getText().toString().trim();
-		if(description.equals("")){
-			Toast.makeText(this, "多少给点介绍吧", Toast.LENGTH_LONG).show();
-			return false;
-		}
+//		if(description.equals("")){
+//			Toast.makeText(this, "多少给点介绍吧", Toast.LENGTH_LONG).show();
+//			return false;
+//		}
 		return true;
 	}
 }

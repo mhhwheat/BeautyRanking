@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    android:useLevel="false" >
+    
+    <corners 
+	    android:topLeftRadius="@dimen/icon_conners_size"
+	    android:topRightRadius="@dimen/icon_conners_size"
+	    android:bottomLeftRadius="@dimen/icon_conners_size"
+	    android:bottomRightRadius="@dimen/icon_conners_size"
+	    />
+    <solid android:color="@color/mediumvioletred"/>
+
+</shape>

@@ -93,7 +93,7 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);//请求设置标题栏
-		setContentView(R.layout.create_new_beauty2);
+		setContentView(R.layout.create_new_beauty);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.create_page_title);
 		// 初始化
 		init();
