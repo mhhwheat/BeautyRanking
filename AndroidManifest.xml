@@ -31,15 +31,33 @@
             android:name="com.amap.api.v2.apikey"
             android:value="7522b10fc4a1e5dc07c6b07f38b7aa63" />
 
+        <activity 
+            android:name="org.wheat.ranking.activity.PhotoCommentActivity"
+            android:label="@string/app_name"
+            android:theme="@style/myTheme">
+            
+        </activity>
+        
         
         <activity
             android:name="org.wheat.ranking.checkUpdate.OpinionBack"
             android:label="@string/app_name" >
         </activity>
         
+        <activity 
+            android:name="org.wheat.ranking.activity.ModifyNickName"
+            android:label="@string/app_name"></activity>
+        
+        
         
         <activity 
             android:name="org.wheat.ranking.checkUpdate.SettingPage"
+            android:label="@string/setting_page">
+        </activity>
+        
+        
+        <activity 
+            android:name="org.wheat.ranking.activity.BeautyPersonalPageActivity"
             android:label="@string/app_name">
         </activity>
         
@@ -64,13 +82,14 @@
             </activity>
         <activity
             android:name="org.wheat.ranking.activity.MainInterfaceActivity"
-            android:label="@string/app_name"
-            android:theme="@style/myTheme" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/myTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
         </activity>
+        
+        <!-- android:theme="@style/myTheme" -->
         
         
         <activity
@@ -92,12 +111,8 @@
             android:theme="@style/titleStyle" >
         </activity>
         
-        <activity android:name="org.wheat.ranking.activity.PhotoCommentActivity" 
-            android:label="@string/app_name"
-            android:theme="@style/titleStyle">
-        </activity>
+        
         <activity
-            
             android:name="org.wheat.ranking.activity.Login"
             android:theme="@style/myTheme" >
         </activity>
@@ -122,12 +137,7 @@
         </activity>
         <activity
             android:name="org.wheat.ranking.activity.PersonInfo"
-            android:label="@string/app_name" >
-        </activity>
-        
-        <activity
-            android:name="org.wheat.ranking.activity.BeautyPersonalPageActivity"
-            android:label="@string/app_name">
+            android:label="@string/beauty_detail_msg" >
         </activity>
     </application>
 
