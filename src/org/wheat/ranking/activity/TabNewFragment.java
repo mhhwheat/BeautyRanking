@@ -239,10 +239,13 @@ mInflater=inflater;
 		protected void onPostExecute(BeautyIntroductionListJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					mListData.clear();
-					mListData=result.getData().getIntroductionList();
-					adapter.notifyDataSetChanged();
+				if(result.getData().getIntroductionList().size()>0)
+				{
+					synchronized (mListData) {
+						mListData.clear();
+						mListData=result.getData().getIntroductionList();
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 			mPullToRefreshListView.onRefreshComplete();

@@ -10,9 +10,11 @@ import java.util.Map;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.data.UserLoginPreference;
+import org.wheat.ranking.entity.BeautyDetail;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.Praise;
+import org.wheat.ranking.entity.json.BeautyDetailJson;
 import org.wheat.ranking.entity.json.PhotoListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.HttpUploadMethods;
@@ -81,6 +83,11 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	private boolean allowFix=false;
 	private Map<String,ImageView> taskPool;
 	
+	//listview第一个item的数据
+	private BeautyDetail mBeauty=null;
+	
+	
+	
 	
 	
 
@@ -116,6 +123,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		
 		initialListViewListener();
 		new UpdateDataTask().execute();
+		new UpdateAlbumCoverTask().execute();
 	}
 	
 	
@@ -175,7 +183,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return mListData.size();
+				return mListData.size()+1;
 		}
 
 		@Override
@@ -193,9 +201,27 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			final Photo photo=mListData.get(position);
+			if(position==0)
+			{
+				convertView=mInflater.inflate(R.layout.beauty_personal_album_cover, null);
+				if(mBeauty!=null)
+				{
+					ImageView ivAlbumCover=(ImageView)convertView.findViewById(R.id.beauty_personal_album_cover);
+					TextView tvAlbumCoverName=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_name);
+					TextView tvAlbumCoverSchool=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_school);
+					TextView tvAlbumCoverDescription=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_description);
+					
+					addTaskToPool(new PhotoParameters(mBeauty.getAvatarPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth), ivAlbumCover);
+					tvAlbumCoverName.setText(mBeauty.getTrueName());
+					tvAlbumCoverSchool.setText(mBeauty.getSchool());
+					tvAlbumCoverDescription.setText(mBeauty.getDescription());
+				}
+				return convertView;
+			}
+			
+			final Photo photo=mListData.get(position-1);
 			ViewHolder holder;
-			if(convertView==null)
+			if(convertView==null||convertView.getTag()==null)
 			{
 				holder=new ViewHolder();
 				convertView=mInflater.inflate(R.layout.beauty_personal_page_list_item, null);
@@ -228,7 +254,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			addTaskToPool(new PhotoParameters(photo.getAvatarPath(), 50, 50*50), holder.ivUserAvatar);
 			holder.tvUserNikeName.setText(photo.getNickName());
 			holder.tvPublishTime.setText(getDifferenceFromDate(photo.getUploadTime()));
-			addTaskToPool(new PhotoParameters(photo.getPhotoPath(),mPhotoWidth,2*mPhotoWidth*mPhotoWidth,true), holder.ivPhoto);
+			addTaskToPool(new PhotoParameters(photo.getPhotoPath(),mPhotoWidth,2*mPhotoWidth*mPhotoWidth,true,mPhotoWidth), holder.ivPhoto);
 			if(photo.getIsPraise())
 			{
 				holder.ivPraiseButton.setImageResource(R.drawable.praise_select);
@@ -270,6 +296,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				
 				// Update the LastUpdatedLabel
 				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				new UpdateAlbumCoverTask().execute();
 				new UpdateDataTask().execute();
 			}
 		});
@@ -294,6 +321,36 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		mPullToRefreshListView.setOnScrollListener(this);
 	}
 	
+	private class UpdateAlbumCoverTask extends AsyncTask<Void, Void, BeautyDetailJson>
+	{
+
+		@Override
+		protected BeautyDetailJson doInBackground(Void... params) {
+			BeautyDetailJson json=null;
+			try {
+				json=HttpLoderMethods.getBeautyDetail(mBeautyId);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			return json;
+		}
+
+		@Override
+		protected void onPostExecute(BeautyDetailJson result) {
+			if(result!=null&&result.getCode()==1000)
+			{
+				if(result.getData()!=null)
+				{
+					mBeauty=result.getData();
+					adapter.notifyDataSetChanged();
+				}
+			}
+			super.onPostExecute(result);
+		}
+		
+		
+	}
+	
 	/**
 	 * 
 	 * description:刷新ListView内容的异步线程
@@ -311,14 +368,6 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-//			if(json==null)
-//			{
-//				Log.w("TabSumFragment","json is null----------->");
-//				return null;
-//			}
-//			if(json.getData()==null)
-//				return null;
-//			final ArrayList<Photo> data=(ArrayList<Photo>)json.getData().getPhotoList();
 			return json;
 		}
 
@@ -327,10 +376,13 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 					
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					mListData.clear();
-					mListData=result.getData().getPhotoList();
-					adapter.notifyDataSetChanged();
+				if(result.getData().getPhotoList().size()>0)
+				{
+					synchronized (mListData) {
+						mListData.clear();
+						mListData=result.getData().getPhotoList();
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 			mPullToRefreshListView.onRefreshComplete();
@@ -372,12 +424,6 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-//			if(json==null)
-//			{
-//				Log.w("TabSumFragment","json is null------------->");
-//				return null;
-//			}
-//			final ArrayList<Photo> data=(ArrayList<Photo>)json.getData().getPhotoList();
 			return json;
 		}
 
@@ -456,10 +502,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			{
 				photoDetails.setIspraise(true);
 				photoDetails.setPraiseCount(photoDetails.getPraiseCount()+1);
-//				tvPraiseTimes.setText(String.valueOf(photoDetails.getPraiseCount()));
-//				ivPraiseButton.setImageResource(R.drawable.praise_select);
 				adapter.notifyDataSetChanged();
-				//add  praise_record
 				new Thread(new Runnable() {
 					
 					@Override
@@ -552,7 +595,6 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				unLockTaskPool();
 				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 			}
-			Log.w("BeautyPersonalPageActivity", "mPhotoWidth="+mPhotoWidth);
 		}
 		
 	}
@@ -610,6 +652,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 					if(img.getTag()!=null)
 					{
 						PhotoParameters pp=(PhotoParameters)img.getTag();
+						pp.setImageViewWidth(mPhotoWidth);
 						pp.setMinSideLength(mPhotoWidth);
 						pp.setMaxNumOfPixles(2*mPhotoWidth*mPhotoWidth);
 						mImageLoader.addTask(pp, img);

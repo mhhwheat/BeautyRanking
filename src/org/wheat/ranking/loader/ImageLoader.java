@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 public class ImageLoader 
 {
 	
-	
+	private final boolean DEBUG=true;
 	private static ImageLoader instance;
 	
 	private ExecutorService executorService;	//线程池
@@ -88,9 +88,6 @@ public class ImageLoader
 	public void addTask(PhotoParameters parameters,ImageView img)
 	{
 		Bitmap bitmap=null;
-		Log.w("ImageLoader","addTask-------------->");
-		Log.w("ImageLoader","ImageView hashCode:"+img.hashCode());
-		Log.w("ImageLoader","url:"+parameters.getUrl());
 		if(parameters.getMinSideLength()==-1&&parameters.getMaxNumOfPixels()==-1)
 		{
 			bitmap=memoryCache.getBitmapFromCache(parameters.getUrl());
@@ -102,12 +99,14 @@ public class ImageLoader
 			
 		if(bitmap!=null)
 		{
-			Log.w("ImageLoader", "setImageBitmap in addTask-------->");
-			if(parameters.isFixWidth())
+			if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
 			{
 				//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
-				int width=parameters.getMinSideLength();
-				Log.w("ImageLoader", "parameters.getMinSideLength()="+width);
+				int width=parameters.getImageViewWidth();
+				if(DEBUG)
+				{
+					Log.d("ImageLoader", "parameters.getMinSideLength()="+width);
+				}
 				int picWidth=bitmap.getWidth();
 				int picHeight=bitmap.getHeight();
 				int height = (int) (width * 1.0 / picWidth * picHeight);
@@ -116,7 +115,6 @@ public class ImageLoader
 			}
 			img.setImageBitmap(bitmap);
 			
-			Log.w("ImageLoader","从memoryCache获取图片--------"+parameters.getUrl());
 			synchronized (taskMap) {
 				taskMap.remove(img.hashCode());
 			}
@@ -143,7 +141,6 @@ public class ImageLoader
      */
 	public void doTask()
 	{
-		Log.w("ImageLoader","doTask-------------->");
 		synchronized (taskMap) {
 			Collection<ImageView> con=taskMap.values();
 			for(ImageView img:con)
@@ -170,7 +167,6 @@ public class ImageLoader
 		
 		
 		// 从内存缓存中获取图片
-		Log.w("ImageLoader","从内存缓存中获取图片------"+parameters.getUrl());
 		if(parameters.getMinSideLength()==-1&&parameters.getMaxNumOfPixels()==-1)
 		{
 			result=memoryCache.getBitmapFromCache(parameters.getUrl());
@@ -181,7 +177,6 @@ public class ImageLoader
 		}
 		if(result==null){
 			// 文件缓存中获取
-			Log.w("ImageLoader","从文件缓存中获取图片------"+parameters.getUrl());
 			
 			if(parameters.getMinSideLength()==-1&&parameters.getMaxNumOfPixels()==-1)
 			{
@@ -194,7 +189,6 @@ public class ImageLoader
 			
 			if(result==null){
 				// 从网络获取
-				Log.w("ImageLoader","从网络获取图片------"+parameters.getUrl());
 				try {
 					result=HttpLoderMethods.downLoadBitmap(parameters.getUrl(),parameters.getMinSideLength(),parameters.getMaxNumOfPixels());
 				} catch (Throwable e) {
@@ -217,7 +211,10 @@ public class ImageLoader
 				}
 				else
 				{
-					Log.w("ImageLoader", "result为null!!!!!!");
+					if(DEBUG)
+					{
+						Log.d("ImageLoader", "result为null!!!!!!");
+					}
 				}
 			}
 			else
@@ -287,14 +284,10 @@ public class ImageLoader
 				if(msg.obj!=null)
 				{
 					Bitmap bitmap=(Bitmap)msg.obj;
-					Log.w("ImageLoader", "setImageBitmap in handler-------->");
-					if(parameters.isFixWidth())
+					if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
 					{
-						img.measure(0, 0);
-						Log.w("ImageLoader", "img.getMeasureWidth="+img.getMeasuredWidth());
 						//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
-						int width=parameters.getMinSideLength();
-						Log.w("ImageLoader", "parameters.getMinSideLength()="+width);
+						int width=parameters.getImageViewWidth();			
 						int picWidth=bitmap.getWidth();
 						int picHeight=bitmap.getHeight();
 						int height = (int) (width * 1.0 / picWidth * picHeight);

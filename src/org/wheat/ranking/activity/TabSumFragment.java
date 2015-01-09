@@ -235,12 +235,6 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-//			if(json==null)
-//			{
-//				Log.w("TabSumFragment","json is null------------->");
-//				return null;
-//			}
-//			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
 			return json;
 		}
 
@@ -248,10 +242,13 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 		protected void onPostExecute(BeautyIntroductionListJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					mListData.clear();
-					mListData=result.getData().getIntroductionList();
-					adapter.notifyDataSetChanged();
+				if(result.getData().getIntroductionList().size()>0)
+				{
+					synchronized (mListData) {
+						mListData.clear();
+						mListData=result.getData().getIntroductionList();
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 			mPullToRefreshListView.onRefreshComplete();

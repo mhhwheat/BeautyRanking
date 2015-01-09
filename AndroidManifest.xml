@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,8 +26,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:label="@string/app_name" >
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="7522b10fc4a1e5dc07c6b07f38b7aa63" />
@@ -86,7 +85,11 @@
             </activity>
         <activity
             android:name="org.wheat.ranking.activity.MainInterfaceActivity"
-              android:theme="@style/myTheme">
+            android:theme="@style/myTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
         </activity>
         
         <!-- android:theme="@style/myTheme" -->
@@ -133,11 +136,7 @@
             android:name="org.wheat.ranking.activity.FirstPage"
             android:label="@string/app_name"
             android:theme="@style/myTheme" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            
         </activity>
         <activity
             android:name="org.wheat.ranking.activity.PersonInfo"

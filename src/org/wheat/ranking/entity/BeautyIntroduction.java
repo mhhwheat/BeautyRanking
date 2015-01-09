@@ -30,6 +30,14 @@ public class BeautyIntroduction
 	@SerializedName("avatarPath")
 	private String mAvatarPath;
 	
+	@SerializedName("praiseTimes")
+	private int mPraiseTimes;
+	
+	@SerializedName("commentTimes")
+	private int mCommentTimes;
+	
+	
+	
 	public void setBeautyName(String beautyName)
 	{
 		this.mBeautyName=beautyName;
@@ -69,10 +77,33 @@ public class BeautyIntroduction
 	{
 		return this.mAvatarPath;
 	}
+	
 	public void setBeautyId(int beautyId){
 		this.beautyId=beautyId;
 	}
+	
 	public int getBeautyId(){
 		return this.beautyId;
 	}
+	
+	public void setPraiseTimes(int mPraiseTimes)
+	{
+		this.mPraiseTimes=mPraiseTimes;
+	}
+	
+	public int getPraiseTimes()
+	{
+		return this.mPraiseTimes;
+	}
+	
+	public void setCommentTimes(int mCommentTimes)
+	{
+		this.mCommentTimes=mCommentTimes;
+	}
+	
+	public int getCommentTimes()
+	{
+		return this.mCommentTimes;
+	}
+	
 }

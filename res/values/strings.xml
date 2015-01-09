@@ -22,7 +22,7 @@
     <string name="up_arrow">指示释放开始更新的箭头</string>
     <string name="list_footer_more">更多</string>
     <string name="list_footer_loading">正在加载</string>
-    <string name="list_footer_no_more">已没有更多内容</string>
+    <string name="list_footer_no_more">查看更多</string>
     <string name="name_label">姓名：</string>
     <string name="school_lable">学校：</string>
     <string name="sumList">总排行榜</string>

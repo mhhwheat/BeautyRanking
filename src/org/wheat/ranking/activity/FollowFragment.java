@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
@@ -72,6 +73,9 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	private boolean allowFix=false;
 	private Map<String,ImageView> taskPool;
 	
+	//存储页面缓存的数据库管理工具
+	private SqliteDBManager dbManager;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,15 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		mListData=new ArrayList<Photo>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new FollowRefreshListAdapter();
+		dbManager=new SqliteDBManager(getActivity());
+		
 		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
+		
+		List<Photo> list=dbManager.getFromFollowPage();
+		if(list.size()>0)
+		{
+			mListData.addAll(list);
+		}
 		
 		new UpdateDataTask().execute();
 	}
@@ -110,6 +122,14 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	}
 
 	
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		dbManager.clearFollowPage();
+		dbManager.addToFollowPage(mListData);
+	}
+
 
 
 	@Override
@@ -222,10 +242,10 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			}
 			
 			
-			addTaskToPool(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50, false),holder.ivUserAvatar);
+			addTaskToPool(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50),holder.ivUserAvatar);
 			holder.tvUserNickName.setText(listItem.getNickName());
 			holder.ivPhoto.setTag(R.id.tag_first, listItem);
-			addTaskToPool(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true), holder.ivPhoto);
+			addTaskToPool(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth), holder.ivPhoto);
 			holder.tvPhotoDescription.setText(listItem.getPhotoDescription());
 			holder.tvPraiseTimes.setText(String.valueOf(listItem.getPraiseCount()));
 			holder.tvCommentTimes.setText(String.valueOf(listItem.getCommentCount()));
@@ -307,12 +327,6 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-//			if(json==null)
-//			{
-//				Log.w("TabSumFragment","json is null------------->");
-//				return null;
-//			}
-//			final ArrayList<BeautyIntroduction> data=(ArrayList<BeautyIntroduction>)json.getData().getIntroductionList();
 			return json;
 		}
 
@@ -320,10 +334,13 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		protected void onPostExecute(PhotoListJson result) {
 			if(result!=null&&result.getCode()==1000)
 			{
-				synchronized (mListData) {
-					mListData.clear();
-					mListData=result.getData().getPhotoList();
-					adapter.notifyDataSetChanged();
+				if(result.getData().getPhotoList().size()>0)
+				{
+					synchronized (mListData) {
+						mListData.clear();
+						mListData=result.getData().getPhotoList();
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 			mPullToRefreshListView.onRefreshComplete();
