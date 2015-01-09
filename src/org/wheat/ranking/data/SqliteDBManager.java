@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.Photo;
 
 import android.content.Context;
@@ -97,6 +98,45 @@ public class SqliteDBManager
 		db.execSQL("update sqlite_sequence SET seq = 0 where name ='follow_page'");
 	}
 	
+	public void addToNeighborPage(List<BeautyIntroduction> list)
+	{
+		String sql="INSERT INTO neighbor_page VALUES(null, ?, ?, ?, ?, ?)";
+		db.beginTransaction();
+		try{
+			for(BeautyIntroduction beauty:list)
+			{
+				db.execSQL(sql, new Object[]{beauty.getBeautyId(),beauty.getBeautyName(),beauty.getSchool(),beauty.getAvatarPath(),beauty.getDescription()});
+				
+			}
+			db.setTransactionSuccessful();
+		}finally
+		{
+			db.endTransaction();
+		}
+	}
 	
+	public List<BeautyIntroduction> getFromNeighborPage()
+	{
+		ArrayList<BeautyIntroduction> list=new ArrayList<BeautyIntroduction>();
+		Cursor cursor=db.rawQuery("select * from neighbor_page", null);
+		while(cursor.moveToNext())
+		{
+			BeautyIntroduction beauty=new BeautyIntroduction();
+			beauty.setBeautyId(cursor.getInt(cursor.getColumnIndex("beautyId")));
+			beauty.setBeautyName(cursor.getString(cursor.getColumnIndex("beautyName")));
+			beauty.setSchool(cursor.getString(cursor.getColumnIndex("school")));
+			beauty.setAvatarPath(cursor.getString(cursor.getColumnIndex("avatarPath")));
+			beauty.setDescription(cursor.getString(cursor.getColumnIndex("photoDescription")));
+			
+			list.add(beauty);
+		}
+		return list;
+	}
+	
+	public void clearNeighborPage()
+	{
+		db.execSQL("delete from neighbor_page");
+		db.execSQL("update sqlite_sequence SET seq = 0 where name ='neighbor_page'");
+	}
 	
 }
