@@ -26,7 +26,7 @@ public class PersonInfo extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.createbeautyinfo);
+		setContentView(R.layout.beauty_detail_info);
 		init();
 		btnSure.setOnClickListener(new commitInfolistener());
 		

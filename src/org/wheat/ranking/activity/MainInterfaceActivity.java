@@ -1,14 +1,18 @@
 package org.wheat.ranking.activity;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.checkUpdate.SettingPage;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,9 +36,11 @@ public class MainInterfaceActivity extends FragmentActivity
 	private View mMinePageLayout;
 	private View mCreateBeautyLayout;
 	
+	private ViewGroup mTitleContainer;
+	
 
 	private int mCurrentCheckID=R.id.tab_first_page;
-	
+//	ImageView settingImg;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +48,13 @@ public class MainInterfaceActivity extends FragmentActivity
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);//请求设置标题栏
 		setContentView(R.layout.main_user_interface);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mycustomtitle);
+//		LayoutInflater inflater = this.getLayoutInflater();
+//		View mypageTitle=inflater.inflate(R.layout.mypage_title, null);
+//		settingImg= (ImageView)findViewById(R.id.setting_img);
+//		settingImg.setOnClickListener(new SettingClickListener());
+		
+		mTitleContainer=(ViewGroup)findViewById(getTitleContainerId());
+		
 		initialTab();
 		checkTab(mCurrentCheckID);
 		
@@ -114,7 +127,11 @@ public class MainInterfaceActivity extends FragmentActivity
 			replaceFragment(mFindPageFragment, R.id.replacing_fragment);
 			break;
 		case R.id.tab_mine_page:
+			mTitleContainer.removeAllViews();
 			getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.mypage_title);
+			ImageView settingImg=(ImageView)findViewById(R.id.setting_img);
+			settingImg.setOnClickListener(new SettingClickListener());
+			
 			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
 			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
 
@@ -139,7 +156,17 @@ public class MainInterfaceActivity extends FragmentActivity
 		}
 	}                                                              
 	
-	
+	private class SettingClickListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent settingIntent = new Intent();
+			settingIntent.setClass(MainInterfaceActivity.this,SettingPage.class);
+			startActivity(settingIntent);
+		}
+		
+	}
 	/**
 	 * 
 	 * @param tabID
@@ -192,6 +219,37 @@ public class MainInterfaceActivity extends FragmentActivity
 		replace(source, targetFragment).commit();
 	}
 	
+	
+	
+	
+	
+	public static Object reflactFiled(String className, String filedName){
+    	Object result = null;
+		try {
+			result = Class.forName(className).getField(filedName).get(null);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return result;
+    }
+	
+	protected int getTitleContainerId(){
+		Object obj = reflactFiled("com.android.internal.R$id", "title_container");
+		if(obj != null){
+			return (Integer) obj;
+		}
+		else{
+			return -1;
+		}
+	}
 	
 	
 }

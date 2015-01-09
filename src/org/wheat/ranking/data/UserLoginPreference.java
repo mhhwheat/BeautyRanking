@@ -43,7 +43,7 @@ public class UserLoginPreference
         editor.commit();
     }
     public  String getUserInfoPersionSign() {
-    	String userPhoneNumber = sharedPreference.getString(USER_INFO_PERSION_SIGN, "ÄáÂê");  
+    	String userPhoneNumber = sharedPreference.getString(USER_INFO_PERSION_SIGN, "");  
         return userPhoneNumber;
 	}
 
@@ -60,7 +60,7 @@ public class UserLoginPreference
 	}
 
 	public  String getUserInfoNickname() {
-		String userPhoneNumber = sharedPreference.getString(USER_INFO_NICKNAME, "ºê¼Ñ");  
+		String userPhoneNumber = sharedPreference.getString(USER_INFO_NICKNAME, "");  
         return userPhoneNumber;
 	}
 	
@@ -77,21 +77,21 @@ public class UserLoginPreference
 
 	public  void setUserInfoNickname(String userinfonickname) {
 		Editor editor = sharedPreference.edit();  
-        editor.putString(USER_PHONE_NUMBER, userinfonickname);  
+        editor.putString(USER_INFO_NICKNAME, userinfonickname);  
         editor.commit(); 
 	}
 
 
 	public  void setUserInfoCreateNum(int userInfoCreateNum) {
 		Editor editor = sharedPreference.edit();  
-        editor.putInt(USER_PHONE_NUMBER, userInfoCreateNum);  
+        editor.putInt(USER_INFO_CREATE_NUM, userInfoCreateNum);  
         editor.commit(); 
 	}
 
 
 	public  void setUserInfoFocusNum(int userInfoFocusNum) {
 		Editor editor = sharedPreference.edit();  
-        editor.putInt(USER_PHONE_NUMBER, userInfoFocusNum);  
+        editor.putInt(USER_INFO_FOCUS_NUM, userInfoFocusNum);  
         editor.commit(); 
 	}
 

@@ -6,5 +6,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="slidingmenu_offset">60dp</dimen>
     <dimen name="shadow_width">5dp</dimen>
-
+	<dimen name="icon_size">35dp</dimen>
+	<dimen name="icon_conners_size">6dp</dimen>
 </resources>

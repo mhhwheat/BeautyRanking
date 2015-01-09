@@ -48,7 +48,7 @@ import android.widget.TextView;
 public class MyDetailPage extends Fragment implements OnScrollListener
 {
 	int whichButton=1;//设置当前是那一个按钮，默认第一位为我的创建页面
-	
+	int mCurrentId=R.id.mycreate;
 	
 //	private final int mDeviceScreenWidth=getDeviceScreenWidth();//设备屏幕宽度
 	private int mBeautyId;//该页面显示该BeautyId对应的Beauty的所有图片
@@ -72,7 +72,10 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 	
 	
 	
-	
+	//tab下面的禄色线
+	TextView tab_green_line1;
+	TextView tab_green_line2;
+	TextView tab_green_line3;
 	//header
 		private View mHeaderView;
 		private ImageView ivHeaderAvatar;
@@ -86,10 +89,12 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		private TextView tvPersonSign;//个性签名
 		private LinearLayout rlCreate;
 		private LinearLayout rlLike;
-		private LinearLayout rlFollow;
+		private LinearLayout rlComment;
 		private LinearLayout rlFocus;
-
+		UserLoginPreference preference;
 		Activity parentActivity;
+		
+		ImageView settingImg;
 	@Override
 		public void onAttach(Activity activity) {
 			// TODO Auto-generated method stub
@@ -100,7 +105,11 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//设置标题栏的布局，颜色大小需要在styles中设置，再天骄到AndroidManifest.xml文件中
+//		LayoutInflater inflater = this.getLayoutInflater(savedInstanceState);
+//		View mypageTitle=inflater.inflate(R.layout.mypage_title, null);
+//		settingImg= (ImageView)mypageTitle.findViewById(R.id.setting_img);
+//		settingImg.setOnClickListener(new SettingClickListener());
+		//设置标题栏的布局，颜色大小需要在styles中设置，再添加到AndroidManifest.xml文件中
 		mBeautyId=getBeautyIdFromIntent();
 		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
 		
@@ -111,8 +120,20 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		
 		
 		new UpdateDataTask().execute();
+		preference=UserLoginPreference.getInstance(getActivity().getApplicationContext());
 	}
-	
+	private class SettingClickListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent settingIntent = new Intent();
+			settingIntent.setClass(parentActivity,SettingPage.class);
+			startActivity(settingIntent);
+			System.out.println("startActivity(settingIntent);");
+		}
+		
+	}
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater=inflater;
@@ -130,9 +151,9 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		 * 添加mypage头部
 		 */
 		initialHeader();
-		
-		rlFocus.setOnClickListener(new rlFocusOnClickListener());
-		rlCreate.setOnClickListener(new rlCreateOnClickListener());
+		rlComment.setOnClickListener(new TabOnClickListener());
+		rlFocus.setOnClickListener(new TabOnClickListener());
+		rlCreate.setOnClickListener(new TabOnClickListener());
 		mActualListView.addHeaderView(mHeaderView);
 		initialListViewListener();
 		return view;
@@ -403,31 +424,53 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 	* @author hogachen
 	* @date 2014年12月25日 下午1:27:53 
 	*
-	 */
-	
-	private class rlFocusOnClickListener implements OnClickListener
+	 */	
+	private class TabOnClickListener implements OnClickListener
 	{
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			whichButton=2;
-			adapter.notifyDataSetChanged();
-			new UpdateDataTask().execute();
+			if(v.getId()!=mCurrentId){
+				TabUnClick(mCurrentId);
+				mCurrentId=v.getId();
+				TabClick(mCurrentId);
+			}
 		}	
 	}
-	
-	
-	private class rlCreateOnClickListener implements OnClickListener
-	{
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
+	private void TabClick(int tabid){
+		switch(tabid){
+		case R.id.mycreate:
+			tab_green_line1.setVisibility(View.VISIBLE);
 			whichButton=1;
 			adapter.notifyDataSetChanged();
 			new UpdateDataTask().execute();
-		}	
+			break;
+		case R.id.myfocus:
+			tab_green_line2.setVisibility(View.VISIBLE);
+			whichButton=2;
+			adapter.notifyDataSetChanged();
+			new UpdateDataTask().execute();
+			break;
+		case R.id.mycomment:
+			tab_green_line3.setVisibility(View.VISIBLE);
+//			whichButton=3;
+//			adapter.notifyDataSetChanged();
+//			new UpdateDataTask().execute();
+			break;
+		}
+	}
+	private void TabUnClick(int tabid){
+		switch(tabid){
+		case R.id.mycreate:
+			tab_green_line1.setVisibility(View.GONE);
+			break;
+		case R.id.myfocus:
+			tab_green_line2.setVisibility(View.GONE);
+			break;
+		case R.id.mycomment:
+			tab_green_line3.setVisibility(View.GONE);
+			break;
+		}
 	}
 	
 	/**
@@ -455,7 +498,13 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 	
 	private void initialHeader()
 	{
+		
 		mHeaderView=mInflater.inflate(R.layout.mypage_header, null);
+		tab_green_line1=(TextView)mHeaderView.findViewById(R.id.tab_green_line1);
+		tab_green_line1.setVisibility(0);
+		tab_green_line2=(TextView)mHeaderView.findViewById(R.id.tab_green_line2);
+		tab_green_line3=(TextView)mHeaderView.findViewById(R.id.tab_green_line3);
+		
 		ivHeaderAvatar=(ImageView)mHeaderView.findViewById(R.id.myavatar);
 		tvHeaderNickName=(TextView)mHeaderView.findViewById(R.id.mynickname);
 		tvHeaderBeautyId=(TextView)mHeaderView.findViewById(R.id.mybeautyid);
@@ -465,24 +514,45 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 //		tvLike=(TextView)mHeaderView.findViewById(R.id.mylikenum);
 //		rlLike=(RelativeLayout)mHeaderView.findViewById(R.id.mylike);
 		tvFollow=(TextView)mHeaderView.findViewById(R.id.myfollownum);
-		rlFollow=(LinearLayout)mHeaderView.findViewById(R.id.myfollow);
+		rlComment=(LinearLayout)mHeaderView.findViewById(R.id.mycomment);
 		tvFocus=(TextView)mHeaderView.findViewById(R.id.myfocusnum);
 		rlFocus=(LinearLayout)mHeaderView.findViewById(R.id.myfocus);
 		tvPersonSign=(TextView)mHeaderView.findViewById(R.id.mypersonalsign);
 		//从本地获取头像，昵称，个性签名，还有创建的数据等，更新数据的时候也需要将数据存入local文件
 		getDataFromLocal();
-		ivSetting.setOnClickListener(new SettingListener());
+		ivSetting.setOnClickListener(new PersonInfoEdit());
 	}
-	class SettingListener implements OnClickListener{
-
+	//设置页面的监听器
+	class PersonInfoEdit implements OnClickListener{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			Intent settingIntent = new Intent();
-			settingIntent.setClass(parentActivity,SettingPage.class);
-			startActivity(settingIntent);
+			Intent modifyNickName = new Intent();
+			modifyNickName.setClass(parentActivity,ModifyNickName.class);
+			startActivityForResult(modifyNickName, 1);
 		}
-		
+	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		switch(requestCode){
+		case 1:
+			if(data!=null){
+				String nickname = data.getStringExtra("nickname");
+				String personSign = data.getStringExtra("personSign");
+				if(!nickname.equals("")){
+					tvHeaderNickName.setText(nickname);
+					preference.setUserInfoNickname(nickname);
+				}
+				if(!personSign.equals("")){
+					tvPersonSign.setText(personSign);
+					preference.setUserInfoPersionSign(personSign);
+				}
+				//获取上传的头像信息并显示在控件中和存储于本地数据库
+			}
+			break;
+		}
 	}
 	/**
 	 * 
@@ -498,7 +568,7 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 			System.err.println("hogahcen the avatar is null");
 			ivHeaderAvatar.setImageBitmap(bm);
 		}	 
-		UserLoginPreference preference=UserLoginPreference.getInstance(getActivity().getApplicationContext());
+		
 
 		tvCreate.setText(String.valueOf(preference.getUserInfoCreateNum()));
 //		tvLike.setText(String.valueOf(preference.getUserInfoLike()));

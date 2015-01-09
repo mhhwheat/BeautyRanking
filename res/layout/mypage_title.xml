@@ -24,7 +24,7 @@
             android:layout_centerVertical="true"
             android:singleLine="true"
             android:text="BEAUTY"
-            android:textColor="@color/green"
+            android:textColor="@color/tab_check_color"
             android:textSize="20sp" />
         
         <ImageView 

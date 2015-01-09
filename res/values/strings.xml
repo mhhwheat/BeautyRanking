@@ -2,6 +2,8 @@
 <resources>
 
     <string name="app_name">BeautyRanking</string>
+    <string name="beauty_detail_msg">详细信息</string>
+    <string name="setting_page">设置</string>
     <string name="content_description">contentDescription</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
