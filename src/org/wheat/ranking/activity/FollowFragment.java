@@ -242,10 +242,10 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			}
 			
 			
-			addTaskToPool(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50, false),holder.ivUserAvatar);
+			addTaskToPool(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50),holder.ivUserAvatar);
 			holder.tvUserNickName.setText(listItem.getNickName());
 			holder.ivPhoto.setTag(R.id.tag_first, listItem);
-			addTaskToPool(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true), holder.ivPhoto);
+			addTaskToPool(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth), holder.ivPhoto);
 			holder.tvPhotoDescription.setText(listItem.getPhotoDescription());
 			holder.tvPraiseTimes.setText(String.valueOf(listItem.getPraiseCount()));
 			holder.tvCommentTimes.setText(String.valueOf(listItem.getCommentCount()));

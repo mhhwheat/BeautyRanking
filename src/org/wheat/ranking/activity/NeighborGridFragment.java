@@ -143,7 +143,7 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
-			mImageLoader.addTask(new PhotoParameters(GridItem.getAvatarPath(), mImageWidth, 2*mImageWidth*mImageWidth, true), holder.ivAvatar);
+			mImageLoader.addTask(new PhotoParameters(GridItem.getAvatarPath(), mImageWidth, 2*mImageWidth*mImageWidth, true,mImageWidth), holder.ivAvatar);
 			holder.tvDescription.setText(GridItem.getDescription());
 			return convertView;
 		}

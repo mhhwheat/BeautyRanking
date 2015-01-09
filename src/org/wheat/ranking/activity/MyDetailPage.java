@@ -1,7 +1,10 @@
 package org.wheat.ranking.activity;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.checkUpdate.SettingPage;
@@ -29,6 +32,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -70,6 +74,11 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
+	private int mImageViewWidth;
+	//已经获取到正确的ImageWidth
+	private boolean allowFix=false;
+	private Map<String,ImageView> taskPool;
+	
 	
 	
 	//tab下面的禄色线
@@ -110,6 +119,7 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 //		settingImg= (ImageView)mypageTitle.findViewById(R.id.setting_img);
 //		settingImg.setOnClickListener(new SettingClickListener());
 		//设置标题栏的布局，颜色大小需要在styles中设置，再添加到AndroidManifest.xml文件中
+		taskPool=new HashMap<String, ImageView>();
 		mBeautyId=getBeautyIdFromIntent();
 		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
 		
@@ -232,8 +242,10 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
+			if(mImageViewWidth<=0)
+				holder.ivPhoto.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(holder.ivPhoto));
 			
-			mImageLoader.addTask(new PhotoParameters(photo.getPhotoPath(),-1 , -1,true), holder.ivPhoto);
+			addTaskToPool(new PhotoParameters(photo.getPhotoPath(),-1 , -1,true,mImageViewWidth), holder.ivPhoto);
 
 			holder.tvPraiseTimes.setText(String.valueOf(photo.getPraiseCount()));
 			holder.tvCommentTimes.setText(String.valueOf(photo.getCommentCount()));
@@ -571,6 +583,7 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		
 
 		tvCreate.setText(String.valueOf(preference.getUserInfoCreateNum()));
+		
 //		tvLike.setText(String.valueOf(preference.getUserInfoLike()));
 		tvFocus.setText(String.valueOf(preference.getUserInfoFocusNum()));
 		tvFollow.setText("0");//暂时设置为0，估计以后去掉该功能
@@ -579,5 +592,87 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		tvHeaderBeautyId.setText("");
 	}
 
+	
+	public class GlobalLayoutLinstener implements OnGlobalLayoutListener
+	{
+		private View view;
+		public GlobalLayoutLinstener(View view)
+		{
+			this.view=view;
+		}
+
+		@Override
+		public void onGlobalLayout() {
+			mImageViewWidth=view.getWidth();
+			if(mImageViewWidth>0)
+			{
+				unLockTaskPool();
+				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			}
+		}
+		
+	}
+	
+	
+	/**
+	 * 锁住时，不能加载自适配图片，只能加载固定图片
+	 */
+	public void lockTaskPool()
+	{
+		this.allowFix=false;
+	}
+	
+	/**
+	 * 解除锁定后，可以加载自适配图片
+	 */
+	public void unLockTaskPool()
+	{
+		if(!allowFix)
+		{
+			this.allowFix=true;
+			doTaskInPool();
+		}
+	}
+	
+	public void addTaskToPool(PhotoParameters parameters,ImageView img)
+	{
+		if(!parameters.isFixWidth())
+		{
+			mImageLoader.addTask(parameters, img);
+		}
+		else
+		{
+			synchronized (taskPool) {
+				img.setTag(parameters);
+				taskPool.put(Integer.toString(img.hashCode()), img);
+			}
+			if(allowFix)
+			{
+				doTaskInPool();
+			}
+				
+				
+		}
+	}
+	
+	public void doTaskInPool()
+	{
+		synchronized (taskPool) {
+			Collection<ImageView> con=taskPool.values();
+			for(ImageView img:con)
+			{
+				if(img!=null)
+				{
+					if(img.getTag()!=null)
+					{
+						PhotoParameters pp=(PhotoParameters)img.getTag();
+						pp.setImageViewWidth(mImageViewWidth);
+						mImageLoader.addTask(pp, img);
+					}
+				}
+			}
+			taskPool.clear();
+		}
+	}
 	
 }
