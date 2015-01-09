@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
     <ListView
         android:id="@+id/photo_comment_list_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         />
-	<Button 
+    
+   <RelativeLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:padding="5dp">
+	    <Button 
+	        android:id="@+id/photo_comment_popup_publish_button"
+	        android:layout_width="70dp"
+	        android:layout_height="40dp"
+	        android:layout_alignParentRight="true"
+	        android:layout_centerVertical="true"
+	        android:text="发表"
+	        android:textSize="14sp"
+	        android:background="@drawable/comment_summit_background"
+	       />
+	    <EditText
+	        android:background="@drawable/loginbuttonbackground"
+	        android:id="@+id/photo_comment_popup_edit"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:layout_toLeftOf="@id/photo_comment_popup_publish_button"
+	        android:layout_alignParentLeft="true"
+	        android:focusable="true"
+	        android:gravity="center_vertical"
+	        android:hint="来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧"
+	        android:layout_marginRight="1dp"
+	        android:inputType="textMultiLine"
+	        android:layout_alignBottom="@id/photo_comment_popup_publish_button"
+	        />
+	</RelativeLayout>
+	<!-- <Button 
         android:id="@+id/photo_comment_comment_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -16,5 +48,5 @@
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:textSize="20sp"
-        android:text="评论"/>
+        android:text="评论"/>  -->
 </RelativeLayout>

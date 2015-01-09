@@ -87,7 +87,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		adapter=new PhotoCommentListAdapter();
 		
 		mListView=(ListView)findViewById(R.id.photo_comment_list_view);
-		btComment=(Button)findViewById(R.id.photo_comment_comment_button);
+		btComment=(Button)findViewById(R.id.photo_comment_popup_publish_button);//
 		initialHeader();
 //		initialFooter();
 		
@@ -96,7 +96,6 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		mListView.setAdapter(adapter);
 		mListView.setOnScrollListener(this);
 		btComment.setOnClickListener(new CommentOnClickListener());
-		
 		new UpdateCommentsTask().execute();
 		
 	}
@@ -292,7 +291,8 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 
 		@Override
 		public void onClick(View v) {
-			showPopupView(btComment);
+			//将评论添加到lisetview中，同时上传到服务器
+//			showPopupView(btComment);
 		}
 		
 		

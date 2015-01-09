@@ -32,12 +32,10 @@
 			    android:id="@+id/avatarF"
 			   android:layout_width="65dp"
 			   android:layout_height="65dp">
-			    <ImageView
+			    <org.wheat.widget.CircleImageView
                 android:id="@+id/myavatar"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                
-                android:scaleType="centerCrop"
                 android:src="@drawable/liu" />
 			    
 			    </FrameLayout>

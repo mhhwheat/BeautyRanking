@@ -19,14 +19,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="5dp">
-        <ImageView 
+        <org.wheat.widget.CircleImageView 
+            android:id="@+id/fragment_follow_user_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+          />
+         <!-- <org.wheat.widget.CircleImageView 
             android:id="@+id/fragment_follow_user_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:scaleType="fitXY"
-            android:contentDescription="@string/beauty_personal_contenDescription"/>
+            android:contentDescription="@string/beauty_personal_contenDescription"/> -->
         <LinearLayout
             android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
