@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
+
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.wheelview.*;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.BeautyDetail;
 import org.wheat.ranking.entity.ConstantValue;
@@ -38,6 +41,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -63,12 +67,13 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	private  MyLocation myLocation = new MyLocation();;
 	
 	private LinearLayout tvPersonInfo;
-	
+	private int privilege=2;
 	private ImageView iv = null;
 	String truename;
 	String birthday;
 	String school;
 	String description;
+	String locationText;
 //	private EditText edt_beauty_info_school=null;
 //	private EditText edt_beauty_info_admission=null;
 //	private EditText edt_beauty_info_birthday=null;//实际上改为微信号
@@ -79,10 +84,11 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 	private String tp = null;
 
 	private String photoName = null;
-
-
 	
 	
+	private LinearLayout llPrivilege; 
+	private TextView tvPrivilegeShow;
+	private String[] names ={" 仅自己可添加 "," 仅通讯录好友可添加 "," 所有人可添加 "};// {" 浙江 "," 江苏 "," 山东 "," 江西 "," 湖南 "," 广东 "};//
 	File tempfile =null;
 	//生成的图片的文件名，为了方便，设置一个公共变量
 	String filename=null;
@@ -143,12 +149,43 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 //		edt_beauty_info_description=(EditText)findViewById(R.id.beauty_info_description);
 		textview_location=(TextView)findViewById(R.id.beauty_info_location);
 		btn_submit= (Button)findViewById(R.id.submit);
+		llPrivilege=(LinearLayout)findViewById(R.id.linear3);
+		tvPrivilegeShow=(TextView)findViewById(R.id.beauty_info_privilege_text);
+		llPrivilege.setOnClickListener(PrivilegeListener);
 		iv.setOnClickListener(this);
 //		threadToGetLocation();
 		tvPersonInfo.setOnClickListener(personinfolistener);
 		btn_submit.setOnClickListener(submitListener);
 	}
-	
+	OnClickListener PrivilegeListener = new OnClickListener(){
+		public void onClick(View v) {
+			final AlertDialog dialog = new AlertDialog.Builder(CreateBeauty.this).create();
+			dialog.setTitle("权限设置");
+			final WheelView catalogWheel = new WheelView(CreateBeauty.this);
+			dialog.setButton("确定", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					privilege=catalogWheel.getCurrentItem();
+					System.out.println("privilege "+privilege);
+					tvPrivilegeShow.setText(names[privilege]);
+					dialog.dismiss();
+					// 实现下ui的刷新
+				}
+			});
+			dialog.setButton2("取消", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+		
+			catalogWheel.setVisibleItems(5);
+			catalogWheel.setCyclic(true);
+			catalogWheel.setAdapter(new ArrayWheelAdapter<String>(names));
+			dialog.setView(catalogWheel);
+			dialog.show();
+			}
+	};
 	OnClickListener personinfolistener = new OnClickListener(){
 
 		@Override
@@ -405,13 +442,14 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 //		beauty.setDescription(description);
 //		beauty.setSchool(school);
 		beauty.setCreateTime(createTime);
-		
+		beauty.setPrivilege(privilege);
 		UserLoginPreference localfile=UserLoginPreference.getInstance(this);
 		String userPhoneNumber = localfile .getuserPhoneNumber();
 		beauty.setUserPhoneNumber(userPhoneNumber);
 		beauty.setBirthday(birthday);
 		beauty.setDescription(description);
 		beauty.setSchool(school);
+		beauty.setLocationText(locationText);
 		if(description!=null&&!description.equals("")){
 			beauty.setTrueName(truename);
 		}else{
@@ -490,7 +528,9 @@ public class CreateBeauty extends Activity implements OnClickListener, AMapLocat
 			this.myLocation.setLat(amapLocation.getLatitude());
 			this.myLocation.setLng(amapLocation.getLongitude());
 			this.myLocation.setLocationMessage(amapLocation.getAddress());
-			this.textview_location.setText(amapLocation.getAddress());
+			locationText=amapLocation.getAddress();
+			this.textview_location.setText(locationText);
+			
 		}else{
 			this.textview_location.setText("定位失败");
 		}

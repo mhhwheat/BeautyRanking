@@ -10,7 +10,38 @@ import com.google.gson.annotations.SerializedName;
 
 public class BeautyDetail 
 {
+	@SerializedName("commentTimes")
+	private int commentTimes;
 	
+	@SerializedName("locationText")
+	private String locationText;
+	
+	public int getCommentTimes() {
+		return commentTimes;
+	}
+
+	public void setCommentTimes(int commentTimes) {
+		this.commentTimes = commentTimes;
+	}
+
+	public String getLocationText() {
+		return locationText;
+	}
+
+	public void setLocationText(String locationText) {
+		this.locationText = locationText;
+	}
+	@SerializedName("privilege")
+	private int privilege;
+	
+	public int getPrivilege() {
+		return privilege;
+	}
+
+	public void setPrivilege(int privilege) {
+		this.privilege = privilege;
+	}
+
 	/*
 	 * beauty的创建者电话号码
 	 */
