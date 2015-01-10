@@ -245,6 +245,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			addTaskToPool(new PhotoParameters(listItem.getAvatarPath(), 50, 50*50),holder.ivUserAvatar);
 			holder.tvUserNickName.setText(listItem.getNickName());
 			holder.ivPhoto.setTag(R.id.tag_first, listItem);
+			holder.ivPhoto.setImageResource(R.drawable.imageview_background);
 			addTaskToPool(new PhotoParameters(listItem.getPhotoPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth, true,mPhotoWidth), holder.ivPhoto);
 			holder.tvPhotoDescription.setText(listItem.getPhotoDescription());
 			holder.tvPraiseTimes.setText(String.valueOf(listItem.getPraiseCount()));
@@ -575,8 +576,8 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		if(!allowFix)
 		{
 			this.allowFix=true;
-			doTaskInPool();
 		}
+		doTaskInPool();
 	}
 	
 	public void addTaskToPool(PhotoParameters parameters,ImageView img)
@@ -611,6 +612,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 						PhotoParameters pp=(PhotoParameters)img.getTag();
 						pp.setMinSideLength(mPhotoWidth);
 						pp.setMaxNumOfPixles(2*mPhotoWidth*mPhotoWidth);
+						pp.setImageViewWidth(mPhotoWidth);
 						mImageLoader.addTask(pp, img);
 					}
 				}

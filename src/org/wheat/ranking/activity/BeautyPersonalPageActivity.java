@@ -616,8 +616,8 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		if(!allowFix)
 		{
 			this.allowFix=true;
-			doTaskInPool();
 		}
+		doTaskInPool();
 	}
 	
 	public void addTaskToPool(PhotoParameters parameters,ImageView img)

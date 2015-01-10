@@ -245,6 +245,7 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 			if(mImageViewWidth<=0)
 				holder.ivPhoto.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(holder.ivPhoto));
 			
+			holder.ivPhoto.setImageResource(R.drawable.imageview_background);
 			addTaskToPool(new PhotoParameters(photo.getPhotoPath(),-1 , -1,true,mImageViewWidth), holder.ivPhoto);
 
 			holder.tvPraiseTimes.setText(String.valueOf(photo.getPraiseCount()));
@@ -630,8 +631,8 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		if(!allowFix)
 		{
 			this.allowFix=true;
-			doTaskInPool();
 		}
+		doTaskInPool();
 	}
 	
 	public void addTaskToPool(PhotoParameters parameters,ImageView img)
