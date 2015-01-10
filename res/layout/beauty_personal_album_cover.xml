@@ -2,11 +2,56 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
+    
+    <RelativeLayout
+        android:id="@+id/beauty_personal_album_cover_head"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <ImageView
+            android:id="@+id/beauty_personal_album_cover_user_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp" 
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/beauty_personal_album_cover_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/beauty_personal_album_cover_user_avatar"
+            android:text="豆芽" />
+
+        <TextView
+            android:id="@+id/beauty_personal_alum_cover_create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/beauty_personal_album_cover_user_name"
+            android:layout_toRightOf="@id/beauty_personal_album_cover_user_avatar"
+            android:text="2014-11-01" />
+        
+        <LinearLayout 
+            android:id="@+id/beauty_personal_album_cover_follow_action_area"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true">
+            <ImageView 
+                android:layout_width="50dp"
+                android:layout_height="match_parent"/>
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="关注"/>
+        </LinearLayout>
+        
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/beauty_personal_album_cover"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_below="@id/beauty_personal_album_cover_head"
         android:contentDescription="@string/content_description"
         android:scaleType="centerCrop"
         android:src="@drawable/test" />
