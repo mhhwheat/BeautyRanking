@@ -8,37 +8,67 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
         />
-    
-   <RelativeLayout 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    android:padding="5dp">
-	    <Button 
-	        android:id="@+id/photo_comment_popup_publish_button"
-	        android:layout_width="70dp"
-	        android:layout_height="40dp"
-	        android:layout_alignParentRight="true"
-	        android:layout_centerVertical="true"
-	        android:text="发表"
-	        android:textSize="14sp"
-	        android:background="@drawable/comment_summit_background"
-	       />
-	    <EditText
-	        android:background="@drawable/loginbuttonbackground"
-	        android:id="@+id/photo_comment_popup_edit"
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content"
-	        android:layout_toLeftOf="@id/photo_comment_popup_publish_button"
-	        android:layout_alignParentLeft="true"
-	        android:focusable="true"
-	        android:gravity="center_vertical"
-	        android:hint="来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧来说一句吧"
-	        android:layout_marginRight="1dp"
-	        android:inputType="textMultiLine"
-	        android:layout_alignBottom="@id/photo_comment_popup_publish_button"
-	        />
-	</RelativeLayout>
+    <LinearLayout 
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <RelativeLayout
+            
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            >
+
+            <!-- <Button
+                android:id="@+id/photo_comment_popup_publish_button"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/comment_summit_background"
+                android:text="评论"
+                android:textSize="14sp" /> -->
+            <ImageView 
+                android:id="@+id/photo_comment_popup_publish_button"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/comment_summit_background"
+                android:text="评论"
+                android:src="@drawable/comment_sent_icon"
+                android:textSize="14sp"
+                />
+
+           <!--  <EditText
+                android:id="@+id/photo_comment_popup_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="1dp"
+                android:layout_toLeftOf="@id/photo_comment_popup_publish_button"
+                android:background="@drawable/loginbuttonbackground"
+                android:inputType="textMultiLine" /> -->
+
+            <EditText
+                android:maxLines="4"
+                android:id="@+id/photo_comment_popup_edit"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/photo_comment_popup_publish_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/photo_comment_popup_publish_button"
+                android:gravity="center_vertical"
+                android:background="@drawable/commnetlinepink" 
+    			android:textColor="@null"/>
+
+        </RelativeLayout>
+
+	</LinearLayout>
 	<!-- <Button 
         android:id="@+id/photo_comment_comment_button"
         android:layout_width="fill_parent"
