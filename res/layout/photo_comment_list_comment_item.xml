@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    >
 
-    <ImageView
-        android:id="@+id/photo_comment_user_avatar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:contentDescription="@string/content_description" />
-
+	<org.wheat.widget.DashedLine 
+	    android:id="@+id/line"
+	    android:layout_width="fill_parent"
+	    android:layout_height="1dp"
+	    android:layout_marginLeft="40dp"
+	    android:layout_marginRight="10dp"
+	    />
     <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+         android:layout_marginBottom="10dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <!-- <ImageView
+        <org.wheat.widget.CircleImageView
+            android:id="@+id/photo_comment_user_avatar"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/praisefull" /> -->
-            <org.wheat.widget.CircleImageView 
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/liu"/>
+            android:src="@drawable/liu" />
 
         <RelativeLayout
-            android:layout_marginLeft="5dp"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+             android:layout_marginBottom="10dp" >
 
             <LinearLayout
                 android:id="@+id/llnameandtime"
@@ -38,31 +42,32 @@
                     android:id="@+id/photo_comment_user_nike_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/photo_comment_user_avatar"
                     android:text="豆芽"
+                    android:textColor="@color/lightgreen"
                     android:textSize="12sp" />
 
                 <TextView
+                    android:textColor="@color/hotpink"
+                    android:layout_marginLeft="5dp"
                     android:id="@+id/photo_comment_comment_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/photo_comment_user_nike_name"
                     android:layout_toRightOf="@id/photo_comment_user_avatar"
                     android:text="12小时前"
-                    android:textColor="#FF696969"
                     android:textSize="12sp" />
             </LinearLayout>
-             <TextView
-                 android:layout_marginTop="5dp"
-            android:id="@+id/photo_comment_comment_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/llnameandtime"
-            android:text="对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱"
-            android:textSize="15sp" />
-        </RelativeLayout>
 
-       
+            <TextView
+               
+                android:id="@+id/photo_comment_comment_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llnameandtime"
+                android:layout_marginTop="5dp"
+                android:text="对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱"
+                android:textSize="15sp" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

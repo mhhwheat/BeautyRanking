@@ -9,6 +9,6 @@
 	    android:bottomLeftRadius="5dp"
 	    android:bottomRightRadius="5dp"
 	    />
-    <solid android:color="#8F67F7"/>
+    <solid android:color="@color/tab_uncheck_color"/>
 
 </shape>
