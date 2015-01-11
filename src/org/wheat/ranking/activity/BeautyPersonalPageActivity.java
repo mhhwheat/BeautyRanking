@@ -206,6 +206,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				convertView=mInflater.inflate(R.layout.beauty_personal_album_cover, null);
 				if(mBeauty!=null)
 				{
+					
 					ImageView ivAlbumCover=(ImageView)convertView.findViewById(R.id.beauty_personal_album_cover);
 					TextView tvAlbumCoverName=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_name);
 					TextView tvAlbumCoverSchool=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_school);

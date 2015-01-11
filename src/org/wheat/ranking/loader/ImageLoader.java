@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -110,7 +111,7 @@ public class ImageLoader
 				int picWidth=bitmap.getWidth();
 				int picHeight=bitmap.getHeight();
 				int height = (int) (width * 1.0 / picWidth * picHeight);
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,height);
+				LayoutParams params = new LayoutParams(width,height);
 				img.setLayoutParams(params);
 			}
 			img.setImageBitmap(bitmap);
@@ -291,7 +292,7 @@ public class ImageLoader
 						int picWidth=bitmap.getWidth();
 						int picHeight=bitmap.getHeight();
 						int height = (int) (width * 1.0 / picWidth * picHeight);
-						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width,height);
+						LayoutParams params = new LayoutParams(width,height);
 						img.setLayoutParams(params);
 					}
 					img.setImageBitmap(bitmap);
