@@ -10,12 +10,14 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.Comment;
 import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.CommentListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
 import org.wheat.ranking.loader.ImageLoader;
+import org.wheat.widget.CircleImageView;
 
 import android.app.Activity;
 import android.app.ActionBar.LayoutParams;
@@ -24,18 +26,33 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.util.Log;
+=======
+import android.text.Editable;
+import android.text.TextWatcher;
+>>>>>>> e32cde99e869d106f98b141d02bd020955218caa
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+<<<<<<< HEAD
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+=======
+import android.view.View.OnFocusChangeListener;
+>>>>>>> e32cde99e869d106f98b141d02bd020955218caa
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+<<<<<<< HEAD
+=======
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+>>>>>>> e32cde99e869d106f98b141d02bd020955218caa
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -52,12 +69,14 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 	private ImageLoader mImageLoader;
 	private PhotoCommentListAdapter adapter;
 	private LayoutInflater mInflater;
+	private EditText edittext;
 	
 	private boolean mLastItemVisible;
 	private boolean isLoadingMore=false;//防止重复开启异步加载线程
 	
 	//header
 	private View mHeaderView;
+	private View mFooterView;
 	private ImageView ivHeaderAvatar;
 	private TextView tvHeaderNickName;
 	private TextView tvHeaderPublishTime;
@@ -72,11 +91,14 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 	
 	//弹出的编辑窗口
 	private PopupWindow mPopWindow;
-	private ImageView btComment;
-	
+	private Button btComment;
+	private ImageView comment_sent_img;
+	TextView tv_comment_footerTextView ;
+	UserLoginPreference pre;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
+		pre = UserLoginPreference.getInstance(getApplicationContext());
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.photo_comment_layout);
@@ -93,19 +115,79 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		adapter=new PhotoCommentListAdapter();
 		
 		mListView=(ListView)findViewById(R.id.photo_comment_list_view);
-		btComment=(ImageView)findViewById(R.id.photo_comment_popup_publish_button);//
+		btComment=(Button)findViewById(R.id.photo_comment_popup_publish_button);//
+		comment_sent_img=(ImageView)findViewById(R.id.photo_comment_popup_publish_img);
+		edittext = (EditText)findViewById(R.id.photo_comment_popup_edit);
+		edittext.setOnFocusChangeListener(editTextFocusListener);
+		
+		
+		
+		
+		edittext.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				// s:变化后的所有字符
+//				Toast.makeText(getApplicationContext(), "变化:" + s,
+//						Toast.LENGTH_SHORT).show();
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				// s:变化前的所有字符； start:字符开始的位置； count:变化前的总字节数；after:变化后的字节数
+//				Toast.makeText(getApplicationContext(),
+//						"变化前:" + s + ";" + start + ";" + count + ";" + after,
+//						Toast.LENGTH_SHORT).show();
+			}
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				// S：变化后的所有字符；start：字符起始的位置；before: 变化之前的总字节数；count:变化后的字节数
+//				Toast.makeText(getApplicationContext(),
+//						"变化后:" + s + ";" + start + ";" + before + ";" + count,
+//						Toast.LENGTH_SHORT).show();
+				if(count!=0){
+					comment_sent_img.setImageResource(R.drawable.comment_sent_full);
+				}else{
+					comment_sent_img.setImageResource(R.drawable.comment_sent_empty);
+				}
+			}
+		});
+		
+		
+		
 		initialHeader();
-//		initialFooter();
+		initialFooter();
 		
 		mListView.addHeaderView(mHeaderView);
+		mListView.addFooterView(mFooterView);
 //		mListView.addFooterView(mFooterView);
 		mListView.setAdapter(adapter);
 		mListView.setOnScrollListener(this);
-		btComment.setOnClickListener(new CommentOnClickListener());
+		comment_sent_img.setOnClickListener(new CommentOnClickListener());
 		new UpdateCommentsTask().execute();
 		
 	}
-	
+	OnFocusChangeListener editTextFocusListener = new android.view.View.OnFocusChangeListener() {
+		@Override
+		public void onFocusChange(View v, boolean hasFocus) {
+			if (hasFocus) {
+				// 此处为得到焦点时的处理内容
+				btComment.setVisibility(View.INVISIBLE);
+				comment_sent_img.setVisibility(View.VISIBLE);
+				comment_sent_img.setImageResource(R.drawable.comment_sent_empty);
+			} else {
+				// 此处为失去焦点时的处理内容
+				btComment.setVisibility(View.VISIBLE);
+				comment_sent_img.setVisibility(View.INVISIBLE);
+			}
+		}
+	};
+	private void initialFooter(){
+		mFooterView=mInflater.inflate(R.layout.comment_listview_footer, null);
+		tv_comment_footerTextView =(TextView)mFooterView.findViewById(R.id.tv_comment_footer);
+	}
 	private void initialHeader()
 	{
 		mHeaderView=mInflater.inflate(R.layout.photo_comment_list_header, null);
@@ -195,7 +277,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 			{
 				holder=new ViewHolder();
 				convertView=mInflater.inflate(R.layout.photo_comment_list_comment_item, null);
-				holder.ivUserAvatar=(ImageView)convertView.findViewById(R.id.photo_comment_user_avatar);
+				holder.ivUserAvatar=(CircleImageView)convertView.findViewById(R.id.photo_comment_user_avatar);
 				holder.tvUserNickName=(TextView)convertView.findViewById(R.id.photo_comment_user_nike_name);
 				holder.tvCommentTime=(TextView)convertView.findViewById(R.id.photo_comment_comment_time);
 				holder.tvCommentContent=(TextView)convertView.findViewById(R.id.photo_comment_comment_content);
@@ -214,7 +296,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		
 		private final class ViewHolder
 		{
-			public ImageView ivUserAvatar;
+			public CircleImageView ivUserAvatar;
 			public TextView tvUserNickName;
 			public TextView tvCommentTime;
 			public TextView tvCommentContent;
@@ -244,6 +326,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 			{
 				if(result.getData().getCommentList().size()>0)
 				{
+//					tv_comment_footerTextView.setVisibility(View.INVISIBLE);
 					synchronized (mListData) {
 						List<Comment> list=result.getData().getCommentList();
 						mListData.clear();
@@ -253,6 +336,8 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 						}
 						adapter.notifyDataSetChanged();
 					}
+				}else{
+					tv_comment_footerTextView.setVisibility(View.INVISIBLE);
 				}
 			}
 		}
@@ -303,15 +388,18 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 			//将评论添加到lisetview中，同时上传到服务器
 //			showPopupView(btComment);
 			synchronized (mListData) {
-//				if()
-//				Comment comment= new Comment();
-//				comment.setCommentContent(commentContent);
-//				mListData.add(comment);
-//				adapter.notifyDataSetChanged();
+				if(!edittext.getText().toString().trim().equals("")){
+					Comment comment= new Comment();
+					comment.setCommentContent(edittext.getText().toString().trim());
+					comment.setUserNickName(pre.getUserInfoNickname());//pre.getUserInfoNickname()
+					comment.setCommentTime(new Date());
+					mListData.add(comment);
+					edittext.setText("");
+					adapter.notifyDataSetChanged();
+					
+				}
 			}
-			
 		}
-		
 		
 		
 	}
