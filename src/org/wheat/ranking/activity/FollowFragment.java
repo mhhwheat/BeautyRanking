@@ -68,11 +68,6 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	
 	private String mLoginUserPhoneNumber;
 	
-	private int mPhotoWidth=0;
-	//已经获取到正确的ImageWidth
-	private boolean allowFix=false;
-	private Map<String,ImageView> taskPool;
-	
 	//存储页面缓存的数据库管理工具
 	private SqliteDBManager dbManager;
 	
@@ -92,6 +87,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		if(list.size()>0)
 		{
 			mListData.addAll(list);
+			adapter.notifyDataSetChanged();
 		}
 		
 		new UpdateDataTask().execute();
@@ -538,6 +534,15 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			return second+new String("秒前");
 		}
 	}
+	
+	
+	
+	
+	private int mPhotoWidth=0;
+	//已经获取到正确的ImageWidth
+	private boolean allowFix=false;
+	private Map<String,ImageView> taskPool;
+	
 
 	public class GlobalLayoutLinstener implements OnGlobalLayoutListener
 	{

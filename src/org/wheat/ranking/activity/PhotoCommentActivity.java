@@ -1,10 +1,13 @@
 package org.wheat.ranking.activity;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.data.UserLoginPreference;
@@ -20,16 +23,17 @@ import android.app.Activity;
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -41,6 +45,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -94,6 +99,9 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		mCurrentPhoto=getPhotoFromIntent();
 		
 		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+		taskPool=new HashMap<String, ImageView>();
+		
 		mListData=new LinkedList<Comment>();
 		mImageLoader=ImageLoader.getInstance(this);
 		adapter=new PhotoCommentListAdapter();
@@ -181,10 +189,13 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		ivHeaderPhoto=(ImageView)mHeaderView.findViewById(R.id.photo_comment_header_photo);
 		tvHeaderPhotoDescription=(TextView)mHeaderView.findViewById(R.id.photo_comment_header_description);
 		
+		//为了获得ivHeaderPhoto正确宽度而设置的监听器
+		ivHeaderPhoto.getViewTreeObserver().addOnGlobalLayoutListener(new GlobalLayoutLinstener(ivHeaderPhoto));
+		
 		mImageLoader.addTask(new PhotoParameters(mCurrentPhoto.getAvatarPath(), 50, 50*50), ivHeaderAvatar);
 		tvHeaderNickName.setText(mCurrentPhoto.getNickName());
 		tvHeaderPublishTime.setText(getDifferenceFromDate(mCurrentPhoto.getUploadTime()));
-		mImageLoader.addTask(new PhotoParameters(mCurrentPhoto.getPhotoPath(), -1, -1), ivHeaderPhoto);
+		addTaskToPool(new PhotoParameters(mCurrentPhoto.getPhotoPath(), -1, -1,true,mPhotoWidth), ivHeaderPhoto);
 		tvHeaderPhotoDescription.setText(mCurrentPhoto.getPhotoDescription());
 	}
 	
@@ -466,5 +477,91 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		}
 	}
 
+	
+	private int mPhotoWidth=0;
+	//已经获取到正确的ImageWidth
+	private boolean allowFix=false;
+	private Map<String,ImageView> taskPool;
+	
+
+	public class GlobalLayoutLinstener implements OnGlobalLayoutListener
+	{
+		private View view;
+		public GlobalLayoutLinstener(View view)
+		{
+			this.view=view;
+		}
+
+		@Override
+		public void onGlobalLayout() {
+			mPhotoWidth=view.getWidth();
+			if(mPhotoWidth>0)
+			{
+				unLockTaskPool();
+				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			}
+			Log.w("FollowFragment", "mPhotoWidth="+mPhotoWidth);
+		}
+		
+	}
+	
+	/**
+	 * 锁住时，不能加载自适配图片，只能加载固定图片
+	 */
+	public void lockTaskPool()
+	{
+		this.allowFix=false;
+	}
+	
+	/**
+	 * 解除锁定后，可以加载自适配图片
+	 */
+	public void unLockTaskPool()
+	{
+		if(!allowFix)
+		{
+			this.allowFix=true;
+		}
+		doTaskInPool();
+	}
+	
+	public void addTaskToPool(PhotoParameters parameters,ImageView img)
+	{
+		if(!parameters.isFixWidth())
+		{
+			mImageLoader.addTask(parameters, img);
+		}
+		else
+		{
+			synchronized (taskPool) {
+				img.setTag(parameters);
+				taskPool.put(Integer.toString(img.hashCode()), img);
+			}
+			if(allowFix)
+			{
+				doTaskInPool();
+			}	
+		}
+	}
+	
+	public void doTaskInPool()
+	{
+		synchronized (taskPool) {
+			Collection<ImageView> con=taskPool.values();
+			for(ImageView img:con)
+			{
+				if(img!=null)
+				{
+					if(img.getTag()!=null)
+					{
+						PhotoParameters pp=(PhotoParameters)img.getTag();
+						pp.setImageViewWidth(mPhotoWidth);
+						mImageLoader.addTask(pp, img);
+					}
+				}
+			}
+			taskPool.clear();
+		}
+	}
 	
 }

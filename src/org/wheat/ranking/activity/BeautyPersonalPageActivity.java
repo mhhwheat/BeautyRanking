@@ -50,6 +50,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -220,12 +221,13 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 				convertView=mInflater.inflate(R.layout.beauty_personal_album_cover, null);
 				if(mBeauty!=null)
 				{
-					ImageView ivAlbumCover=(ImageView)convertView.findViewById(R.id.beauty_personal_album_cover);
+					
+					RelativeLayout ivAlbumCover=(RelativeLayout)convertView.findViewById(R.id.beauty_personal_album_cover);
 					TextView tvAlbumCoverName=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_name);
 					TextView tvAlbumCoverSchool=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_school);
 					TextView tvAlbumCoverDescription=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_description);
 					
-					addTaskToPool(new PhotoParameters(mBeauty.getAvatarPath(), mPhotoWidth, 2*mPhotoWidth*mPhotoWidth), ivAlbumCover);
+					mImageLoader.addTask(new PhotoParameters(mBeauty.getAvatarPath(), -1, -1), ivAlbumCover);
 					tvAlbumCoverName.setText(mBeauty.getTrueName());
 					tvAlbumCoverSchool.setText(mBeauty.getSchool());
 					tvAlbumCoverDescription.setText(mBeauty.getDescription());
@@ -675,6 +677,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			}
 			taskPool.clear();
 		}
+		
 	}
 	
 	

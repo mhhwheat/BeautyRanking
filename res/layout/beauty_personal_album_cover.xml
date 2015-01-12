@@ -2,93 +2,65 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
-    
-    <RelativeLayout
-        android:id="@+id/beauty_personal_album_cover_head"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
+
+    <LinearLayout
+        android:id="@+id/beauty_personal_album_cover_follow_action_area"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal" >
 
         <ImageView
-            android:id="@+id/beauty_personal_album_cover_user_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp" 
-            android:layout_centerVertical="true"/>
+            android:layout_width="30dp"
+            android:layout_height="match_parent" 
+            android:src="@drawable/secret4"/>
 
         <TextView
-            android:id="@+id/beauty_personal_album_cover_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/beauty_personal_album_cover_user_avatar"
-            android:text="豆芽" />
-
-        <TextView
-            android:id="@+id/beauty_personal_alum_cover_create_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/beauty_personal_album_cover_user_name"
-            android:layout_toRightOf="@id/beauty_personal_album_cover_user_avatar"
-            android:text="2014-11-01" />
-        
-        <LinearLayout 
-            android:id="@+id/beauty_personal_album_cover_follow_action_area"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_alignParentRight="true">
-            <ImageView 
-                android:layout_width="50dp"
-                android:layout_height="match_parent"/>
-            <TextView 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="关注"/>
-        </LinearLayout>
-        
-    </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/beauty_personal_album_cover"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/beauty_personal_album_cover_head"
-        android:contentDescription="@string/content_description"
-        android:scaleType="centerCrop"
-        android:src="@drawable/test" />
+            android:layout_gravity="center_vertical"
+            android:text="关注" />
+    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/beauty_personal_album_cover_data_area"
+        android:id="@+id/beauty_personal_album_cover"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/beauty_personal_album_cover">
-         <TextView
-            android:id="@+id/beauty_personal_album_cover_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="麦华华"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp" />
+        android:layout_below="@id/beauty_personal_album_cover_follow_action_area"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/test" >
 
-        <TextView
-            android:id="@+id/beauty_personal_album_cover_school"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:text="广东外语外贸大学"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/beauty_personal_album_cover_description"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/beauty_personal_album_cover_school"
-            android:text="当地时间6月4日，英国伦敦绘公司将亚洲狮的脸描摹在人体模特身上，为伦敦动物学学会分支机构揭幕，呼吁保护濒危生物。"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp" />
+            android:layout_alignParentBottom="true"
+            android:background="#44000000">
+
+            <TextView
+                android:id="@+id/beauty_personal_album_cover_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="豆芽"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/beauty_personal_album_cover_school"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="广东外语外贸大学"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+            <TextView 
+                android:id="@+id/beauty_personal_album_cover_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="当地时间6月4日，英国伦敦绘公司将亚洲狮的脸描摹在人体模特身上，为伦敦动物学学会分支机构揭幕，呼吁保护濒危生物。"
+                android:textSize="12sp"
+                android:textColor="#99FFFFFF"
+                android:layout_below="@id/beauty_personal_album_cover_name"/>
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>
