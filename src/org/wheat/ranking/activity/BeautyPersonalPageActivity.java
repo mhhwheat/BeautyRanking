@@ -29,20 +29,26 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -120,13 +126,21 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		
 		mQuickReturnRelativeLayout=(QuickReturnRelativeLayout)findViewById(R.id.beauty_personal_page_quick_return_linearlayout);
 		mQuickReturnView=mInflater.inflate(R.layout.beauty_personal_page_quick_return_view, null);
+		Button btnAddPhoto=(Button) mQuickReturnView.findViewById(R.id.beauty_personal_page_return_view);
+		btnAddPhoto.setOnClickListener(addphotoListener);
 		mQuickReturnRelativeLayout.addQuickReturnView(mQuickReturnView);
 		
 		initialListViewListener();
 		new UpdateDataTask().execute();
 		new UpdateAlbumCoverTask().execute();
 	}
-	
+	OnClickListener addphotoListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			popAddPhotoView(v);
+		}
+	};
 	
 	
 	@Override
@@ -666,4 +680,38 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		
 	}
 	
+	
+
+	private void popAddPhotoView(View parent){
+		LayoutInflater mLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		//自定义布局
+		View menuView = mLayoutInflater.inflate(
+				R.layout.add_beauty_photo, null, false);
+		PopupWindow mPop = new PopupWindow(menuView, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT, true);
+		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
+		mPop.setFocusable(true);
+		// 设置允许在外点击消失
+		mPop.setOutsideTouchable(false);
+		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
+		ColorDrawable dw = new ColorDrawable(0X00000000);
+		mPop.setBackgroundDrawable(dw);
+//		mPop.setContentView(menuView );//设置包含视图
+		int width = (int) (getScreenWidth()*0.9);
+		int height = (int) (getScreenHeight()*0.9);
+		mPop.setWidth(width);
+		mPop.setHeight(height );//设置弹出框大小
+		mPop.showAsDropDown(parent,40,40);
+		mPop.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+	}
+	private int getScreenWidth() {
+		WindowManager wm = this.getWindowManager();
+		int width = wm.getDefaultDisplay().getWidth();
+		return width;
+	}
+	private int getScreenHeight() {
+		WindowManager wm = this.getWindowManager();
+		int width = wm.getDefaultDisplay().getHeight();
+		return width;
+	}
 }
