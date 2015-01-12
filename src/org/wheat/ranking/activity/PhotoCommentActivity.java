@@ -26,34 +26,26 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.util.Log;
-=======
 import android.text.Editable;
 import android.text.TextWatcher;
->>>>>>> e32cde99e869d106f98b141d02bd020955218caa
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-<<<<<<< HEAD
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-=======
 import android.view.View.OnFocusChangeListener;
->>>>>>> e32cde99e869d106f98b141d02bd020955218caa
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
-<<<<<<< HEAD
-=======
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
->>>>>>> e32cde99e869d106f98b141d02bd020955218caa
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;

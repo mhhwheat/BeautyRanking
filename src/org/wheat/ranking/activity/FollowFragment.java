@@ -87,6 +87,7 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		if(list.size()>0)
 		{
 			mListData.addAll(list);
+			adapter.notifyDataSetChanged();
 		}
 		
 		new UpdateDataTask().execute();

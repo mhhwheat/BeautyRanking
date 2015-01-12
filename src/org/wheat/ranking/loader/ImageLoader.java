@@ -13,12 +13,14 @@ import org.wheat.ranking.entity.PhotoParameters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.ViewGroup.LayoutParams;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 
 public class ImageLoader 
 {
@@ -29,7 +31,7 @@ public class ImageLoader
 	private ExecutorService executorService;	//线程池
 	private ImageMemoryCache memoryCache;		//内存缓存
 	private ImageFileCache fileCache;			//文件缓存
-	private Map<String,ImageView> taskMap;		//存放任务
+	private Map<String,View> taskMap;		//存放任务
 	private boolean allowLoad=true;				//是否允许加载图片
 	private Context context;
 	
@@ -43,7 +45,7 @@ public class ImageLoader
 		
 		this.memoryCache=new ImageMemoryCache(context);
 		this.fileCache=new ImageFileCache();
-		this.taskMap=new HashMap<String, ImageView>();
+		this.taskMap=new HashMap<String, View>();
 	}
 	
 	/**
@@ -86,7 +88,7 @@ public class ImageLoader
 	
 	
 	
-	public void addTask(PhotoParameters parameters,ImageView img)
+	public void addTask(PhotoParameters parameters,View view)
 	{
 		Bitmap bitmap=null;
 		if(parameters.getMinSideLength()==-1&&parameters.getMaxNumOfPixels()==-1)
@@ -100,24 +102,33 @@ public class ImageLoader
 			
 		if(bitmap!=null)
 		{
-			if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
+			if(view instanceof ImageView)
 			{
-				//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
-				int width=parameters.getImageViewWidth();
-				if(DEBUG)
+				ImageView imageView=(ImageView)view;
+				if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
 				{
-					Log.d("ImageLoader", "parameters.getMinSideLength()="+width);
+					//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
+					int width=parameters.getImageViewWidth();
+					if(DEBUG)
+					{
+						Log.d("ImageLoader", "parameters.getMinSideLength()="+width);
+					}
+					int picWidth=bitmap.getWidth();
+					int picHeight=bitmap.getHeight();
+					int height = (int) (width * 1.0 / picWidth * picHeight);
+					LayoutParams params = new LayoutParams(width,height);
+					view.setLayoutParams(params);
 				}
-				int picWidth=bitmap.getWidth();
-				int picHeight=bitmap.getHeight();
-				int height = (int) (width * 1.0 / picWidth * picHeight);
-				LayoutParams params = new LayoutParams(width,height);
-				img.setLayoutParams(params);
+				imageView.setImageBitmap(bitmap);
 			}
-			img.setImageBitmap(bitmap);
+			if(view instanceof RelativeLayout)
+			{
+				RelativeLayout layout=(RelativeLayout)view;
+				layout.setBackgroundDrawable(new BitmapDrawable(bitmap));
+			}
 			
 			synchronized (taskMap) {
-				taskMap.remove(img.hashCode());
+				taskMap.remove(view.hashCode());
 			}
 		}
 		else
@@ -127,8 +138,8 @@ public class ImageLoader
                  * 因为ListView或GridView的原理是用上面移出屏幕的item去填充下面新显示的item,
                  * 这里的img是item里的内容，所以这里的taskMap保存的始终是当前屏幕内的所有ImageView。
                  */
-				img.setTag(parameters);
-				taskMap.put(Integer.toString(img.hashCode()), img);
+				view.setTag(parameters);
+				taskMap.put(Integer.toString(view.hashCode()), view);
 			}
 			if(allowLoad)
 			{
@@ -143,14 +154,14 @@ public class ImageLoader
 	public void doTask()
 	{
 		synchronized (taskMap) {
-			Collection<ImageView> con=taskMap.values();
-			for(ImageView img:con)
+			Collection<View> con=taskMap.values();
+			for(View view:con)
 			{
-				if(img!=null)
+				if(view!=null)
 				{
-					if(img.getTag()!=null)
+					if(view.getTag()!=null)
 					{
-						loadImage((PhotoParameters)img.getTag(), img);
+						loadImage((PhotoParameters)view.getTag(), view);
 					}
 				}
 			}
@@ -158,9 +169,9 @@ public class ImageLoader
 		}
 	}
 	
-	private void loadImage(PhotoParameters parameters,ImageView img)
+	private void loadImage(PhotoParameters parameters,View view)
 	{
-		this.executorService.submit(new TaskWithResult(new TaskHandler(parameters, img), parameters));
+		this.executorService.submit(new TaskWithResult(new TaskHandler(parameters, view), parameters));
 	}
 	private Bitmap getBitmap(PhotoParameters parameters)
 	{
@@ -268,34 +279,46 @@ public class ImageLoader
 	private static class TaskHandler extends Handler
 	{
 		PhotoParameters parameters;
-		ImageView img;
+		View view;
 		
-		public TaskHandler(PhotoParameters parameters,ImageView img)
+		public TaskHandler(PhotoParameters parameters,View view)
 		{
 			this.parameters=parameters;
-			this.img=img;
+			this.view=view;
 		}
 
 		@Override
 		public void handleMessage(Message msg) 
 		{
 			/*** 查看ImageView需要显示的图片是否被改变  ***/
-			if(img.getTag().equals(parameters))
+			if(view.getTag().equals(parameters))
 			{
 				if(msg.obj!=null)
 				{
 					Bitmap bitmap=(Bitmap)msg.obj;
-					if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
+					
+					if(view instanceof ImageView)
 					{
-						//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
-						int width=parameters.getImageViewWidth();			
-						int picWidth=bitmap.getWidth();
-						int picHeight=bitmap.getHeight();
-						int height = (int) (width * 1.0 / picWidth * picHeight);
-						LayoutParams params = new LayoutParams(width,height);
-						img.setLayoutParams(params);
+						ImageView imageView=(ImageView)view;
+						if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
+						{
+							//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
+							int width=parameters.getImageViewWidth();			
+							int picWidth=bitmap.getWidth();
+							int picHeight=bitmap.getHeight();
+							int height = (int) (width * 1.0 / picWidth * picHeight);
+							LayoutParams params = new LayoutParams(width,height);
+							imageView.setLayoutParams(params);
+						}
+						imageView.setImageBitmap(bitmap);
 					}
-					img.setImageBitmap(bitmap);
+					
+					if(view instanceof RelativeLayout)
+					{
+						RelativeLayout layout=(RelativeLayout)view;
+						layout.setBackgroundDrawable(new BitmapDrawable(bitmap));
+					}
+					
 				}
 			}
 		}
