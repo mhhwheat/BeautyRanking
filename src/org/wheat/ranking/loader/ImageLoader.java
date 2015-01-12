@@ -33,7 +33,7 @@ public class ImageLoader
 	private ImageFileCache fileCache;			//文件缓存
 	private Map<String,View> taskMap;		//存放任务
 	private boolean allowLoad=true;				//是否允许加载图片
-	private Context context;
+	private static Context context;
 	
 	private ImageLoader(Context context)
 	{
@@ -124,7 +124,7 @@ public class ImageLoader
 			if(view instanceof RelativeLayout)
 			{
 				RelativeLayout layout=(RelativeLayout)view;
-				layout.setBackgroundDrawable(new BitmapDrawable(bitmap));
+				layout.setBackgroundDrawable(new BitmapDrawable(context.getResources(), bitmap));
 			}
 			
 			synchronized (taskMap) {
@@ -316,7 +316,7 @@ public class ImageLoader
 					if(view instanceof RelativeLayout)
 					{
 						RelativeLayout layout=(RelativeLayout)view;
-						layout.setBackgroundDrawable(new BitmapDrawable(bitmap));
+						layout.setBackgroundDrawable(new BitmapDrawable(context.getResources(), bitmap));
 					}
 					
 				}
