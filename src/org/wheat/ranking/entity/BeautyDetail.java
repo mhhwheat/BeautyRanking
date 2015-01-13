@@ -10,57 +10,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class BeautyDetail 
 {
-	@SerializedName("commentTimes")
-	private int commentTimes;
 	
-	@SerializedName("locationText")
-	private String locationText;
-	
-	public int getCommentTimes() {
-		return commentTimes;
-	}
-
-	public void setCommentTimes(int commentTimes) {
-		this.commentTimes = commentTimes;
-	}
-
-	public String getLocationText() {
-		return locationText;
-	}
-
-	public void setLocationText(String locationText) {
-		this.locationText = locationText;
-	}
-	@SerializedName("privilege")
-	private int privilege;
-	
-	public int getPrivilege() {
-		return privilege;
-	}
-
-	public void setPrivilege(int privilege) {
-		this.privilege = privilege;
-	}
-
-	/*
-	 * beauty的创建者电话号码
+	/**
+	 * beautyId
 	 */
-	@SerializedName("createTime")
-	private Date mCreateTime;
-	
-	/*
-	 * 该beauty被赞的次数
-	 */
-	@Expose 
-	@SerializedName("lat")
-	private double mLat;
-	
-	/*
-	 * 该beauty的年级
-	 */
-	@Expose 
-	@SerializedName("lng")
-	private double mLng;
+	@Expose
+	@SerializedName("beautyId")
+	private int  mBeautyId;
 	
 	/*
 	 * beauty的创建者电话号码
@@ -75,6 +31,13 @@ public class BeautyDetail
 	@SerializedName("praiseTimes")
 	private int mPraiseTimes;
 	
+	/**
+	 * 该beauty被评论的次数
+	 */
+	@SerializedName("commentTimes")
+	private int commentTimes;
+	
+	
 	/*
 	 * 该beauty的年级
 	 */
@@ -88,29 +51,36 @@ public class BeautyDetail
 	@Expose 
 	@SerializedName("birthday")
 	private String mBirthday;
-	/*
-	 * beauty的真实名字
-	 */
-	@Expose 
-	@SerializedName("trueName")
-	private String mTrueName;
+	
 	/*
 	 * beauty的星座
 	 */
 	@Expose 
 	@SerializedName("constellation")
 	private String mConstellation;
+
+	/*
+	 * 创建时间
+	 */
+	@SerializedName("createTime")
+	private Date mCreateTime;
+	
+	
+	/*
+	 * beauty的真实名字
+	 */ 
+	@SerializedName("trueName")
+	private String mTrueName;
+	
 	/*
 	 * 所在学校
-	 */
-	@Expose 
+	 */ 
 	@SerializedName("school")
 	private String mSchool;
 	
 	/*
 	 * 描述
 	 */
-	@Expose 
 	@SerializedName("description")
 	private String mDescription;
 	
@@ -120,9 +90,21 @@ public class BeautyDetail
 	@SerializedName("avatarPath")
 	private String mAvatarPath;
 	
-	@Expose
-	@SerializedName("beautyId")
-	private int  mBeautyId;
+	@Expose 
+	@SerializedName("lat")
+	private double mLat;
+	
+	@Expose 
+	@SerializedName("lng")
+	private double mLng;
+	
+	@SerializedName("locationText")
+	private String locationText;
+	
+	@SerializedName("privilege")
+	private int privilege;
+	
+	
 	
 	
 	public void setBeautyId(int BeautyId)
@@ -154,7 +136,13 @@ public class BeautyDetail
 		return this.mPraiseTimes;
 	}
 	
-	
+	public int getCommentTimes() {
+		return commentTimes;
+	}
+
+	public void setCommentTimes(int commentTimes) {
+		this.commentTimes = commentTimes;
+	}
 	
 	public void setAdmissionYear(String AdmissionYear)
 	{
@@ -177,6 +165,7 @@ public class BeautyDetail
 	{
 		return this.mBirthday;
 	}
+	
 	public void setConstellation(String Constellation)
 	{
 		this.mConstellation=Constellation;
@@ -254,5 +243,21 @@ public class BeautyDetail
 	public double getLng()
 	{
 		return this.mLng;
+	}
+	
+	public String getLocationText() {
+		return locationText;
+	}
+
+	public void setLocationText(String locationText) {
+		this.locationText = locationText;
+	}
+	
+	public int getPrivilege() {
+		return privilege;
+	}
+
+	public void setPrivilege(int privilege) {
+		this.privilege = privilege;
 	}
 }
