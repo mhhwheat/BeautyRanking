@@ -227,7 +227,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 					TextView tvAlbumCoverSchool=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_school);
 					TextView tvAlbumCoverDescription=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_description);
 					
-					mImageLoader.addTask(new PhotoParameters(mBeauty.getAvatarPath(), -1, -1), ivAlbumCover);
+					mImageLoader.addTask(new PhotoParameters(mBeauty.getAvatarPath(), -1, -1,true,getScreenWidth()), ivAlbumCover);
 					tvAlbumCoverName.setText(mBeauty.getTrueName());
 					tvAlbumCoverSchool.setText(mBeauty.getSchool());
 					tvAlbumCoverDescription.setText(mBeauty.getDescription());

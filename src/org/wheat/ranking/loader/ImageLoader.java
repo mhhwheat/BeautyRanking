@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.wheat.beautyranking.R;
 import org.wheat.ranking.cache.ImageFileCache;
 import org.wheat.ranking.cache.ImageMemoryCache;
 import org.wheat.ranking.entity.PhotoParameters;
@@ -19,6 +20,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
@@ -108,22 +110,33 @@ public class ImageLoader
 				if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
 				{
 					//如果请求的是原图,在固定宽度的情况下，是ImageView.(width:height)==Bitmap.(width:heigh)
-					int width=parameters.getImageViewWidth();
-					if(DEBUG)
-					{
-						Log.d("ImageLoader", "parameters.getMinSideLength()="+width);
-					}
+					int width=parameters.getImageViewWidth();			
 					int picWidth=bitmap.getWidth();
 					int picHeight=bitmap.getHeight();
 					int height = (int) (width * 1.0 / picWidth * picHeight);
-					LayoutParams params = new LayoutParams(width,height);
-					view.setLayoutParams(params);
+					LinearLayout.LayoutParams params=(LinearLayout.LayoutParams)imageView.getLayoutParams();
+					params.width=width;
+					params.height=height;
+					imageView.setLayoutParams(params);
 				}
 				imageView.setImageBitmap(bitmap);
 			}
 			if(view instanceof RelativeLayout)
 			{
+
 				RelativeLayout layout=(RelativeLayout)view;
+				if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
+				{
+					int width=parameters.getImageViewWidth();
+					int picWidth=bitmap.getWidth();
+					int picHeight=bitmap.getHeight();
+					int height = (int) (width * 1.0 / picWidth * picHeight);
+					RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)layout.getLayoutParams();
+//					RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(width, height);
+					params.width=width;
+					params.height=height;
+					layout.setLayoutParams(params);
+				}
 				layout.setBackgroundDrawable(new BitmapDrawable(context.getResources(), bitmap));
 			}
 			
@@ -307,7 +320,9 @@ public class ImageLoader
 							int picWidth=bitmap.getWidth();
 							int picHeight=bitmap.getHeight();
 							int height = (int) (width * 1.0 / picWidth * picHeight);
-							LayoutParams params = new LayoutParams(width,height);
+							LinearLayout.LayoutParams params=(LinearLayout.LayoutParams)imageView.getLayoutParams();
+							params.width=width;
+							params.height=height;
 							imageView.setLayoutParams(params);
 						}
 						imageView.setImageBitmap(bitmap);
@@ -316,6 +331,18 @@ public class ImageLoader
 					if(view instanceof RelativeLayout)
 					{
 						RelativeLayout layout=(RelativeLayout)view;
+						if(parameters.isFixWidth()&&parameters.getImageViewWidth()>0)
+						{
+							int width=parameters.getImageViewWidth();
+							int picWidth=bitmap.getWidth();
+							int picHeight=bitmap.getHeight();
+							int height = (int) (width * 1.0 / picWidth * picHeight);
+							RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)layout.getLayoutParams();
+//							RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(width, height);
+							params.width=width;
+							params.height=height;
+							layout.setLayoutParams(params);
+						}
 						layout.setBackgroundDrawable(new BitmapDrawable(context.getResources(), bitmap));
 					}
 					

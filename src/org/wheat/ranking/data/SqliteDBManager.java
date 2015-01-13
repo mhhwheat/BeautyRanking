@@ -372,12 +372,76 @@ public class SqliteDBManager
 	}
 	
 	/**
-	 * 清空TabRiseFragment在sqlite数据库中的缓存
+	 * 清空MyDetailPage在sqlite数据库中的缓存
 	 */
 	public void clearRisePage()
 	{
 		db.execSQL("delete from rise_page");
 		db.execSQL("update sqlite_sequence SET seq = 0 where name ='rise_page'");
+	}
+	
+	/**
+	 * 把FollowFragment的内容存储到表my_detail_page中
+	 * @param list
+	 */
+	public void addToMyDetailPage(List<Photo> list)
+	{
+		String sql="INSERT INTO my_detail_page VALUES(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		db.beginTransaction();
+		try
+		{
+			for(Photo photo:list)
+			{
+				db.execSQL(sql, new Object[]{photo.getAvatarPath(),photo.getNickName(),photo.getIsPraise(),photo.getPhotoDescription(),photo.getBeautyId(),
+						photo.getPhotoId(),photo.getCommentCount(),photo.getPraiseCount(),photo.getPhotoPath(),photo.getUserPhoneNumber(),photo.getUpLoadTimeToString()});
+			}
+			db.setTransactionSuccessful();
+		}
+		finally
+		{
+			db.endTransaction();
+		}
+	}
+	
+	/**
+	 * 获得sqlite中my_detail_page表的内容
+	 * @return 返回一个Photo对象的list
+	 * @throws ParseException 
+	 */
+	public List<Photo> getMyDetailPage()
+	{
+		ArrayList<Photo> list=new ArrayList<Photo>();
+		Cursor cursor=db.rawQuery("select * from my_detail_page", null);
+		while(cursor.moveToNext())
+		{
+			Photo photo=new Photo();
+			photo.setAvatarPath(cursor.getString(cursor.getColumnIndex("avatarPath")));
+			photo.setNickName(cursor.getString(cursor.getColumnIndex("nickname")));
+			photo.setIspraise(cursor.getInt(cursor.getColumnIndex("isPraise")));
+			photo.setPhotoDescription(cursor.getString(cursor.getColumnIndex("photoDescription")));
+			photo.setBeautyId(cursor.getInt(cursor.getColumnIndex("beautyId")));
+			photo.setPhotoId(cursor.getInt(cursor.getColumnIndex("photoId")));
+			photo.setCommentCount(cursor.getInt(cursor.getColumnIndex("commentCount")));
+			photo.setPraiseCount(cursor.getInt(cursor.getColumnIndex("praiseCount")));
+			photo.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+			photo.setUserPhoneNumber(cursor.getString(cursor.getColumnIndex("userPhoneNumber")));
+			try {
+				photo.setUploadTime(cursor.getString(cursor.getColumnIndex("uploadTime")));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			list.add(photo);
+		}
+		return list;
+	}
+	
+	/**
+	 * 清空sqlite中my_detail_page表的所用内容，并且重置自增id的初始值
+	 */
+	public void clearMyDetailPage()
+	{
+		db.execSQL("delete from my_detail_page");
+		db.execSQL("update sqlite_sequence SET seq = 0 where name ='my_detail_page'");
 	}
 	
 }
