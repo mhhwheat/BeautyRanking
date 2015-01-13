@@ -3,9 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@color/white" >
+    android:background="@color/listview_background_color" >
 
     <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:id="@+id/tv_comment_footer"
         android:layout_width="fill_parent"
         android:layout_height="50dp"

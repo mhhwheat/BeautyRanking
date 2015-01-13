@@ -1,65 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
-
-    <LinearLayout
-        android:id="@+id/beauty_personal_album_cover_follow_action_area"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="match_parent" 
-            android:src="@drawable/secret4"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="关注" />
-    </LinearLayout>
+    android:layout_height="wrap_content"
+    android:background="@color/listview_background_color">
 
     <RelativeLayout
-        android:id="@+id/beauty_personal_album_cover"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/beauty_personal_album_cover_follow_action_area"
-        android:layout_alignParentLeft="true"
-        android:background="@drawable/test" >
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/add_privilege"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/privilege2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20sp"
+                android:text="仅创建人自己可修改"
+                android:textColor="@color/lightgreen" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/beauty_personal_album_cover_follow_action_area"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/focus" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20sp"
+                android:text="关注"
+                android:textColor="@color/lightgreen" />
+        </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/beauty_personal_album_cover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#44000000">
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/beauty_personal_album_cover_follow_action_area"
+            android:background="@drawable/test" >
 
-            <TextView
-                android:id="@+id/beauty_personal_album_cover_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="豆芽"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/beauty_personal_album_cover_school"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="广东外语外贸大学"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp" />
-            <TextView 
-                android:id="@+id/beauty_personal_album_cover_description"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="当地时间6月4日，英国伦敦绘公司将亚洲狮的脸描摹在人体模特身上，为伦敦动物学学会分支机构揭幕，呼吁保护濒危生物。"
-                android:textSize="12sp"
-                android:textColor="#99FFFFFF"
-                android:layout_below="@id/beauty_personal_album_cover_name"/>
+                android:layout_alignParentBottom="true"
+                android:background="#44000000" >
+
+                <TextView
+                    android:id="@+id/beauty_personal_album_cover_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="豆芽"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/beauty_personal_album_cover_school"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="广东外语外贸大学"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/beauty_personal_album_cover_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/beauty_personal_album_cover_name"
+                    android:text="当地时间6月4日，英国伦敦绘公司将亚洲狮的脸描摹在人体模特身上，为伦敦动物学学会分支机构揭幕，呼吁保护濒危生物。"
+                    android:textColor="#99FFFFFF"
+                    android:textSize="12sp" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 

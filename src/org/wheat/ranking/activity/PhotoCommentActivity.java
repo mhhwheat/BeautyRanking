@@ -177,7 +177,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		}
 	};
 	private void initialFooter(){
-		mFooterView=mInflater.inflate(R.layout.comment_listview_footer, null);
+		mFooterView=mInflater.inflate(R.layout.photo_comment_listview_footer, null);
 		tv_comment_footerTextView =(TextView)mFooterView.findViewById(R.id.tv_comment_footer);
 	}
 	private void initialHeader()
