@@ -95,10 +95,18 @@ public class AddPhotoMethod extends Activity implements OnClickListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);// 请求设置标题栏
+//		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);// 请求设置标题栏
 		setContentView(R.layout.add_beauty_photo);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
-				R.layout.add_photo_title);
+//		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+//				R.layout.add_photo_title);
+//		WindowManager.LayoutParams windowParams = new WindowManager.LayoutParams();
+		int width = (int) (getScreenWidth()*0.9);
+		int height = (int) (getScreenHeight()*0.75);
+//        windowParams.width = width; // 设置宽度
+//        windowParams.height = height; // 设置高度
+        getWindow().setLayout(width, height);
+//        getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+//        getWindow().setAttributes(windowParams);
 		// 初始化
 		init();
 		// 开启界面的时候就定位
@@ -335,19 +343,7 @@ public class AddPhotoMethod extends Activity implements OnClickListener,
 		iv.setImageBitmap(bitmap);
 	}
 
-	/**
-	 * 
-	 * @Description: 获取屏幕宽度
-	 * @author hogachen
-	 * @date 2014年12月18日 下午7:39:14
-	 * @version V1.0
-	 * @return
-	 */
-	private int getScreenWidth() {
-		WindowManager wm = this.getWindowManager();
-		int width = wm.getDefaultDisplay().getWidth();
-		return width;
-	}
+
 
 	/**
 	 * 
@@ -470,5 +466,14 @@ public class AddPhotoMethod extends Activity implements OnClickListener,
 			this.textview_location.setText("定位失败");
 		}
 	}
-
+	private int getScreenWidth() {
+		WindowManager wm = this.getWindowManager();
+		int width = wm.getDefaultDisplay().getWidth();
+		return width;
+	}
+	private int getScreenHeight() {
+		WindowManager wm = this.getWindowManager();
+		int width = wm.getDefaultDisplay().getHeight();
+		return width;
+	}
 }

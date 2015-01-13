@@ -138,7 +138,10 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			popAddPhotoView(v);
+//			popAddPhotoView(v);
+			Intent intent = new Intent();
+			intent.setClass(BeautyPersonalPageActivity.this, AddPhotoMethod.class);
+			startActivity(intent);
 		}
 	};
 	

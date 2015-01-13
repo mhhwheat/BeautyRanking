@@ -135,7 +135,7 @@ public class MainInterfaceActivity extends FragmentActivity
 			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
 			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
 
-			mMinePageImg.setImageResource(R.drawable.mefull);
+			mMinePageImg.setImageResource(R.drawable.me2full);
 			mMinePageText.setTextColor(this.getResources().getColor(R.color.tab_check_color_more));
 			
 			if(mMinePageFragment==null)
@@ -195,7 +195,7 @@ public class MainInterfaceActivity extends FragmentActivity
 			ImageView mMinePageImg=(ImageView)v.findViewById(R.id.tab_mine_page_img);
 			TextView mMinePageText=(TextView)v.findViewById(R.id.tab_mine_page_text);
 
-			mMinePageImg.setImageResource(R.drawable.me);
+			mMinePageImg.setImageResource(R.drawable.me2);
 			mMinePageText.setTextColor(this.getResources().getColor(R.color.tab_uncheck_color));
 			break;
 		case R.id.tab_create_beauty:

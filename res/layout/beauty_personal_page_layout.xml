@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
+    android:orientation="vertical" 
+    android:background="@color/listview_background_color">
+<!-- 上面设置了listview的背景颜色之后，就会使footer也变为该背景颜色 -->
     <org.wheat.widget.QuickReturnRelativeLayout
         android:id="@+id/beauty_personal_page_quick_return_linearlayout"
         android:layout_width="match_parent"
@@ -14,16 +15,16 @@
             android:id="@+id/beauty_personal_page_refresh_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="#00000000"
-            android:divider="#19000000"
-            android:dividerHeight="4dp"
             android:fadingEdge="none"
             android:fastScrollEnabled="false"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"
             android:smoothScrollbar="true"
             ptr:ptrAnimationStyle="flip"
-            ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow" />
+            ptr:ptrDrawable="@drawable/ic_pulltorefresh_arrow" 
+            android:cacheColorHint="@android:color/transparent"
+        	android:listSelector="@android:color/transparent"
+        	android:divider="@null"/>
         
     </org.wheat.widget.QuickReturnRelativeLayout>
 

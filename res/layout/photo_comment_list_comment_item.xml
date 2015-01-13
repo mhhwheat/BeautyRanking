@@ -2,8 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent" 
+    android:background="@color/listview_background_color"
     >
-
+<!-- 要想在listview 的item 两边留有空隙，在外面加一个linearlayout，如下： -->
+     <LinearLayout 
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+         android:background="@color/white">
 	<org.wheat.widget.DashedLine 
 	    android:id="@+id/line"
 	    android:layout_width="fill_parent"
@@ -68,6 +76,7 @@
                 android:text="对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱对面的女孩真可爱"
                 android:textSize="15sp" />
         </RelativeLayout>
+    </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

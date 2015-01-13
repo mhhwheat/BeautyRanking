@@ -76,7 +76,7 @@
             style="@style/tab_layout_style" >
 
             <ImageView
-                 android:src="@drawable/me"
+                 android:src="@drawable/me2"
                 android:id="@+id/tab_mine_page_img"
                 style="@style/tab_img_style"/>
 
