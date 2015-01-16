@@ -278,7 +278,7 @@ public class SqliteDBManager
 	 */
 	public void addToNewPage(List<BeautyIntroduction> list)
 	{
-		String sql="INSERT INTO new_page VALUES(null, ?, ?, ?, ?, ?, ?, ?)";
+		String sql="INSERT INTO new_page(beautyId,beautyName,school,avatarPath,photoDescription,praiseTimes,commentTimes) VALUES(?, ?, ?, ?, ?, ?, ?)";
 		db.beginTransaction();
 		try{
 			for(BeautyIntroduction beauty:list)

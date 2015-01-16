@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.wheat.beautyranking.R;
 import org.wheat.ranking.cache.ImageFileCache;
 import org.wheat.ranking.cache.ImageMemoryCache;
 import org.wheat.ranking.entity.PhotoParameters;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 
 public class ImageLoader 

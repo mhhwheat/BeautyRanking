@@ -30,6 +30,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,7 @@ import android.widget.AbsListView.OnScrollListener;
 public class FollowFragment extends Fragment implements OnScrollListener
 {
 
+	private final boolean DEBUG=true;
 	private final int PAGE_LENGTH=10;//每次请求数据页里面包含的最多数据项
 	private PullToRefreshListView mPullToRefreshListView;
 	private List<Photo> mListData;//保存listview数据项的数组
@@ -71,11 +73,18 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	//存储页面缓存的数据库管理工具
 	private SqliteDBManager dbManager;
 	
+	private DisplayMetrics metric;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
+		//获取设备信息
+		metric = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+		
 		mListData=new ArrayList<Photo>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new FollowRefreshListAdapter();
@@ -121,9 +130,9 @@ public class FollowFragment extends Fragment implements OnScrollListener
 
 	@Override
 	public void onPause() {
-		super.onPause();
 		dbManager.clearFollowPage();
 		dbManager.addToFollowPage(mListData);
+		super.onPause();
 	}
 
 
@@ -539,6 +548,8 @@ public class FollowFragment extends Fragment implements OnScrollListener
 	
 	
 	private int mPhotoWidth=0;
+	private int mMinSideLength=0;
+	private int mMaxNumOfPixles=0;
 	//已经获取到正确的ImageWidth
 	private boolean allowFix=false;
 	private Map<String,ImageView> taskPool;
@@ -554,13 +565,15 @@ public class FollowFragment extends Fragment implements OnScrollListener
 
 		@Override
 		public void onGlobalLayout() {
-			mPhotoWidth=view.getWidth();
-			if(mPhotoWidth>0)
+			if(mPhotoWidth<=0&&view.getWidth()>0)
 			{
+				mPhotoWidth=view.getWidth();
+				mMinSideLength=(int)(mPhotoWidth*metric.density);
+				mMaxNumOfPixles=2*mMinSideLength*mMinSideLength;
 				unLockTaskPool();
 				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 			}
-			Log.w("FollowFragment", "mPhotoWidth="+mPhotoWidth);
+			
 		}
 		
 	}
@@ -615,8 +628,8 @@ public class FollowFragment extends Fragment implements OnScrollListener
 					if(img.getTag()!=null)
 					{
 						PhotoParameters pp=(PhotoParameters)img.getTag();
-						pp.setMinSideLength(mPhotoWidth);
-						pp.setMaxNumOfPixles(2*mPhotoWidth*mPhotoWidth);
+						pp.setMinSideLength(mMinSideLength);
+						pp.setMaxNumOfPixles(mMaxNumOfPixles);
 						pp.setImageViewWidth(mPhotoWidth);
 						mImageLoader.addTask(pp, img);
 					}
@@ -625,4 +638,8 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			taskPool.clear();
 		}
 	}
+	
+		
+	
+	
 }

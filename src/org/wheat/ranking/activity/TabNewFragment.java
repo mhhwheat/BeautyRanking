@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
@@ -20,7 +21,7 @@ import android.text.format.DateUtils;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,32 +51,57 @@ public class TabNewFragment extends Fragment implements OnScrollListener
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
+	//存储页面缓存的数据库管理工具
+	private SqliteDBManager dbManager;
+	
+	private DisplayMetrics metric;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//获取设备信息
+		metric = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+		
 		mListData=new ArrayList<BeautyIntroduction>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new NewRefreshListAdapter();
+		
+		dbManager=new SqliteDBManager(getActivity());
+		List<BeautyIntroduction> list=dbManager.getFromNewPage();
+		if(list.size()>0)
+		{
+			mListData.addAll(list);
+			adapter.notifyDataSetChanged();
+		}
+		
 		new UpdateDataTask().execute();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-mInflater=inflater;
-		
+		mInflater=inflater;
+
 		View view=inflater.inflate(R.layout.fragment_new, container, false);
 		mPullToRefreshListView=(PullToRefreshListView)view.findViewById(R.id.new_refresh_list_view);
 		mActualListView=mPullToRefreshListView.getRefreshableView();
 		mFooterView=inflater.inflate(R.layout.refresh_list_footer, null);
 		pbFooterLoading=(ProgressBar)mFooterView.findViewById(R.id.refresh_list_footer_progressbar);
 		tvFooterText=(TextView)mFooterView.findViewById(R.id.refresh_list_footer_text);
-		
+
 		mPullToRefreshListView.setAdapter(adapter);
 		mActualListView.addFooterView(mFooterView);
 		initialListViewListener();
-		
+
 		return view;
+	}
+	
+	@Override
+	public void onPause() {
+		dbManager.clearNewPage();
+		dbManager.addToNewPage(mListData);
+		super.onPause();
 	}
 	
 	
@@ -133,7 +159,6 @@ mInflater=inflater;
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) 
 		{
-			Log.w("TabNewFragment","------------------------>getView");
 			final BeautyIntroduction listItem=mListData.get(position);
 			ViewHolder holder=null;
 			if(convertView==null)
@@ -152,7 +177,7 @@ mInflater=inflater;
 			holder.name.setText(listItem.getBeautyName());
 			holder.school.setText(listItem.getSchool());
 			holder.description.setText(listItem.getDescription());
-			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), 100, 10000), holder.photo);
+			mImageLoader.addTask(new PhotoParameters(listItem.getAvatarPath(), (int)(100*metric.density),(int)(10000*metric.density)), holder.photo);
 			return convertView;
 		}
 		private final class ViewHolder

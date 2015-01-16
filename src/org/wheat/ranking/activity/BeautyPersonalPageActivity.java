@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.data.UserLoginPreference;
 import org.wheat.ranking.entity.BeautyDetail;
 import org.wheat.ranking.entity.Photo;
@@ -29,26 +30,22 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -80,20 +77,17 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
-	private int mPhotoWidth=0;
-	
 	private QuickReturnRelativeLayout mQuickReturnRelativeLayout;
 	private View mQuickReturnView;
 	
 	
-	//已经获取到正确的ImageWidth
-	private boolean allowFix=false;
-	private Map<String,ImageView> taskPool;
-	
 	//listview第一个item的数据
 	private BeautyDetail mBeauty=null;
 	
+	//存储页面缓存的数据库管理工具
+	private SqliteDBManager dbManager;
 	
+	private DisplayMetrics metric;
 	
 	
 	
@@ -101,6 +95,11 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//获取设备信息
+		metric = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metric);
+		
 		setContentView(R.layout.beauty_personal_page_layout);
 		mInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
@@ -130,10 +129,32 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		btnAddPhoto.setOnClickListener(addphotoListener);
 		mQuickReturnRelativeLayout.addQuickReturnView(mQuickReturnView);
 		
+		dbManager=new SqliteDBManager(this);
+		List<Photo> list=dbManager.getFromFollowPage();
+		if(list.size()>0)
+		{
+			mListData.addAll(list);
+			adapter.notifyDataSetChanged();
+		}
+		
 		initialListViewListener();
 		new UpdateDataTask().execute();
 		new UpdateAlbumCoverTask().execute();
 	}
+	
+	
+	
+	
+	@Override
+	protected void onPause() {
+		dbManager.clearBeautyPersonalPage();
+		dbManager.addToBeautyPersonalPage(mListData);
+		super.onPause();
+	}
+
+
+
+
 	OnClickListener addphotoListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -230,7 +251,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 					TextView tvAlbumCoverSchool=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_school);
 					TextView tvAlbumCoverDescription=(TextView)convertView.findViewById(R.id.beauty_personal_album_cover_description);
 					
-					mImageLoader.addTask(new PhotoParameters(mBeauty.getAvatarPath(), -1, -1,true,getScreenWidth()), ivAlbumCover);
+					mImageLoader.addTask(new PhotoParameters(mBeauty.getAvatarPath(), -1, -1,true,metric.widthPixels), ivAlbumCover);
 					tvAlbumCoverName.setText(mBeauty.getTrueName());
 					tvAlbumCoverSchool.setText(mBeauty.getSchool());
 					tvAlbumCoverDescription.setText(mBeauty.getDescription());
@@ -598,6 +619,15 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	}
 	*/
 	
+	
+	
+	private int mPhotoWidth=0;
+	private int mMinSideLength=0;
+	private int mMaxNumOfPixles=0;
+	//已经获取到正确的ImageWidth
+	private boolean allowFix=false;
+	private Map<String,ImageView> taskPool;
+	
 	public class GlobalLayoutLinstener implements OnGlobalLayoutListener
 	{
 		private View view;
@@ -608,9 +638,11 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 
 		@Override
 		public void onGlobalLayout() {
-			mPhotoWidth=view.getWidth();
-			if(mPhotoWidth>0)
+			if(mPhotoWidth<=0&&view.getWidth()>0)
 			{
+				mPhotoWidth=view.getWidth();
+				mMinSideLength=(int)(mPhotoWidth*metric.density);
+				mMaxNumOfPixles=2*mMinSideLength*mMinSideLength;
 				unLockTaskPool();
 				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 			}
@@ -672,8 +704,8 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 					{
 						PhotoParameters pp=(PhotoParameters)img.getTag();
 						pp.setImageViewWidth(mPhotoWidth);
-						pp.setMinSideLength(mPhotoWidth);
-						pp.setMaxNumOfPixles(2*mPhotoWidth*mPhotoWidth);
+						pp.setMinSideLength(mMinSideLength);
+						pp.setMaxNumOfPixles(mMaxNumOfPixles);
 						mImageLoader.addTask(pp, img);
 					}
 				}
@@ -685,36 +717,27 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 	
 	
 
-	private void popAddPhotoView(View parent){
-		LayoutInflater mLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-		//自定义布局
-		View menuView = mLayoutInflater.inflate(
-				R.layout.add_beauty_photo, null, false);
-		PopupWindow mPop = new PopupWindow(menuView, LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT, true);
-		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
-		mPop.setFocusable(true);
-		// 设置允许在外点击消失
-		mPop.setOutsideTouchable(false);
-		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
-		ColorDrawable dw = new ColorDrawable(0X00000000);
-		mPop.setBackgroundDrawable(dw);
-//		mPop.setContentView(menuView );//设置包含视图
-		int width = (int) (getScreenWidth()*0.9);
-		int height = (int) (getScreenHeight()*0.9);
-		mPop.setWidth(width);
-		mPop.setHeight(height );//设置弹出框大小
-		mPop.showAsDropDown(parent,40,40);
-		mPop.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
-	}
-	private int getScreenWidth() {
-		WindowManager wm = this.getWindowManager();
-		int width = wm.getDefaultDisplay().getWidth();
-		return width;
-	}
-	private int getScreenHeight() {
-		WindowManager wm = this.getWindowManager();
-		int width = wm.getDefaultDisplay().getHeight();
-		return width;
-	}
+//	private void popAddPhotoView(View parent){
+//		LayoutInflater mLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//		//自定义布局
+//		View menuView = mLayoutInflater.inflate(
+//				R.layout.add_beauty_photo, null, false);
+//		PopupWindow mPop = new PopupWindow(menuView, LayoutParams.WRAP_CONTENT,
+//				LayoutParams.WRAP_CONTENT, true);
+//		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
+//		mPop.setFocusable(true);
+//		// 设置允许在外点击消失
+//		mPop.setOutsideTouchable(false);
+//		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
+//		ColorDrawable dw = new ColorDrawable(0X00000000);
+//		mPop.setBackgroundDrawable(dw);
+////		mPop.setContentView(menuView );//设置包含视图
+//		int width = (int) (getScreenWidth()*0.9);
+//		int height = (int) (getScreenHeight()*0.9);
+//		mPop.setWidth(width);
+//		mPop.setHeight(height );//设置弹出框大小
+//		mPop.showAsDropDown(parent,40,40);
+//		mPop.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+//	}
+
 }

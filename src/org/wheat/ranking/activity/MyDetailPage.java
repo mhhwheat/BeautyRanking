@@ -29,6 +29,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,10 +75,7 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
-	private int mImageViewWidth;
-	//已经获取到正确的ImageWidth
-	private boolean allowFix=false;
-	private Map<String,ImageView> taskPool;
+	private DisplayMetrics metric;
 	
 	
 	
@@ -119,6 +117,11 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 //		settingImg= (ImageView)mypageTitle.findViewById(R.id.setting_img);
 //		settingImg.setOnClickListener(new SettingClickListener());
 		//设置标题栏的布局，颜色大小需要在styles中设置，再添加到AndroidManifest.xml文件中
+		
+		//获取设备信息
+		metric = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+		
 		taskPool=new HashMap<String, ImageView>();
 		mBeautyId=getBeautyIdFromIntent();
 		mLoginUserPhoneNumber=getLoginUserPhoneNumber();
@@ -593,6 +596,12 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		tvHeaderBeautyId.setText("");
 	}
 
+	private int mImageViewWidth=0;
+	private int mMinSideLength=0;
+	private int mMaxNumOfPixles=0;
+	//已经获取到正确的ImageWidth
+	private boolean allowFix=false;
+	private Map<String,ImageView> taskPool;
 	
 	public class GlobalLayoutLinstener implements OnGlobalLayoutListener
 	{
@@ -604,9 +613,11 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 
 		@Override
 		public void onGlobalLayout() {
-			mImageViewWidth=view.getWidth();
-			if(mImageViewWidth>0)
+			if(mImageViewWidth<=0&&view.getWidth()>0)
 			{
+				mImageViewWidth=view.getWidth();
+				mMinSideLength=(int)(mImageViewWidth*metric.density);
+				mMaxNumOfPixles=2*mMinSideLength*mMinSideLength;
 				unLockTaskPool();
 				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 			}

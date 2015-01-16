@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
@@ -55,6 +56,8 @@ public class TabRiseFragment extends Fragment implements OnScrollListener
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
+	//存储页面缓存的数据库管理工具
+	private SqliteDBManager dbManager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,15 @@ public class TabRiseFragment extends Fragment implements OnScrollListener
 		mListData=new ArrayList<BeautyIntroduction>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new RiseRefreshListAdapter();
+		
+		dbManager=new SqliteDBManager(getActivity());
+		List<BeautyIntroduction> list=dbManager.getFromRisePage();
+		if(list.size()>0)
+		{
+			mListData.addAll(list);
+			adapter.notifyDataSetChanged();
+		}
+		
 		new UpdateDataTask().execute();
 	}
 
@@ -81,6 +93,13 @@ mInflater=inflater;
 		initialListViewListener();
 		
 		return view;
+	}
+	
+	@Override
+	public void onPause() {
+		dbManager.clearRisePage();
+		dbManager.addToRisePage(mListData);
+		super.onPause();
 	}
 	
 	@Override

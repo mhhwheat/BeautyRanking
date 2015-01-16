@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.entity.BeautyIntroduction;
+import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
@@ -55,6 +57,9 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 	private ProgressBar pbFooterLoading;
 	private ListView mActualListView;//PulltoRefreshListView中真正的ListView
 	
+	//存储页面缓存的数据库管理工具
+	private SqliteDBManager dbManager;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,15 @@ public class TabSumFragment extends Fragment implements OnScrollListener
         mListData=new ArrayList<BeautyIntroduction>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new SumRefreshListAdapter();
+		
+		dbManager=new SqliteDBManager(getActivity());
+		List<BeautyIntroduction> list=dbManager.getFromSumPage();
+		if(list.size()>0)
+		{
+			mListData.addAll(list);
+			adapter.notifyDataSetChanged();
+		}
+		
 		new UpdateDataTask().execute();
 		}
 	
@@ -83,6 +97,13 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 		
 		return view;
     }
+	
+	@Override
+	public void onPause() {
+		dbManager.clearSumPage();
+		dbManager.addToSumPage(mListData);
+		super.onPause();
+	}
 	    
 	
 	@Override
@@ -102,6 +123,7 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 			break;
 		}
 	}
+	
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {

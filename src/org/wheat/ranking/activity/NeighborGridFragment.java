@@ -13,6 +13,7 @@ import me.maxwin.view.XListView;
 import me.maxwin.view.XListView.IXListViewListener;
 
 import org.wheat.beautyranking.R;
+import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.entity.BeautyIntroduction;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
@@ -30,6 +31,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,14 +56,35 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 	private NeighborGridAdapter adapter;
 	
 	private int mImageWidth=-1;
+	private int mMinSideLength=0;
+	private int mMaxNumOfPixles=0;
+	
+	private DisplayMetrics metric;
+	
+	//存储页面缓存的数据库管理工具
+	private SqliteDBManager dbManager;
 	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//获取设备信息
+		metric = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+		
 		mGridData=new ArrayList<BeautyIntroduction>();
 		mImageLoader=ImageLoader.getInstance(getActivity().getApplicationContext());
 		adapter=new NeighborGridAdapter();
+		
+		dbManager=new SqliteDBManager(getActivity());
+		List<BeautyIntroduction> list=dbManager.getFromNeighborPage();
+		if(list.size()>0)
+		{
+			mGridData.addAll(list);
+			adapter.notifyDataSetChanged();
+		}
+		
 		new UpdateDataTask().execute();
 	}
 
@@ -80,6 +103,19 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 		return view;
 	}
 	
+	
+	
+
+
+	@Override
+	public void onPause() {
+		dbManager.clearNeighborPage();
+		dbManager.addToNewPage(mGridData);
+		super.onPause();
+	}
+
+
+
 	@Override
 	public void onScrollStateChanged(PLA_AbsListView view, int scrollState) {
 		switch(scrollState)
@@ -143,7 +179,7 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
-			mImageLoader.addTask(new PhotoParameters(GridItem.getAvatarPath(), mImageWidth, 2*mImageWidth*mImageWidth, true,mImageWidth), holder.ivAvatar);
+			mImageLoader.addTask(new PhotoParameters(GridItem.getAvatarPath(), mMinSideLength, mMaxNumOfPixles, true,mImageWidth), holder.ivAvatar);
 			holder.tvDescription.setText(GridItem.getDescription());
 			return convertView;
 		}
@@ -180,6 +216,8 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 			@Override
 			public void onColumnWidthIsMeasure(int mColumnWidth) {
 				mImageWidth=mColumnWidth;
+				mMinSideLength=(int)(mImageWidth*metric.density);
+				mMaxNumOfPixles=2*mMinSideLength*mMinSideLength;
 			}
 		});
 		
