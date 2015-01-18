@@ -99,7 +99,16 @@ public class FollowFragment extends Fragment implements OnScrollListener
 			adapter.notifyDataSetChanged();
 		}
 		
-		new UpdateDataTask().execute();
+		if(null!=savedInstanceState)
+		{
+			int position=savedInstanceState.getInt("ListViewSelectionPosition");
+			if(position<=list.size())
+			{
+				mPullToRefreshListView.getRefreshableView().setSelection(position);
+			}
+		}
+		else
+			new UpdateDataTask().execute();
 	}
 	
 	
@@ -133,6 +142,16 @@ public class FollowFragment extends Fragment implements OnScrollListener
 		dbManager.clearFollowPage();
 		dbManager.addToFollowPage(mListData);
 		super.onPause();
+	}
+	
+	
+
+
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("ListViewSelectionPosition",mPullToRefreshListView.getRefreshableView().getFirstVisiblePosition());
 	}
 
 

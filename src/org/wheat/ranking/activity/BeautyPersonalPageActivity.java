@@ -130,7 +130,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 		mQuickReturnRelativeLayout.addQuickReturnView(mQuickReturnView);
 		
 		dbManager=new SqliteDBManager(this);
-		List<Photo> list=dbManager.getFromFollowPage();
+		List<Photo> list=dbManager.getFromBeautyPersonalPage(mBeautyId);
 		if(list.size()>0)
 		{
 			mListData.addAll(list);

@@ -76,6 +76,15 @@ public class TabNewFragment extends Fragment implements OnScrollListener
 			adapter.notifyDataSetChanged();
 		}
 		
+		if(null!=savedInstanceState)
+		{
+			int position=savedInstanceState.getInt("ListViewSelectionPosition");
+			if(position<=list.size())
+			{
+				mPullToRefreshListView.getRefreshableView().setSelection(position);
+			}
+		}
+		
 		new UpdateDataTask().execute();
 	}
 
@@ -105,6 +114,14 @@ public class TabNewFragment extends Fragment implements OnScrollListener
 	}
 	
 	
+	
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("ListViewSelectionPosition", mPullToRefreshListView.getRefreshableView().getFirstVisiblePosition());
+	}
+
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		// TODO Auto-generated method stub

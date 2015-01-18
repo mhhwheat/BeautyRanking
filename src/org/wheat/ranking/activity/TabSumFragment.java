@@ -6,7 +6,6 @@ import java.util.List;
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.data.SqliteDBManager;
 import org.wheat.ranking.entity.BeautyIntroduction;
-import org.wheat.ranking.entity.Photo;
 import org.wheat.ranking.entity.PhotoParameters;
 import org.wheat.ranking.entity.json.BeautyIntroductionListJson;
 import org.wheat.ranking.loader.HttpLoderMethods;
@@ -76,8 +75,17 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 			adapter.notifyDataSetChanged();
 		}
 		
-		new UpdateDataTask().execute();
+		if(null!=savedInstanceState)
+		{
+			int position=savedInstanceState.getInt("ListViewSelectionPosition");
+			if(position<=list.size())
+			{
+				mPullToRefreshListView.getRefreshableView().setSelection(position);
+			}
 		}
+		
+		new UpdateDataTask().execute();
+	}
 	
 	
 	@Override
@@ -103,6 +111,12 @@ public class TabSumFragment extends Fragment implements OnScrollListener
 		dbManager.clearSumPage();
 		dbManager.addToSumPage(mListData);
 		super.onPause();
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("ListViewSelectionPosition", mPullToRefreshListView.getRefreshableView().getFirstVisiblePosition());
 	}
 	    
 	

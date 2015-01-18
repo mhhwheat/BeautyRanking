@@ -85,6 +85,15 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 			adapter.notifyDataSetChanged();
 		}
 		
+		if(null!=savedInstanceState)
+		{
+			int position=savedInstanceState.getInt("GridViewSelectionPosition");
+			if(position<=list.size())
+			{
+				mPullToRefreshGridView.setSelection(position);
+			}
+		}
+		
 		new UpdateDataTask().execute();
 	}
 
@@ -112,6 +121,16 @@ public class NeighborGridFragment extends Fragment implements XListView.XListVie
 		dbManager.clearNeighborPage();
 		dbManager.addToNewPage(mGridData);
 		super.onPause();
+	}
+	
+	
+
+
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("GridViewSelectionPosition", mPullToRefreshGridView.getFirstVisiblePosition());
 	}
 
 

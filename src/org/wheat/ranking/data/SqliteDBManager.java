@@ -8,9 +8,11 @@ package org.wheat.ranking.data;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.wheat.ranking.entity.BeautyIntroduction;
+import org.wheat.ranking.entity.Comment;
 import org.wheat.ranking.entity.Photo;
 
 import android.content.Context;
@@ -180,10 +182,10 @@ public class SqliteDBManager
 	 * 从sqlite数据库中获取BeautyPersonalPageActivity的缓存
 	 * @return
 	 */
-	public List<Photo> getFromBeautyPersonalPage()
+	public List<Photo> getFromBeautyPersonalPage(int beautyId)
 	{
 		ArrayList<Photo> list=new ArrayList<Photo>();
-		Cursor cursor=db.rawQuery("select * from beauty_personal_page", null);
+		Cursor cursor=db.rawQuery("select * from beauty_personal_page where beautyId=?", new String[]{String.valueOf(beautyId)});
 		while(cursor.moveToNext())
 		{
 			Photo photo=new Photo();
@@ -444,4 +446,46 @@ public class SqliteDBManager
 		db.execSQL("update sqlite_sequence SET seq = 0 where name ='my_detail_page'");
 	}
 	
+	public void addToPhotoComments(List<Comment> list)
+	{
+		String sql="INSERT INTO photo_comments VALUES(null, ?, ?, ?, ?, ?, ?, ?)";
+		db.beginTransaction();
+		try
+		{
+			for(Comment comment:list)
+			{
+				db.execSQL(sql, new Object[]{comment.getCommentID(),comment.getPhotoID(),comment.getUserPhoneNumber(),comment.getUserAvatar(),comment.getUserNickName(),comment.getCommentTimeToString(),comment.getCommentContent()});
+			}
+			db.setTransactionSuccessful();
+		}
+		finally
+		{
+			db.endTransaction();
+		}
+	}
+
+	public LinkedList<Comment> getPhotoComment(int photoId)
+	{
+		LinkedList<Comment> list=new LinkedList<Comment>();
+		Cursor cursor=db.rawQuery("select * from photo_comments where photoId=?", new String[]{String.valueOf(photoId)});
+		while(cursor.moveToNext())
+		{
+			Comment comment=new Comment();
+			comment.setCommentID(cursor.getInt(cursor.getColumnIndex("commentId")));
+			comment.setPhotoID(cursor.getInt(cursor.getColumnIndex("photoId")));
+			comment.setUserPhoneNumber(cursor.getString(cursor.getColumnIndex("userPhoneNumber")));
+			comment.setUserAvatar(cursor.getString(cursor.getColumnIndex("userAvatar")));
+			comment.setUserNickName(cursor.getString(cursor.getColumnIndex("userNickeName")));
+			comment.setCommentTime(cursor.getString(cursor.getColumnIndex("commentTime")));
+			comment.setCommentContent(cursor.getString(cursor.getColumnIndex("commentContent")));
+			list.add(comment);
+		}
+		return list;
+	}
+	
+	public void clearPhotoComments()
+	{
+		db.execSQL("delete from photo_comments");
+		db.execSQL("update sqlite_sequence SET seq = 0 where name ='photo_comments'");
+	}
 }

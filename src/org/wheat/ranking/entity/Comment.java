@@ -1,5 +1,7 @@
 package org.wheat.ranking.entity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
@@ -88,6 +90,23 @@ public class Comment
 	public void setCommentTime(Date commentTime)
 	{
 		this.commentTime=commentTime;
+	}
+	
+	public void setCommentTime(String date)
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			this.commentTime=sdf.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String getCommentTimeToString()
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(this.commentTime);
 	}
 	
 	public Date getCommentTime()

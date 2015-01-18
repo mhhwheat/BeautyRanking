@@ -3,13 +3,12 @@ package org.wheat.ranking.activity;
 import org.wheat.beautyranking.R;
 import org.wheat.ranking.checkUpdate.SettingPage;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,6 +38,7 @@ public class MainInterfaceActivity extends FragmentActivity
 	private ViewGroup mTitleContainer;
 	
 
+	private Fragment mCurrentFragment=null;
 	private int mCurrentCheckID=R.id.tab_first_page;
 //	ImageView settingImg;
 	@Override
@@ -56,6 +56,7 @@ public class MainInterfaceActivity extends FragmentActivity
 		mTitleContainer=(ViewGroup)findViewById(getTitleContainerId());
 		
 		initialTab();
+		
 		checkTab(mCurrentCheckID);
 		
 	}
@@ -113,7 +114,7 @@ public class MainInterfaceActivity extends FragmentActivity
 				Log.w("MainInterfaceActivity", "mFirstPageFragment is null!");
 				mFirstPageFragment=new FirstPageFragment();
 			}
-			replaceFragment(mFirstPageFragment, R.id.replacing_fragment);
+			switchFragment(mCurrentFragment, mFirstPageFragment);
 			break;
 		case R.id.tab_find_page:
 			ImageView mFindPageImg=(ImageView)v.findViewById(R.id.tab_find_page_img);
@@ -124,7 +125,7 @@ public class MainInterfaceActivity extends FragmentActivity
 			
 			if(mFindPageFragment==null)
 				mFindPageFragment=new RankingListFragment();
-			replaceFragment(mFindPageFragment, R.id.replacing_fragment);
+			switchFragment(mCurrentFragment, mFindPageFragment);
 			break;
 		case R.id.tab_mine_page:
 			mTitleContainer.removeAllViews();
@@ -140,7 +141,7 @@ public class MainInterfaceActivity extends FragmentActivity
 			
 			if(mMinePageFragment==null)
 				mMinePageFragment=new MyDetailPage();
-			replaceFragment(mMinePageFragment, R.id.replacing_fragment);
+			switchFragment(mCurrentFragment, mMinePageFragment);
 			break;
 		case R.id.tab_create_beauty:
 			ImageView mCreateBeautyImg=(ImageView)v.findViewById(R.id.tab_create_beauty_img);
@@ -209,14 +210,39 @@ public class MainInterfaceActivity extends FragmentActivity
 	}
 	
 	/**
-	 * 用targetFragment去替换布局中id为source的布局
-	 * @param targetFragment 替换的Fragment
-	 * @param source 被替换的布局资源,该布局必须为FrameLayout
+	 * 切换Fragemtn,替换布局为R.id.replacing_fragment
+	 * @param from	切换前的Fragment
+	 * @param to	切换后的Fragment
 	 */
-	public void replaceFragment(Fragment targetFragment,int source)
+	public void switchFragment(Fragment from,Fragment to)
 	{
-		getSupportFragmentManager().beginTransaction().
-		replace(source, targetFragment).commit();
+		if(mCurrentFragment!=to)
+		{
+			mCurrentFragment=to;
+			FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+			if(!to.isAdded())
+			{
+				if(from!=null)
+				{
+					transaction.hide(from).add(R.id.replacing_fragment, to).commit();
+				}
+				else
+				{
+					transaction.add(R.id.replacing_fragment, to).commit();
+				}
+			}
+			else
+			{
+				if(from!=null)
+				{
+					transaction.hide(from).show(to).commit();
+				}
+				else
+				{
+					transaction.show(to).commit();
+				}
+			}
+		}
 	}
 	
 	

@@ -135,18 +135,20 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		new UpdateDataTask().execute();
 		preference=UserLoginPreference.getInstance(getActivity().getApplicationContext());
 	}
-	private class SettingClickListener implements OnClickListener{
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			Intent settingIntent = new Intent();
-			settingIntent.setClass(parentActivity,SettingPage.class);
-			startActivity(settingIntent);
-			System.out.println("startActivity(settingIntent);");
-		}
-		
-	}
+	
+//	private class SettingClickListener implements OnClickListener{
+//
+//		@Override
+//		public void onClick(View v) {
+//			// TODO Auto-generated method stub
+//			Intent settingIntent = new Intent();
+//			settingIntent.setClass(parentActivity,SettingPage.class);
+//			startActivity(settingIntent);
+//			System.out.println("startActivity(settingIntent);");
+//		}
+//		
+//	}
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater=inflater;
@@ -587,8 +589,6 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 		
 
 		tvCreate.setText(String.valueOf(preference.getUserInfoCreateNum()));
-		
-//		tvLike.setText(String.valueOf(preference.getUserInfoLike()));
 		tvFocus.setText(String.valueOf(preference.getUserInfoFocusNum()));
 		tvFollow.setText("0");//暂时设置为0，估计以后去掉该功能
 		tvPersonSign.setText(preference.getUserInfoPersionSign());
@@ -597,8 +597,6 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 	}
 
 	private int mImageViewWidth=0;
-	private int mMinSideLength=0;
-	private int mMaxNumOfPixles=0;
 	//已经获取到正确的ImageWidth
 	private boolean allowFix=false;
 	private Map<String,ImageView> taskPool;
@@ -616,8 +614,6 @@ public class MyDetailPage extends Fragment implements OnScrollListener
 			if(mImageViewWidth<=0&&view.getWidth()>0)
 			{
 				mImageViewWidth=view.getWidth();
-				mMinSideLength=(int)(mImageViewWidth*metric.density);
-				mMaxNumOfPixles=2*mMinSideLength*mMinSideLength;
 				unLockTaskPool();
 				view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 			}
