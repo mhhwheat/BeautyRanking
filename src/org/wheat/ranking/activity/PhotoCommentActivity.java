@@ -20,13 +20,17 @@ import org.wheat.ranking.loader.ImageLoader;
 import org.wheat.widget.CircleImageView;
 
 import android.app.Activity;
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,13 +38,16 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,8 +81,8 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 //	private ProgressBar pbFooterLoading;
 	
 	
-//	//弹出的编辑窗口
-//	private PopupWindow mPopWindow;
+	//弹出的编辑窗口
+	private PopupWindow mPopWindow;
 	private Button btComment;
 	private ImageView comment_sent_img;
 	TextView tv_comment_footerTextView ;
@@ -147,37 +154,13 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		
 		mListView.addHeaderView(mHeaderView);
 		mListView.addFooterView(mFooterView);
+//		mListView.addFooterView(mFooterView);
 		mListView.setAdapter(adapter);
 		mListView.setOnScrollListener(this);
 		comment_sent_img.setOnClickListener(new CommentOnClickListener());
 		new UpdateCommentsTask().execute();
 		
 	}
-	
-	
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		if(mCurrentPhoto!=null)
-		{
-			outState.putString("avatarPath", mCurrentPhoto.getAvatarPath());
-			outState.putString("nickname", mCurrentPhoto.getNickName());
-			outState.putBoolean("isPraise", mCurrentPhoto.getIsPraise());
-			outState.putString("photoDescription", mCurrentPhoto.getPhotoDescription());
-			outState.putInt("beautyId", mCurrentPhoto.getBeautyId());
-			outState.putInt("photoId", mCurrentPhoto.getPhotoId());
-			outState.putInt("commentCount", mCurrentPhoto.getCommentCount());
-			outState.putInt("praiseCount", mCurrentPhoto.getPraiseCount());
-			outState.putString("photoPath", mCurrentPhoto.getPhotoPath());
-			outState.putString("userPhoneNumber", mCurrentPhoto.getUserPhoneNumber());
-			outState.putString("uploadTime",mCurrentPhoto.getUpLoadTimeToString());
-		}
-		outState.putInt("firstVisiblePosition",mListView.getFirstVisiblePosition());
-		super.onSaveInstanceState(outState);
-	}
-
-
-
 	OnFocusChangeListener editTextFocusListener = new android.view.View.OnFocusChangeListener() {
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
@@ -194,7 +177,7 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		}
 	};
 	private void initialFooter(){
-		mFooterView=mInflater.inflate(R.layout.photo_comment_listview_footer, null);
+		mFooterView=mInflater.inflate(R.layout.comment_listview_footer, null);
 		tv_comment_footerTextView =(TextView)mFooterView.findViewById(R.id.tv_comment_footer);
 	}
 	private void initialHeader()
@@ -412,27 +395,26 @@ public class PhotoCommentActivity extends Activity implements OnScrollListener
 		
 		
 	}
-	
-//	private void showPopupView(View parent)
-//	{
-//		if(mPopWindow==null)
-//		{
-//			View view=mInflater.inflate(R.layout.photo_comment_popup_edit_text, null);
-//			mPopWindow=new PopupWindow(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
-//		}
-//		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
-//		mPopWindow.setFocusable(true);
-//		// 设置允许在外点击消失
-//		mPopWindow.setOutsideTouchable(true);
-//		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
-//		ColorDrawable dw = new ColorDrawable(0X00000000);
-//		mPopWindow.setBackgroundDrawable(dw);
-//		//软键盘不会挡着popupwindow
-//		mPopWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//		//设置菜单显示的位置
-//		mPopWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
-//		
-//	}
+	private void showPopupView(View parent)
+	{
+		if(mPopWindow==null)
+		{
+			View view=mInflater.inflate(R.layout.photo_comment_popup_edit_text, null);
+			mPopWindow=new PopupWindow(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
+		}
+		// 使其聚集 ，要想监听菜单里控件的事件就必须要调用此方法
+		mPopWindow.setFocusable(true);
+		// 设置允许在外点击消失
+		mPopWindow.setOutsideTouchable(true);
+		//如果需要PopupWindow响应返回键，那么必须给PopupWindow设置一个背景才行
+		ColorDrawable dw = new ColorDrawable(0X00000000);
+		mPopWindow.setBackgroundDrawable(dw);
+		//软键盘不会挡着popupwindow
+		mPopWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		//设置菜单显示的位置
+		mPopWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+		
+	}
 	
 	public void onLastItemVisible() {
 		if(!isLoadingMore)

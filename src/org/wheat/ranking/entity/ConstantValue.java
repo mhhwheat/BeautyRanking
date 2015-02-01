@@ -17,7 +17,7 @@ package org.wheat.ranking.entity;
 *
  */
 public class ConstantValue {
-	public static String HttpRoot="http://192.168.202.197:8080/BeautyRankingServer/";
+	public static String HttpRoot="http://120.24.161.139:8080/BeautyRankingServer/";
 	/**
 	 * 失败的人生有千百种，成功的人生只有一种（更新失败）
 	 */
