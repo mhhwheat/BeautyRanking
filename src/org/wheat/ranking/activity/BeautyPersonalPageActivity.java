@@ -301,6 +301,7 @@ public class BeautyPersonalPageActivity extends Activity implements OnScrollList
 			}
 			else
 				holder.ivPraiseButton.setImageResource(R.drawable.praise);
+			
 			holder.ivPraiseButton.setTag(photo);
 			holder.tvPraiseTimes.setText(String.valueOf(photo.getPraiseCount()));
 			holder.tvCommentTimes.setTag(photo);

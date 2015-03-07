@@ -249,14 +249,15 @@ public class FollowFragment extends Fragment implements OnScrollListener
 				holder.tvPublishTime=(TextView)convertView.findViewById(R.id.fragment_follow_publish_time);
 				convertView.setTag(holder);
 				
-				View PraiseView=convertView.findViewById(R.id.fragment_follow_praise_area);
-				View CommentView=convertView.findViewById(R.id.fragment_follow_comment_area);
-				PraiseView.setOnClickListener(new PraiseAreaOnClickListener());
-				CommentView.setOnClickListener(new CommentAreaOnClickListener());
-				holder.ivPhoto.setOnClickListener(new PhotoOnClickListener());
 			}
 			else
 				holder=(ViewHolder)convertView.getTag();
+			
+			View PraiseView=convertView.findViewById(R.id.fragment_follow_praise_area);
+			View CommentView=convertView.findViewById(R.id.fragment_follow_comment_area);
+			PraiseView.setOnClickListener(new PraiseAreaOnClickListener());
+			CommentView.setOnClickListener(new CommentAreaOnClickListener());
+			holder.ivPhoto.setOnClickListener(new PhotoOnClickListener());
 			
 			
 			//为了获取ImageView的宽度,给ImageView设置监听器
